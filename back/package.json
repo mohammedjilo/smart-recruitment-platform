@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "tsx watch src/index.ts",
     "build": "prisma generate --config ./prisma.config.ts && tsc",
-    "start": "node dist/src/index.js",
+    "start": "node dist/index.js",
     "update:geonames": "node scripts/update-geonames-dataset.mjs",
     "test": "node --import tsx --test src/middlewares/error.integration.test.ts src/middlewares/message.authorization.integration.test.ts src/middlewares/support.authorization.integration.test.ts src/middlewares/supportOnly.integration.test.ts src/services/auth.service.test.mjs src/services/application.state.test.ts src/services/application.withdrawal.service.test.mjs src/services/user.profile.authorization.test.mjs src/services/job.visibility.service.test.mjs"
   },
