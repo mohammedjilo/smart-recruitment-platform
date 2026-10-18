@@ -1,0 +1,15 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "Build Backend Chat Cursor",
+			"type": "shell",
+			"command": "npm run build; $code = $LASTEXITCODE; Write-Output \"BACK_BUILD_EXIT:$code\"; exit $code",
+			"isBackground": false,
+			"problemMatcher": [
+				"$tsc"
+			],
+			"group": "build"
+		}
+	]
+}

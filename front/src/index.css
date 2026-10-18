@@ -1,0 +1,75 @@
+/* @import url("https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&family=Source+Sans+3:ital,wght@0,200..900;1,200..900&display=swap"); */
+@import url("https://fonts.googleapis.com/css2?family=Gelasio:ital,wght@0,400..700;1,400..700&family=Roboto:ital,wght@0,100..900;1,100..900&family=Source+Sans+3:ital,wght@0,200..900;1,200..900&display=swap");
+@import "tailwindcss";
+@theme inline {
+   --color-bg: var(--bg);
+   --color-surface: var(--surface);
+   --color-border: var(--border);
+   --color-content: var(--text);
+   --color-muted: var(--muted);
+   --color-primary: var(--primary);
+   --color-primary-dark: var(--primary-dark);
+   --color-primary-tint: var(--primary-tint);
+   --color-link: var(--link);
+   --color-link-hover: var(--link-hover);
+}
+
+/* Background   #F8FAFC
+Surface      #FFFFFF
+Text         #0F172A
+Text 2       #475569
+Text muted   #64748B
+Border       #E2E8F0 */
+@theme {
+   --color-mui-blue-50: #e3f2fd;
+   --color-mui-blue-100: #bbdefb;
+   --color-mui-blue-200: #90caf9;
+   --color-mui-blue-300: #64b5f6;
+   --color-mui-blue-400: #42a5f5;
+   --color-mui-blue-500: #2196f3;
+   --color-mui-blue-600: #1e88e5;
+   --color-mui-blue-700: #1976d2;
+   --color-mui-blue-800: #1565c0;
+   --color-mui-blue-900: #0d47a1;
+   --color-mui-blue-A100: #82b1ff;
+   --color-mui-blue-A200: #448aff;
+   --color-mui-blue-A400: #2979ff;
+   --color-mui-blue-A700: #2962ff;
+}
+
+body {
+   margin: 0;
+   background: var(--bg, #f8fafc);
+   color: var(--text, #0f172a);
+   transition:
+      background-color 200ms ease,
+      color 200ms ease;
+}
+
+.role-content {
+   padding: 24px;
+}
+
+.role-content > :first-child {
+   margin: 0 !important;
+   padding: 0 !important;
+}
+
+.responsive-scroll-region {
+   overscroll-behavior-x: contain;
+   scrollbar-width: thin;
+   -webkit-overflow-scrolling: touch;
+}
+
+@media (max-width: 639px) {
+   .role-content {
+      padding: 16px;
+   }
+}
+
+*,
+html,
+body {
+   font-family: "Roboto", sans-serif !important;
+   font-weight: bold !important;
+}

@@ -1,0 +1,625 @@
+generator client {
+  provider = "prisma-client-js"
+  // output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum AccountStatus {
+  ACTIVE
+  DEACTIVATED
+}
+
+enum JobStatus {
+  OPEN
+  CLOSED
+  DRAFT
+  EXPIRED
+}
+
+enum EmploymentType {
+  FULL_TIME
+  PART_TIME
+  CONTRACT
+  INTERNSHIP
+  FREELANCE
+  REMOTE
+}
+
+enum ApplicationStatus {
+  PENDING
+  REVIEWING
+  SHORTLISTED
+  INTERVIEW
+  ACCEPTED
+  REJECTED
+  WITHDRAWN
+}
+
+enum LanguageLevel {
+  BEGINNER
+  INTERMEDIATE
+  ADVANCED
+  FLUENT
+  NATIVE
+}
+
+enum NotificationType {
+  APPLICATION
+  MESSAGE
+  INTERVIEW
+  JOB
+  SUPPORT
+  COMPANY_REQUEST
+  SYSTEM
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
+enum QuestionType {
+  YES_NO
+  TEXT
+  NUMBER
+  SINGLE_CHOICE
+  MULTIPLE_CHOICE
+}
+
+enum ResumeType {
+  PROFILE
+  UPLOAD
+}
+
+enum CompanyApprovalStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+enum SupportTicketStatus {
+  OPEN
+  IN_PROGRESS
+  WAITING_FOR_USER
+  RESOLVED
+  CLOSED
+}
+
+enum SupportPriority {
+  LOW
+  MEDIUM
+  HIGH
+  URGENT
+}
+
+enum SupportCategoryAudience {
+  USER
+  COMPANY
+}
+
+model Permission {
+  id          String   @id @default(uuid())
+  code        String   @unique
+  resource    String
+  action      String
+  description String?
+  active      Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  rolePermissions AdminRolePermission[]
+}
+
+model AdminRole {
+  id          String   @id @default(uuid())
+  name        String   @unique
+  description String?
+  active      Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  users       UserAdminRole[]
+  permissions AdminRolePermission[]
+}
+
+model AdminRolePermission {
+  roleId       String
+  permissionId String
+
+  role       AdminRole  @relation(fields: [roleId], references: [id], onDelete: Cascade)
+  permission Permission @relation(fields: [permissionId], references: [id], onDelete: Cascade)
+
+  @@id([roleId, permissionId])
+  @@index([permissionId])
+}
+
+model UserAdminRole {
+  userId      String
+  adminRoleId String
+  assignedAt  DateTime @default(now())
+
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  adminRole AdminRole @relation(fields: [adminRoleId], references: [id], onDelete: Cascade)
+
+  @@id([userId, adminRoleId])
+  @@index([adminRoleId])
+}
+
+model AuditLog {
+  id          String   @id @default(uuid())
+  actorUserId String?
+  action      String
+  resource    String
+  resourceId  String?
+  metadata    Json?
+  createdAt   DateTime @default(now())
+
+  actorUser User? @relation("AuditLogActor", fields: [actorUserId], references: [id], onDelete: SetNull)
+
+  @@index([actorUserId, createdAt])
+  @@index([resource, resourceId, createdAt])
+}
+
+model User {
+  id            String        @id @default(uuid())
+  firstName     String
+  lastName      String
+  email         String        @unique
+  password      String
+  phone         String
+  country       String
+  countryCode   String?
+  state         String?
+  stateCode     String?
+  city          String?
+  cityGeonameId Int?
+  birthdate     DateTime      @default(now())
+  profilePicId  String?
+  profilePicUrl String?       @default("https://res.cloudinary.com/daqygkjf1/image/upload/v1755890964/cuedsbzrjnje47ftblsa.jpg")
+  role          Role          @default(USER)
+  accountStatus AccountStatus @default(ACTIVE)
+
+  profile      ProfessionalProfile?
+  createdAt    DateTime             @default(now())
+  updatedAt    DateTime             @updatedAt
+  applications Application[]
+
+  messagesSent       Message[] @relation("MessageSender")
+  messagesReceived   Message[] @relation("MessageReceiver")
+  messagesSentByUser Message[] @relation("MessageSenderUser")
+
+  conversations Conversation[] @relation("ConversationUser")
+  notifications Notification[]
+  savedJobs     SavedJob[]
+  skills        UserSkill[]
+  languages     UserLanguage[]
+
+  supportTicketsCreated  SupportTicket[]  @relation("SupportTicketCreatorUser")
+  assignedSupportTickets SupportTicket[]  @relation("SupportTicketAssignedAdmin")
+  supportMessages        SupportMessage[] @relation("SupportMessageAuthorUser")
+  adminRoleAssignments   UserAdminRole[]
+  auditLogs              AuditLog[]       @relation("AuditLogActor")
+
+  @@index([countryCode, stateCode, city])
+  @@index([countryCode, cityGeonameId])
+}
+
+model Company {
+  id          String  @id @default(uuid())
+  companyName String
+  slug        String
+  description String?
+  logoId      String?
+  logoUrl     String? @default("https://res.cloudinary.com/daqygkjf1/image/upload/v1755890964/cuedsbzrjnje47ftblsa.jpg")
+
+  phone    String
+  email    String  @unique
+  password String
+  website  String?
+  location String?
+  country     String?
+  countryCode String?
+  state       String?
+  stateCode   String?
+  city        String?
+  cityGeonameId Int?
+
+  // Account status
+  status AccountStatus @default(ACTIVE)
+
+  // Admin approval
+  approvalStatus  CompanyApprovalStatus @default(PENDING)
+  rejectionReason String?
+  reviewedAt      DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  jobs                Job[]
+  notifications       Notification[]
+  conversations       Conversation[] @relation("ConversationCompany")
+  sentCompanyMessages Message[]      @relation("MessageSenderCompany")
+
+  supportTicketsCreated SupportTicket[]  @relation("SupportTicketCreatorCompany")
+  supportMessages       SupportMessage[] @relation("SupportMessageAuthorCompany")
+
+  @@index([countryCode, stateCode, city])
+  @@index([countryCode, cityGeonameId])
+}
+
+model SupportCategory {
+  id        String                  @id @default(dbgenerated("gen_random_uuid()"))
+  name      String
+  audience  SupportCategoryAudience @default(USER)
+  active    Boolean                 @default(true)
+  createdAt DateTime                @default(now())
+  updatedAt DateTime                @default(now()) @updatedAt
+
+  tickets SupportTicket[]
+
+  @@unique([name, audience])
+}
+
+model SupportTicket {
+  id          String              @id @default(uuid())
+  subject     String
+  description String
+  status      SupportTicketStatus @default(OPEN)
+  priority    SupportPriority     @default(MEDIUM)
+  createdAt   DateTime            @default(now())
+  updatedAt   DateTime            @updatedAt
+
+  creatorUserId            String?
+  creatorCompanyId         String?
+  assignedAdminId          String?
+  categoryId               String?
+
+  creatorUser      User?                    @relation("SupportTicketCreatorUser", fields: [creatorUserId], references: [id], onDelete: SetNull)
+  creatorCompany   Company?                 @relation("SupportTicketCreatorCompany", fields: [creatorCompanyId], references: [id], onDelete: SetNull)
+  assignedAdmin    User?                    @relation("SupportTicketAssignedAdmin", fields: [assignedAdminId], references: [id], onDelete: SetNull)
+  category         SupportCategory?         @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+  messages         SupportMessage[]
+
+  @@index([status, createdAt])
+  @@index([priority, createdAt])
+  @@index([assignedAdminId, createdAt])
+  @@index([creatorUserId, createdAt])
+  @@index([creatorCompanyId, createdAt])
+}
+
+model SupportMessage {
+  id        String   @id @default(uuid())
+  content   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  ticketId                     String
+  authorUserId                 String?
+  authorCompanyId              String?
+
+  ticket        SupportTicket @relation(fields: [ticketId], references: [id], onDelete: Cascade)
+  authorUser    User?         @relation("SupportMessageAuthorUser", fields: [authorUserId], references: [id], onDelete: SetNull)
+  authorCompany Company?      @relation("SupportMessageAuthorCompany", fields: [authorCompanyId], references: [id], onDelete: SetNull)
+
+  @@index([ticketId, createdAt])
+}
+
+model Job {
+  id                 String         @id @default(uuid())
+  title              String
+  description        String
+  employmentType     EmploymentType
+  salary             Float?
+  status             JobStatus      @default(OPEN)
+  deadline           DateTime       @db.Date
+  experienceRequired Int
+  slug               String
+  createdAt          DateTime       @default(now())
+  updatedAt          DateTime       @updatedAt
+
+  companyId            String
+  company              Company               @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  savedBy              SavedJob[]
+  applications         Application[]
+  notifications        Notification[]
+  skills               JobSkill[]
+  applicationQuestions ApplicationQuestion[]
+
+  @@index([companyId])
+  @@index([status])
+  @@index([deadline])
+  @@index([companyId, status, createdAt])
+}
+
+model Skill {
+  id        String      @id @default(uuid())
+  skillName String
+  slug      String      @unique
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+  users     UserSkill[]
+  jobs      JobSkill[]
+}
+
+model UserSkill {
+  id String @id @default(uuid())
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  userId    String
+  skillId   String
+
+  user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  skill Skill @relation(fields: [skillId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, skillId])
+}
+
+model JobSkill {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  jobId     String
+  skillId   String
+
+  job   Job   @relation(fields: [jobId], references: [id], onDelete: Cascade)
+  skill Skill @relation(fields: [skillId], references: [id], onDelete: Cascade)
+
+  @@unique([jobId, skillId])
+}
+
+model Language {
+  id           String         @id @default(uuid())
+  languageName String         @unique
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+  users        UserLanguage[]
+}
+
+model UserLanguage {
+  id String @id @default(uuid())
+
+  level      LanguageLevel
+  createdAt  DateTime      @default(now())
+  updatedAt  DateTime      @updatedAt
+  userId     String
+  languageId String
+
+  user     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  language Language @relation(fields: [languageId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, languageId])
+}
+
+model ProfessionalProfile {
+  id                String   @id @default(uuid())
+  jobTitle          String?
+  summary           String?
+  yearsOfExperience Int?
+  cvPath            String?
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  userId            String   @unique
+  user              User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  educations   Education[]
+  experiences  Experience[]
+  projects     Project[]
+  certificates Certificate[]
+}
+
+model Education {
+  id         String              @id @default(uuid())
+  university String
+  degree     String
+  major      String
+  startDate  DateTime
+  endDate    DateTime?
+  createdAt  DateTime            @default(now())
+  updatedAt  DateTime            @updatedAt
+  profileId  String
+  profile    ProfessionalProfile @relation(fields: [profileId], references: [id], onDelete: Cascade)
+}
+
+model Experience {
+  id          String              @id @default(uuid())
+  companyName String
+  position    String
+  description String?
+  startDate   DateTime
+  endDate     DateTime?
+  createdAt   DateTime            @default(now())
+  updatedAt   DateTime            @updatedAt
+  profileId   String
+  profile     ProfessionalProfile @relation(fields: [profileId], references: [id], onDelete: Cascade)
+}
+
+model Project {
+  id          String              @id @default(uuid())
+  title       String
+  description String?
+  createdAt   DateTime            @default(now())
+  updatedAt   DateTime            @updatedAt
+  profileId   String
+  profile     ProfessionalProfile @relation(fields: [profileId], references: [id], onDelete: Cascade)
+}
+
+model Certificate {
+  id              String              @id @default(uuid())
+  certificateName String
+  organization    String
+  createdAt       DateTime            @default(now())
+  updatedAt       DateTime            @updatedAt
+  profileId       String
+  profile         ProfessionalProfile @relation(fields: [profileId], references: [id], onDelete: Cascade)
+}
+
+model Application {
+  id     String            @id @default(uuid())
+  status ApplicationStatus @default(PENDING)
+
+  matchScore     Float?
+  recommendation String?
+  strengths      Json?
+  missingSkills  Json?
+  resumeType     ResumeType
+
+  cvId             String?
+  cvUrl            String?
+  profileSnapshot  Json?
+  questionSnapshot Json?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  userId String
+  jobId  String
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  job  Job  @relation(fields: [jobId], references: [id], onDelete: Cascade)
+
+  answers       ApplicationAnswer[]
+  notifications Notification[]
+  conversations Conversation[]      @relation("ConversationApplication")
+
+  @@index([userId, createdAt])
+  @@index([jobId, createdAt])
+  @@index([status, createdAt])
+}
+
+model ApplicationQuestion {
+  id       String       @id @default(uuid())
+  question String
+  type     QuestionType
+  required Boolean      @default(true)
+  order    Int          @default(0)
+  options  Json?
+
+  minSelection Int?
+  maxSelection Int?
+  minNumber    Float?
+  maxNumber    Float?
+
+  jobId String
+  job   Job    @relation(fields: [jobId], references: [id], onDelete: Cascade)
+
+  answers ApplicationAnswer[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model ApplicationAnswer {
+  id     String @id @default(uuid())
+  answer Json
+
+  applicationId String
+  questionId    String
+
+  application Application         @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+  question    ApplicationQuestion @relation(fields: [questionId], references: [id], onDelete: Restrict)
+
+  createdAt DateTime @default(now())
+
+  @@unique([applicationId, questionId])
+}
+
+model Conversation {
+  id            String   @id @default(uuid())
+  userId        String
+  companyId     String
+  applicationId String
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  user          User           @relation("ConversationUser", fields: [userId], references: [id], onDelete: Cascade)
+  company       Company        @relation("ConversationCompany", fields: [companyId], references: [id], onDelete: Cascade)
+  application   Application    @relation("ConversationApplication", fields: [applicationId], references: [id], onDelete: Cascade)
+  messages      Message[]
+  notifications Notification[]
+
+  @@unique([userId, companyId, applicationId])
+  @@index([userId, updatedAt])
+  @@index([companyId, updatedAt])
+  @@index([applicationId])
+}
+
+model Message {
+  id            String   @id @default(uuid())
+  content       String
+  isRead        Boolean  @default(false)
+  readByUser    Boolean  @default(false)
+  readByCompany Boolean  @default(false)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  senderId   String?
+  receiverId String?
+
+  conversationId  String?
+  senderUserId    String?
+  senderCompanyId String?
+
+  sender        User?         @relation("MessageSender", fields: [senderId], references: [id], onDelete: SetNull)
+  receiver      User?         @relation("MessageReceiver", fields: [receiverId], references: [id], onDelete: SetNull)
+  conversation  Conversation? @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  senderUser    User?         @relation("MessageSenderUser", fields: [senderUserId], references: [id], onDelete: SetNull)
+  senderCompany Company?      @relation("MessageSenderCompany", fields: [senderCompanyId], references: [id], onDelete: SetNull)
+
+  @@index([senderId, createdAt])
+  @@index([receiverId, createdAt])
+  @@index([conversationId, createdAt])
+  @@index([senderCompanyId, createdAt])
+  @@index([senderUserId, createdAt])
+}
+
+model Notification {
+  id String @id @default(uuid())
+
+  message String
+  isRead  Boolean          @default(false)
+  type    NotificationType
+
+  userId String?
+  user   User?   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  companyId String?
+  company   Company? @relation(fields: [companyId], references: [id], onDelete: Cascade)
+
+  jobId String?
+  job   Job?    @relation(fields: [jobId], references: [id], onDelete: Cascade)
+
+  applicationId String?
+  application   Application? @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+
+  supportTicketId String?
+  conversationId  String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  conversation Conversation? @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+
+  @@index([userId, createdAt])
+  @@index([companyId, createdAt])
+  @@index([supportTicketId, createdAt])
+  @@index([conversationId, createdAt])
+}
+
+model SavedJob {
+  id     String @id @default(uuid())
+  userId String
+  jobId  String
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  job  Job  @relation(fields: [jobId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId, jobId]) // يمنع تكرار حفظ نفس الوظيفة لنفس المستخدم
+  @@index([userId, createdAt])
+}

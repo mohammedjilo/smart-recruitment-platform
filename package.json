@@ -1,0 +1,18 @@
+{
+  "name": "smart-recruitment-platform",
+  "private": true,
+  "version": "1.0.0",
+  "workspaces": [
+    "front",
+    "back",
+    "packages/*"
+  ],
+  "scripts": {
+    "build": "npm run build:validation && npm run build --workspace front && npm run build --workspace back",
+    "build:validation": "npm run build --workspace @smart-recruitment/validation",
+    "test:validation": "npm run test --workspace @smart-recruitment/validation",
+    "typecheck:front": "tsc -p front/tsconfig.app.json --noEmit",
+    "typecheck:back": "tsc -p back/tsconfig.json --noEmit",
+    "lint": "npm run lint --workspace front"
+  }
+}

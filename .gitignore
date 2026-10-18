@@ -1,0 +1,52 @@
+# Dependencies and generated output
+**/node_modules/
+**/dist/
+**/build/
+**/coverage/
+
+# Local environment files; keep safe examples publishable
+**/.env
+**/.env.*
+!**/.env.example
+!**/.env.*.example
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# Operating-system artifacts
+.DS_Store
+**/.DS_Store
+Thumbs.db
+**/Thumbs.db
+Desktop.ini
+**/Desktop.ini
+
+# Local duplicate source snapshots
+/1/
+/2/
+
+# Temporary migration test artifact
+/back/tmp-migration-check.sql
+
+# Root-level internal audit and remediation reports
+/BACKEND-AUTHORIZATION-AUDIT.md
+/BACKEND-AUTHORIZATION-F01-F02-REMEDIATION.md
+/BACKEND-AUTHORIZATION-VERIFICATION.md
+/BACKEND-COMPANY-CANDIDATE-ACCESS-VERIFICATION.md
+/BACKEND-DEPENDENCY-REMEDIATION-REPORT.md
+/BACKEND-DRAFT-JOB-VISIBILITY-REMEDIATION.md
+/BACKEND-SUPPORT-AUTHORIZATION-ASSIGNMENT-AUDIT.md
+/FRONTEND-FOLLOWUP-AUDIT.md
+/FRONTEND-REMEDIATION-REPORT.md
+/PROJECT-DEPLOYMENT-REVIEW.md
+/SRB-READINESS-AUDIT.md
+/SRB-SUPPORT-ARCHITECTURE-AUDIT.md
+/BACKEND-AUTHORIZATION-POLICY-REASSESSMENT.md
+/front/FRONTEND-AUDIT.md
+/front/FRONTEND-AUDIT-VERIFICATION.md
+/front/SUPPORT-ARCHITECTURE-REPORT.md
+/front/responsive-audit/RESPONSIVE_BASELINE.md
