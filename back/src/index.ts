@@ -43,13 +43,22 @@ export const createApp = (testRoutes?: Router) => {
     req.requestId = req.header("x-request-id") || crypto.randomUUID();
     next();
   });
+  const getAllowedOrigins = (): string[] => {
+    const configured = (process.env.FRONTEND_URL ?? "")
+      .split(",")
+      .map((origin) => origin.trim().replace(/\/+$/, ""))
+      .filter(Boolean);
+
+    return configured.length > 0 ? configured : ["http://localhost:5173"];
+  };
+
   app.use(Express.json());
   app.use(Express.urlencoded());
   app.use(cookieParser());
   app.use(apiContract);
   app.use(
     cors({
-      origin: "http://localhost:5173",
+      origin: getAllowedOrigins(),
       credentials: true,
     })
   );
