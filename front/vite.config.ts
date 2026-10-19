@@ -5,6 +5,9 @@ import path from "node:path"
 
 export default defineConfig({
    plugins: [react(), tailwind()],
+   preview: {
+      allowedHosts: ["front-production-bc34.up.railway.app"]
+   },
    build: {
       rolldownOptions: {
          output: {
@@ -12,7 +15,7 @@ export default defineConfig({
                groups: [
                   {
                      name: "mui-icons",
-                     test: /[\\/]@mui[\\/]icons-material[\\/]/
+                     test: /[**\\\\**/]@mui[**\\\\**/]icons-material[**\\\\**/]/
                   }
                ]
             }
