@@ -57,12 +57,12 @@ export default function SupportOnlyAccessPage() {
    return (
       <Box className="bg-bg flex min-h-screen items-center justify-center px-4 py-10">
          <Paper
-            elevation={0}
-            className="border-border bg-surface w-full max-w-lg rounded-xl border p-6 shadow-sm sm:p-8">
+            className="border-border bg-surface w-full max-w-lg rounded-xl border p-6 shadow-sm sm:p-8"
+            elevation={0}>
             <Typography
+               className="text-content font-bold"
                component="h1"
-               variant="h5"
-               className="text-content font-bold">
+               variant="h5">
                Contact Support
             </Typography>
             <Typography className="text-muted mt-2 text-sm leading-6">
@@ -71,21 +71,21 @@ export default function SupportOnlyAccessPage() {
             </Typography>
             {error && (
                <Alert
-                  severity="error"
+                  className="mt-5"
                   role="alert"
-                  className="mt-5">
+                  severity="error">
                   {error}
                </Alert>
             )}
             <Box
+               className="mt-5 space-y-4"
                component="form"
-               onSubmit={event => void submit(event)}
-               className="mt-5 space-y-4">
+               onSubmit={event => void submit(event)}>
                <FormControl>
                   <FormLabel>Account type</FormLabel>
                   <RadioGroup
-                     row
                      value={role}
+                     row
                      onChange={event =>
                         setRole(event.target.value as LoginFormValues["role"])
                      }>
@@ -103,40 +103,40 @@ export default function SupportOnlyAccessPage() {
                </FormControl>
                <TextField
                   className="mt-3!"
-                  fullWidth
-                  required
                   id="support-account-email"
                   type="email"
-                  autoComplete="username"
-                  label="Account email"
+                  required
                   value={email}
+                  autoComplete="username"
+                  fullWidth
+                  label="Account email"
                   onChange={event => setEmail(event.target.value)}
                />
                <TextField
                   className="mt-3!"
-                  fullWidth
-                  required
                   id="support-account-password"
                   type="password"
-                  autoComplete="current-password"
-                  label="Password"
+                  required
                   value={password}
+                  autoComplete="current-password"
+                  fullWidth
+                  label="Password"
                   onChange={event => setPassword(event.target.value)}
                />
                <Button
                   className="mt-3!"
                   type="submit"
+                  disabled={isSubmitting}
                   fullWidth
-                  variant="contained"
-                  disabled={isSubmitting}>
+                  variant="contained">
                   {isSubmitting ? "Verifying..." : "Verify and continue"}
                </Button>
             </Box>
             <Button
+               className="mt-3! normal-case!"
                component={Link}
                to="/login"
-               variant="text"
-               className="mt-3! normal-case!">
+               variant="text">
                Back to Login
             </Button>
          </Paper>

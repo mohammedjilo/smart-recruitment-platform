@@ -8,8 +8,8 @@ const ApplicationsHeader = ({ totalApplications }: ApplicationsHeaderProps) => {
    return (
       <Box>
          <Typography
-            variant="h6"
-            className="font-bold text-content">
+            className="font-bold text-content"
+            variant="h6">
             All Applications ({totalApplications})
          </Typography>
 

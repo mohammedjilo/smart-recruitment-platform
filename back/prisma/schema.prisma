@@ -215,16 +215,16 @@ model Company {
   logoId      String?
   logoUrl     String? @default("https://res.cloudinary.com/daqygkjf1/image/upload/v1755890964/cuedsbzrjnje47ftblsa.jpg")
 
-  phone    String
-  email    String  @unique
-  password String
-  website  String?
-  location String?
-  country     String?
-  countryCode String?
-  state       String?
-  stateCode   String?
-  city        String?
+  phone         String
+  email         String  @unique
+  password      String
+  website       String?
+  location      String?
+  country       String?
+  countryCode   String?
+  state         String?
+  stateCode     String?
+  city          String?
   cityGeonameId Int?
 
   // Account status
@@ -238,10 +238,11 @@ model Company {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  jobs                Job[]
-  notifications       Notification[]
-  conversations       Conversation[] @relation("ConversationCompany")
-  sentCompanyMessages Message[]      @relation("MessageSenderCompany")
+  jobs                        Job[]
+  notifications               Notification[]
+  companyRequestNotifications Notification[] @relation("CompanyRequestNotification")
+  conversations               Conversation[] @relation("ConversationCompany")
+  sentCompanyMessages         Message[]      @relation("MessageSenderCompany")
 
   supportTicketsCreated SupportTicket[]  @relation("SupportTicketCreatorCompany")
   supportMessages       SupportMessage[] @relation("SupportMessageAuthorCompany")
@@ -272,16 +273,16 @@ model SupportTicket {
   createdAt   DateTime            @default(now())
   updatedAt   DateTime            @updatedAt
 
-  creatorUserId            String?
-  creatorCompanyId         String?
-  assignedAdminId          String?
-  categoryId               String?
+  creatorUserId    String?
+  creatorCompanyId String?
+  assignedAdminId  String?
+  categoryId       String?
 
-  creatorUser      User?                    @relation("SupportTicketCreatorUser", fields: [creatorUserId], references: [id], onDelete: SetNull)
-  creatorCompany   Company?                 @relation("SupportTicketCreatorCompany", fields: [creatorCompanyId], references: [id], onDelete: SetNull)
-  assignedAdmin    User?                    @relation("SupportTicketAssignedAdmin", fields: [assignedAdminId], references: [id], onDelete: SetNull)
-  category         SupportCategory?         @relation(fields: [categoryId], references: [id], onDelete: SetNull)
-  messages         SupportMessage[]
+  creatorUser    User?            @relation("SupportTicketCreatorUser", fields: [creatorUserId], references: [id], onDelete: SetNull)
+  creatorCompany Company?         @relation("SupportTicketCreatorCompany", fields: [creatorCompanyId], references: [id], onDelete: SetNull)
+  assignedAdmin  User?            @relation("SupportTicketAssignedAdmin", fields: [assignedAdminId], references: [id], onDelete: SetNull)
+  category       SupportCategory? @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+  messages       SupportMessage[]
 
   @@index([status, createdAt])
   @@index([priority, createdAt])
@@ -296,9 +297,9 @@ model SupportMessage {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  ticketId                     String
-  authorUserId                 String?
-  authorCompanyId              String?
+  ticketId        String
+  authorUserId    String?
+  authorCompanyId String?
 
   ticket        SupportTicket @relation(fields: [ticketId], references: [id], onDelete: Cascade)
   authorUser    User?         @relation("SupportMessageAuthorUser", fields: [authorUserId], references: [id], onDelete: SetNull)
@@ -589,6 +590,9 @@ model Notification {
   companyId String?
   company   Company? @relation(fields: [companyId], references: [id], onDelete: Cascade)
 
+  companyRequestId String?
+  companyRequest   Company? @relation("CompanyRequestNotification", fields: [companyRequestId], references: [id], onDelete: SetNull)
+
   jobId String?
   job   Job?    @relation(fields: [jobId], references: [id], onDelete: Cascade)
 
@@ -605,6 +609,7 @@ model Notification {
 
   @@index([userId, createdAt])
   @@index([companyId, createdAt])
+  @@index([companyRequestId, createdAt])
   @@index([supportTicketId, createdAt])
   @@index([conversationId, createdAt])
 }
@@ -620,6 +625,6 @@ model SavedJob {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  @@unique([userId, jobId]) // يمنع تكرار حفظ نفس الوظيفة لنفس المستخدم
+  @@unique([userId, jobId]) // Prevent duplicate saves of the same job by a user.
   @@index([userId, createdAt])
 }

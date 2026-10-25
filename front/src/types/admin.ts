@@ -10,9 +10,14 @@ import type {
    UserStatus
 } from "./common/enums"
 import type { Company } from "./company"
+import type { ApplicationMatchScore } from "./application"
 import type { QuestionType } from "./question.types"
 import type { ProfessionalProfile } from "./entities/user"
+import type { ProfileSnapshot } from "./profileSnapshot"
+
+export type { ProfileSnapshot } from "./profileSnapshot"
 import type { Skill } from "./entities/skill"
+import type { UserLanguage } from "./entities/language"
 export type {
    ApplicationStatus,
    CompanyApprovalStatus,
@@ -360,6 +365,7 @@ export type JobApplicationUser = {
    firstName: string
    lastName: string
    email: string
+   profilePicUrl: string | null
 }
 
 export type JobApplication = {
@@ -392,6 +398,7 @@ export type GetJobApplicationsParams = {
    search?: string
    status?: ApplicationStatus | "ALL"
    experience?: ExperienceFilter
+   matchScore?: ApplicationMatchScore
 }
 //////////////
 export type AdminApplicationDetails = {
@@ -442,47 +449,6 @@ export type GetApplicationDetailsByAdminResult = {
    data: AdminApplicationDetails
 }
 ///////////
-export type ProfileSnapshot = {
-   firstName: string
-   lastName: string
-   email: string
-   phone: string
-   country: string
-   age: string
-   jobTitle: string
-   yearsOfExperience: number | null
-
-   educations: {
-      major: string
-      university: string
-      degree: string
-   }[]
-
-   languages: {
-      language: string
-   }[]
-
-   experiences: {
-      companyName: string
-      description: string
-      position: string
-      startDate: string
-      endDate: string | null
-   }[]
-
-   projects: {
-      title: string
-      description: string
-   }[]
-
-   certificates: {
-      certificateName: string
-      organization: string
-   }[]
-
-   skills: string[]
-}
-
 export type GetProfileSnapshotByAdminResult = {
    success: true
    data: {
@@ -497,6 +463,7 @@ export type GetApplicationsByAdminQuery = {
    search?: string
    status?: ApplicationStatus | "ALL"
    experience?: "ALL" | "0-2" | "3-5" | "6+"
+   matchScore?: ApplicationMatchScore
 }
 export type AdminApplication = {
    id: string
@@ -548,16 +515,13 @@ export type GetApplicationsByAdminResult = {
    meta: AdminApplicationsPagination
 }
 
-export type CompanyApplicationsMatchScore =
-   "ALL" | "HIGH" | "GOOD" | "FAIR" | "LOW" | "UNSCORED"
-
 export type GetAdminCompanyApplicationsQuery = {
    companyId: string
    page?: number
    pageSize?: number
    search?: string
    status?: ApplicationStatus | "ALL"
-   matchScore?: CompanyApplicationsMatchScore
+   matchScore?: ApplicationMatchScore
 }
 
 export type AdminCompanyApplication = {
@@ -665,6 +629,7 @@ export type AdminUserStats = {
 
 export type AdminUserProfessionalProfile = ProfessionalProfile & {
    skills: Pick<Skill, "id" | "skillName" | "slug">[]
+   languages: UserLanguage[]
 }
 
 export type GetAdminUserProfessionalProfileResult = {

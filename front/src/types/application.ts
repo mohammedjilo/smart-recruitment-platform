@@ -11,6 +11,8 @@ export type {
 
 export type UpdateApplicationStatus = Exclude<ApplicationStatus, "WITHDRAWN">
 
+export type ApplicationMatchScore = "ALL" | "HIGH" | "GOOD" | "FAIR" | "LOW"
+
 export type UpdateApplicationStatusArgs = {
    applicationId: string
    status: UpdateApplicationStatus
@@ -66,6 +68,7 @@ export type GetCompanyApplicationsParams = {
    pageSize?: number
    search?: string
    status?: ApplicationStatus
+   matchScore?: Exclude<ApplicationMatchScore, "ALL">
    sort?: "newest" | "oldest"
 }
 

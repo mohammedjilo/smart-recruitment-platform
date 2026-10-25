@@ -2,88 +2,25 @@ import { CompanyApprovalStatus, Prisma } from "@prisma/client";
 import { prisma } from "../config/db.js";
 import { AppError } from "../utils/appError.js";
 import { z } from "zod";
-import { professionalProfileSchema } from "../validation/professionalProfile.validation";
-import { certificateSchema } from "../validation/certificate.validation";
-import { educationSchema } from "../validation/education.validation";
-import { experienceSchema } from "../validation/experience.validation";
-import { projectSchema } from "../validation/project.validation";
+import { updateProfessionalProfileSchema } from "../validation/professionalProfile.validation";
 import { calculateMatch } from "./ai.service.js";
-import { getRecommendedJobs } from "./recommendation.service.js"; // استيراد الخدمة
+import { getRecommendedJobs } from "./recommendation.service.js"; // Import the recommendation service.
 import { getCompaniesQuerySchema } from "../validation/user.validation";
-import { cityLocationPredicate } from "../utils/locationData";
+import {
+  cityLocationPredicate,
+  resolveLocation,
+} from "../utils/locationData";
+import type { PersonalInformationUpdateInput } from "@smart-recruitment/validation";
 
 /**
  * User and dashboard service. It owns profile composition, user-owned profile
  * updates, and dashboard aggregation; controllers remain HTTP adapters.
  */
 
-type ProfessionalProfileInput = z.infer<typeof professionalProfileSchema>;
-type EducationInput = z.infer<typeof educationSchema>;
-type ExperienceInput = z.infer<typeof experienceSchema>;
-type ProjectInput = z.infer<typeof projectSchema>;
-type CertificateInput = z.infer<typeof certificateSchema>;
+type ProfessionalProfileInput = z.infer<
+  typeof updateProfessionalProfileSchema
+>;
 type GetCompaniesQuery = z.infer<typeof getCompaniesQuerySchema>;
-
-type ProfessionalProfilePayload = ProfessionalProfileInput & {
-  educations?: EducationInput[];
-  experiences?: ExperienceInput[];
-  projects?: ProjectInput[];
-  certificates?: CertificateInput[];
-  education?: EducationInput[];
-  experience?: ExperienceInput[];
-  project?: ProjectInput[];
-  certificate?: CertificateInput[];
-};
-
-const normalizeNestedItems = <T>(...values: Array<T[] | undefined>) => {
-  for (const value of values) {
-    if (Array.isArray(value)) {
-      return value;
-    }
-  }
-
-  return [] as T[];
-};
-
-const buildProfileData = (input: ProfessionalProfilePayload) => ({
-  jobTitle: input.jobTitle,
-  summary: input.summary ?? null,
-  yearsOfExperience: input.yearsOfExperience,
-  cvPath: input.cvPath ?? null,
-});
-
-export const updateUserPhoto = async (
-  userId: string,
-  profilePicId: string,
-  profilePicUrl: string,
-) => {
-  const existingUser = await prisma.user.findUnique({
-    where: { id: userId },
-    select: { id: true },
-  });
-
-  if (!existingUser) {
-    throw new AppError("User not found", 404);
-  }
-
-  return prisma.user.update({
-    where: { id: userId },
-    data: {
-      profilePicId,
-      profilePicUrl,
-    },
-    select: {
-      id: true,
-      firstName: true,
-      lastName: true,
-      email: true,
-      phone: true,
-      country: true,
-      profilePicId: true,
-      profilePicUrl: true,
-    },
-  });
-};
 
 type ProfileRequester =
   | { id: string; type: "user" }
@@ -116,6 +53,11 @@ export const getCompleteUserProfile = async (
       email: true,
       phone: true,
       country: true,
+      countryCode: true,
+      state: true,
+      stateCode: true,
+      city: true,
+      cityGeonameId: true,
       birthdate: true,
       profilePicId: true,
       profilePicUrl: true,
@@ -345,7 +287,6 @@ export const getCompanyJobsForUser = async (
   companyId: string,
   pageNumber = 1,
   search?: string,
-  status?: "OPEN" | "CLOSED" | "EXPIRED",
 ) => {
   const pageSize = 10;
   const page =
@@ -353,7 +294,7 @@ export const getCompanyJobsForUser = async (
   const searchTerm = search?.trim();
   const where: Prisma.JobWhereInput = {
     companyId,
-    status: status ?? { in: ["OPEN", "CLOSED", "EXPIRED"] },
+    status: "OPEN",
     ...(searchTerm
       ? { title: { contains: searchTerm, mode: "insensitive" as const } }
       : {}),
@@ -425,166 +366,81 @@ export const getCompanyJobsForUser = async (
   };
 };
 
-export const upsertProfessionalProfile = async (
+export const updateUserPersonalInformation = async (
   userId: string,
-  input: ProfessionalProfilePayload,
+  input: PersonalInformationUpdateInput,
 ) => {
-  const existingUser = await prisma.user.findUnique({
+  const location = await resolveLocation({
+    country: input.country,
+    countryCode: input.countryCode,
+    state: input.state,
+    stateCode: input.stateCode,
+    city: input.city,
+    cityGeonameId: input.cityGeonameId,
+  });
+
+  return prisma.user.update({
     where: { id: userId },
+    data: {
+      phone: input.phone,
+      birthdate: new Date(`${input.birthdate}T00:00:00.000Z`),
+      country: location.country,
+      countryCode: location.countryCode,
+      state: location.state || null,
+      stateCode: location.stateCode || null,
+      city: location.city,
+      cityGeonameId: location.cityGeonameId,
+    },
+    select: {
+      id: true,
+      phone: true,
+      birthdate: true,
+      country: true,
+      countryCode: true,
+      state: true,
+      stateCode: true,
+      city: true,
+      cityGeonameId: true,
+      updatedAt: true,
+    },
+  });
+};
+
+export const updateProfessionalProfile = async (
+  userId: string,
+  input: ProfessionalProfileInput,
+) => {
+  const existingProfile = await prisma.professionalProfile.findUnique({
+    where: { userId },
     select: { id: true },
   });
 
-  if (!existingUser) {
-    throw new AppError("User not found", 404);
+  if (!existingProfile) {
+    throw new AppError("Professional profile not found", 404);
   }
 
-  const existingProfile = await prisma.professionalProfile.findUnique({
+  const data: Prisma.ProfessionalProfileUpdateInput = {};
+  if (input.jobTitle !== undefined) data.jobTitle = input.jobTitle;
+  if (input.summary !== undefined) data.summary = input.summary;
+  if (input.yearsOfExperience !== undefined) {
+    data.yearsOfExperience = input.yearsOfExperience;
+  }
+  if (input.cvPath !== undefined) data.cvPath = input.cvPath;
+
+  return prisma.professionalProfile.update({
     where: { userId },
-  });
-
-  const educations = normalizeNestedItems(input.educations, input.education);
-  const experiences = normalizeNestedItems(input.experiences, input.experience);
-  const projects = normalizeNestedItems(input.projects, input.project);
-  const certificates = normalizeNestedItems(
-    input.certificates,
-    input.certificate,
-  );
-
-  const baseProfileData = buildProfileData(input);
-
-  if (existingProfile) {
-    return prisma.$transaction(async (tx) => {
-      const profile = await tx.professionalProfile.update({
-        where: { userId },
-        data: baseProfileData,
-      });
-
-      if (educations.length > 0) {
-        await tx.education.createMany({
-          data: educations.map((item) => ({
-            profileId: profile.id,
-            university: item.university,
-            degree: item.degree,
-            major: item.major,
-            startDate: new Date(item.startDate),
-            endDate: item.endDate ? new Date(item.endDate) : null,
-          })),
-        });
-      }
-
-      if (experiences.length > 0) {
-        await tx.experience.createMany({
-          data: experiences.map((item) => ({
-            profileId: profile.id,
-            companyName: item.companyName,
-            position: item.position,
-            description: item.description ?? null,
-            startDate: new Date(item.startDate),
-            endDate: item.endDate ? new Date(item.endDate) : null,
-          })),
-        });
-      }
-
-      if (projects.length > 0) {
-        await tx.project.createMany({
-          data: projects.map((item) => ({
-            profileId: profile.id,
-            title: item.title,
-            description: item.description ?? null,
-          })),
-        });
-      }
-
-      if (certificates.length > 0) {
-        await tx.certificate.createMany({
-          data: certificates.map((item) => ({
-            profileId: profile.id,
-            certificateName: item.certificateName,
-            organization: item.organization,
-          })),
-        });
-      }
-
-      return tx.professionalProfile.findUniqueOrThrow({
-        where: { id: profile.id },
-        include: {
-          educations: true,
-          experiences: true,
-          projects: true,
-          certificates: true,
-        },
-      });
-    });
-  }
-
-  return prisma.$transaction(async (tx) => {
-    const profile = await tx.professionalProfile.create({
-      data: {
-        userId,
-        ...baseProfileData,
-      },
-    });
-
-    if (educations.length > 0) {
-      await tx.education.createMany({
-        data: educations.map((item) => ({
-          profileId: profile.id,
-          university: item.university,
-          degree: item.degree,
-          major: item.major,
-          startDate: new Date(item.startDate),
-          endDate: item.endDate ? new Date(item.endDate) : null,
-        })),
-      });
-    }
-
-    if (experiences.length > 0) {
-      await tx.experience.createMany({
-        data: experiences.map((item) => ({
-          profileId: profile.id,
-          companyName: item.companyName,
-          position: item.position,
-          description: item.description ?? null,
-          startDate: new Date(item.startDate),
-          endDate: item.endDate ? new Date(item.endDate) : null,
-        })),
-      });
-    }
-
-    if (projects.length > 0) {
-      await tx.project.createMany({
-        data: projects.map((item) => ({
-          profileId: profile.id,
-          title: item.title,
-          description: item.description ?? null,
-        })),
-      });
-    }
-
-    if (certificates.length > 0) {
-      await tx.certificate.createMany({
-        data: certificates.map((item) => ({
-          profileId: profile.id,
-          certificateName: item.certificateName,
-          organization: item.organization,
-        })),
-      });
-    }
-
-    return tx.professionalProfile.findUniqueOrThrow({
-      where: { id: profile.id },
-      include: {
-        educations: true,
-        experiences: true,
-        projects: true,
-        certificates: true,
-      },
-    });
+    data,
+    include: {
+      educations: true,
+      experiences: true,
+      projects: true,
+      certificates: true,
+    },
   });
 };
 
 export const getDashboardData = async (userId: string, requestId?: string) => {
-  // التأكد من وجود المستخدم
+  // Ensure the user exists.
   // const user = await prisma.user.findUnique({
   //   where: { id: userId },
   //   select: { id: true },
@@ -594,15 +450,15 @@ export const getDashboardData = async (userId: string, requestId?: string) => {
   //   throw new AppError("User not found", 404);
   // }
 
-  // // تنفيذ الاستعلامات بالتوازي
+  // // Run the queries in parallel.
   // const [savedJobsCount, recentApplications, totalApplications, recommendedJobs] =
   //   await Promise.all([
-  //     // 1. عدد الوظائف المحفوظة
+  //     // 1. Count saved jobs.
   //     prisma.savedJob.count({
   //       where: { userId },
   //     }),
 
-  //     // 2. أحدث 5 طلبات
+  //     // 2. Get the five most recent applications.
   //     prisma.application.findMany({
   //       where: { userId },
   //       orderBy: { createdAt: "desc" },
@@ -620,23 +476,23 @@ export const getDashboardData = async (userId: string, requestId?: string) => {
   //       },
   //     }),
 
-  //     // 3. العدد الإجمالي للطلبات
+  //     // 3. Count all applications.
   //     prisma.application.count({
   //       where: { userId },
   //     }),
 
-  //     // 4. استدعاء خدمة التوصيات الذكية (باستخدام الذكاء الاصطناعي)
+  //     // 4. Call the AI-powered recommendations service.
   //     getRecommendedJobs(userId),
   //   ]);
 
-  // // إرجاع البيانات المجمعة
+  // // Return the aggregated data.
   // return {
   //   stats: {
   //     savedJobs: savedJobsCount,
   //     applications: totalApplications,
   //   },
   //   recentApplications,
-  //   recommendedJobs, // ← الآن يحتوي على الوظائف الموصى بها من الـ AI
+  //   recommendedJobs, // This now contains AI-recommended jobs.
   // };
   const user = await prisma.user.findUnique({
     where: { id: userId },
@@ -647,7 +503,7 @@ export const getDashboardData = async (userId: string, requestId?: string) => {
     throw new AppError("User not found", 404);
   }
 
-  // تنفيذ الاستعلامات بالتوازي
+  // Run the queries in parallel.
   const [
     savedJobsCount,
     recentApplications,
@@ -655,15 +511,15 @@ export const getDashboardData = async (userId: string, requestId?: string) => {
     recommendedJobs,
     notificationsCount,
   ] = await Promise.all([
-    // 1. عدد الوظائف المحفوظة
+    // 1. Count saved jobs.
     prisma.savedJob.count({
       where: { userId },
     }),
 
-    // 2. أحدث 5 طلبات (باستخدام appliedDate بدلاً من createdAt)
+    // 2. Get the five most recent applications using appliedDate instead of createdAt.
     prisma.application.findMany({
       where: { userId },
-      orderBy: { createdAt: "desc" }, // ✅ التصحيح هنا
+      orderBy: { createdAt: "desc" }, // Corrected ordering.
       take: 5,
       select: {
         id: true,
@@ -687,12 +543,12 @@ export const getDashboardData = async (userId: string, requestId?: string) => {
       },
     }),
 
-    // 3. العدد الإجمالي للطلبات
+    // 3. Count all applications.
     prisma.application.count({
       where: { userId },
     }),
 
-    // 4. استدعاء خدمة التوصيات الذكية
+    // 4. Call the recommendations service.
     getRecommendedJobs(userId, requestId),
 
     prisma.notification.count({
@@ -700,7 +556,7 @@ export const getDashboardData = async (userId: string, requestId?: string) => {
     }),
   ]);
 
-  // إرجاع البيانات المجمعة
+  // Return the aggregated data.
   return {
     stats: {
       savedJobs: savedJobsCount,

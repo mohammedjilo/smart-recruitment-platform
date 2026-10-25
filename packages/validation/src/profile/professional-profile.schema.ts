@@ -28,8 +28,9 @@ export const professionalProfileSchema = z.object({
   certificates: z.array(certificateSchema).optional(),
 });
 
-export const updateProfessionalProfileSchema =
-  professionalProfileSchema.partial();
+export const updateProfessionalProfileSchema = professionalProfileSchema
+  .partial()
+  .refine((input) => Object.keys(input).length > 0, "Provide profile information to update");
 export type ProfessionalProfileInput = z.infer<
   typeof professionalProfileSchema
 >;

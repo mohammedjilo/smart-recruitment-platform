@@ -13,15 +13,15 @@ const ApplicationTabs = ({ activeTab, onChange }: ApplicationTabsProps) => {
             value={activeTab}
             onChange={(_, value) => onChange(value)}>
             <Tab
+               className="min-h-12 px-5! text-xs! font-medium! normal-case!"
                value="overview"
                label="Application Overview"
-               className="min-h-12 px-5! text-xs! font-medium! normal-case!"
             />
 
             <Tab
+               className="min-h-12 px-5! text-xs! font-medium! normal-case!"
                value="profile"
                label="Profile Snapshot"
-               className="min-h-12 px-5! text-xs! font-medium! normal-case!"
             />
          </Tabs>
       </Box>

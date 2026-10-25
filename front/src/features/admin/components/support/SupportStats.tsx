@@ -27,8 +27,8 @@ const SupportStats = ({ stats }: SupportStatsProps) => {
          {cards.map(([label, value]) => (
             <StatCard
                key={label}
-               label={label}
                value={value}
+               label={label}
                layout="stacked"
             />
          ))}

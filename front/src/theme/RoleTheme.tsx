@@ -1,4 +1,5 @@
 import { useContext, useEffect, type CSSProperties, type ReactNode } from "react"
+import { Box } from "@mui/material"
 import { neutrals, roles, type Role } from "./tokens"
 import { RoleThemeContext } from "./AppThemeProvider"
 
@@ -33,11 +34,11 @@ export default function RoleTheme({ role = "user", children }: RoleThemeProps) {
    }, [role, setThemeRole])
 
    return (
-      <div
-         data-role={role}
+      <Box
+         className="bg-bg text-content min-h-screen"
          style={cssVars}
-         className="bg-bg text-content min-h-screen">
+         data-role={role}>
          {children}
-      </div>
+      </Box>
    )
 }

@@ -9,18 +9,10 @@ type CompanyRequestAvatarProps = {
 const CompanyRequestAvatar = ({ companyName, logoUrl }: CompanyRequestAvatarProps) => {
    return (
       <Avatar
-         src={logoUrl || undefined}
+         className="h-10.5! w-10.5! rounded-[10px]! bg-[#F5F3FF]! text-sm! font-bold! text-[#5425D4]!"
          alt={companyName}
-         variant="rounded"
-         sx={{
-            width: 42,
-            height: 42,
-            borderRadius: "10px",
-            backgroundColor: "#F5F3FF",
-            color: "#5425D4",
-            fontSize: "14px",
-            fontWeight: 700
-         }}>
+         src={logoUrl || undefined}
+         variant="rounded">
          {getInitials(companyName)}
       </Avatar>
    )

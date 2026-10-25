@@ -33,10 +33,10 @@ export default function DashboardPage() {
    ) {
       return (
          <Box className="flex min-h-100 flex-col items-center justify-center gap-3">
-            <Typography className="text-sm! text-red-500!" role="alert" aria-live="assertive">
+            <Typography className="text-sm! text-red-500!" aria-live="assertive" role="alert">
                {queryPresentation.message}
             </Typography>
-            <Button onClick={query.refetch} className="normal-case!">
+            <Button className="normal-case!" onClick={query.refetch}>
                Retry
             </Button>
          </Box>
@@ -52,7 +52,7 @@ export default function DashboardPage() {
    if (!response?.data) {
       return (
          <Box className="p-8 text-center">
-            <Typography className="text-sm! text-muted!">
+            <Typography className="text-sm!" color="textSecondary">
                Dashboard data could not be determined.
             </Typography>
          </Box>
@@ -64,11 +64,11 @@ export default function DashboardPage() {
    return (
       <Box className="space-y-5">
          {queryPresentation.category === "stale_error" && (
-            <Box className="flex items-center justify-between gap-3 rounded-lg border border-amber-200 bg-amber-50 px-4 py-3" role="status" aria-live="polite">
+            <Box className="flex items-center justify-between gap-3 rounded-lg border border-amber-200 bg-amber-50 px-4 py-3" aria-live="polite" role="status">
                <Typography className="text-sm! text-amber-900!">
                   {queryPresentation.message}
                </Typography>
-               <Button onClick={query.refetch} className="normal-case!">
+               <Button className="normal-case!" onClick={query.refetch}>
                   Retry
                </Button>
             </Box>

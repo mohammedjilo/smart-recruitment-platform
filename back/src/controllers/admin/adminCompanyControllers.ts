@@ -8,7 +8,6 @@ import {
   getCompanyRequests,
   getCompanyByAdmin,
   updateCompanyStatusByAdmin,
-  deleteCompanyByAdmin,
 } from "../../services/admin/adminCompany.service";
 import {
   getCompanyRequestsQuerySchema,
@@ -17,6 +16,12 @@ import {
 } from "../../validation/admin.validation";
 import { normalizeLocationFilter } from "../../utils/locationData";
 
+/**
+ * @desc Approve a company registration
+ * @route /api/admin/companies/:companyId/approve
+ * @method PATCH
+ * @access private
+ */
 export const approveCompanyController = asyncHandler(
   async (req: Request, res: Response) => {
     const company = await approveCompanyByAdmin(req.params.companyId as string);
@@ -24,23 +29,35 @@ export const approveCompanyController = asyncHandler(
     sendSuccess(res, 200, company, {
       message: "Company approved successfully",
     });
-  },
+  }
 );
 
+/**
+ * @desc Reject a company registration
+ * @route /api/admin/companies/:companyId/reject
+ * @method PATCH
+ * @access private
+ */
 export const rejectCompanyController = asyncHandler(
   async (req: Request, res: Response) => {
     const input = rejectCompanySchema.parse(req.body ?? {});
     const company = await rejectCompanyByAdmin(
       req.params.companyId as string,
-      input,
+      input
     );
 
     sendSuccess(res, 200, company, {
       message: "Company rejected successfully",
     });
-  },
+  }
 );
 
+/**
+ * @desc List company registrations awaiting review
+ * @route /api/admin/company-requests
+ * @method GET
+ * @access private
+ */
 export const getCompanyRequestsController = asyncHandler(
   async (req: Request, res: Response) => {
     const query = getCompanyRequestsQuerySchema.parse(req.query);
@@ -50,9 +67,15 @@ export const getCompanyRequestsController = asyncHandler(
       meta: result.pagination,
       stats: result.stats,
     });
-  },
+  }
 );
 
+/**
+ * @desc List and filter companies
+ * @route /api/admin/companies
+ * @method GET
+ * @access private
+ */
 export const getAllCompaniesController = asyncHandler(
   async (req: Request, res: Response) => {
     const query = getAllCompaniesQuerySchema.parse(req.query);
@@ -62,29 +85,34 @@ export const getAllCompaniesController = asyncHandler(
       meta: result.pagination,
       stats: result.stats,
     });
-  },
+  }
 );
 
+/**
+ * @desc Get company details by ID
+ * @route /api/admin/companies/:companyId
+ * @method GET
+ * @access private
+ */
 export const getCompanyByAdminController = asyncHandler(
   async (req: Request, res: Response) => {
     const company = await getCompanyByAdmin(req.params.companyId as string);
     sendSuccess(res, 200, company);
-  },
+  }
 );
 
+/**
+ * @desc Update a company's status
+ * @route /api/admin/companies/:companyId/status
+ * @method PATCH
+ * @access private
+ */
 export const updateCompanyStatusController = asyncHandler(
   async (req: Request, res: Response) => {
     const company = await updateCompanyStatusByAdmin(
       req.params.companyId as string,
-      req.body as any,
+      req.body as any
     );
     sendSuccess(res, 200, company, { message: "Company status updated" });
-  },
-);
-
-export const deleteCompanyController = asyncHandler(
-  async (req: Request, res: Response) => {
-    const result = await deleteCompanyByAdmin(req.params.companyId as string);
-    sendSuccess(res, 200, undefined, { message: result.message });
-  },
+  }
 );

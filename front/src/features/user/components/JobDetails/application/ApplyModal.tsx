@@ -1,5 +1,5 @@
 import React, { useState } from "react"
-import { Dialog, IconButton } from "@mui/material"
+import { Box, Button, Dialog, IconButton, Typography } from "@mui/material"
 import { Close, ArrowForward } from "@mui/icons-material"
 
 import BasicInformationStep, { type BasicInformationData } from "./BasicInformationStep"
@@ -58,20 +58,25 @@ interface StepIndicatorProps {
 }
 function StepIndicator({ number, title, active }: StepIndicatorProps) {
    return (
-      <div className="flex items-center gap-2">
-         <div
-            className={`flex h-8 w-8 items-center justify-center rounded-full text-sm font-semibold ${
-               active ? "bg-primary text-white" : "text-muted bg-gray-100"
-            }`}>
+      <Box className="flex items-center gap-2">
+         <Box
+            className="flex h-8 w-8 items-center justify-center rounded-full text-sm font-semibold"
+            sx={{
+               backgroundColor: active ? "primary.main" : "grey.100",
+               color: active ? "primary.contrastText" : "text.secondary"
+            }}>
             {number}
-         </div>
-         <span
-            className={`text-sm ${
-               active ? "font-semibold text-primary" : "text-muted"
-            }`}>
+         </Box>
+         <Typography
+            className="text-sm!"
+            component="span"
+            sx={{
+               color: active ? "primary.main" : "text.secondary",
+               fontWeight: active ? 600 : 400
+            }}>
             {title}
-         </span>
-      </div>
+         </Typography>
+      </Box>
    )
 }
 
@@ -203,10 +208,10 @@ const ApplyModal: React.FC<ApplyModalProps> = ({
 
          handleClose()
       } catch (error) {
-         const errorPresentation = getMutationPresentation(
-            getMutationErrorState(error),
-            { surface: "action", importance: "important" }
-         )
+         const errorPresentation = getMutationPresentation(getMutationErrorState(error), {
+            surface: "action",
+            importance: "important"
+         })
          if (errorPresentation.category === "silent") return
          await showAlert({
             type: "error",
@@ -233,10 +238,10 @@ const ApplyModal: React.FC<ApplyModalProps> = ({
          case 1:
             return (
                <QuestionsStep
-                  jobId={id as string}
                   answers={answers}
-                  setAnswers={setAnswers}
                   invalidQuestionIds={invalidQuestionIds}
+                  jobId={id as string}
+                  setAnswers={setAnswers}
                   setInvalidQuestionIds={setInvalidQuestionIds}
                />
             )
@@ -244,8 +249,8 @@ const ApplyModal: React.FC<ApplyModalProps> = ({
          case 2:
             return (
                <ReviewStep
-                  basicInformationsData={basicInformationsData}
                   answers={answers}
+                  basicInformationsData={basicInformationsData}
                />
             )
          default:
@@ -255,78 +260,76 @@ const ApplyModal: React.FC<ApplyModalProps> = ({
 
    return (
       <Dialog
-         open={open}
-         onClose={handleClose}
          maxWidth={false}
+         open={open}
          slotProps={{
             paper: {
                className: "w-177.5 lg:w-190 rounded-2xl overflow-hidden"
             }
-         }}>
-         <div className="bg-surface">
+         }}
+         onClose={handleClose}>
+         <Box className="bg-surface">
             {/* ================= HEADER ================= */}
-            <div className="border-b px-7 pt-6 pb-5">
-               <div className="flex items-start justify-between">
-                  <div>
-                     <h1 className="text-[23px] font-bold text-[#11162f]">
+            <Box className="border-b px-7 pt-6 pb-5">
+               <Box className="flex items-start justify-between">
+                  <Box>
+                     <Typography className="text-[23px]! font-bold!">
                         Apply for this job
-                     </h1>
-                     <p className="mt-2 text-[13px] text-[#66708c]">
+                     </Typography>
+                     <Typography
+                        className="mt-2! text-[13px]!"
+                        color="textSecondary">
                         Fill in your details and answer the questions below
-                     </p>
-                  </div>
+                     </Typography>
+                  </Box>
                   <IconButton
                      aria-label="Close application form"
                      onClick={handleClose}>
                      <Close />
                   </IconButton>
-               </div>
+               </Box>
 
                {/* Steps */}
-               <div className="mt-7 flex items-center justify-center gap-4">
+               <Box className="mt-7 flex items-center justify-center gap-4">
                   {steps.map((title, index) => (
                      <React.Fragment key={title}>
                         <StepIndicator
+                           active={index === activeStep}
                            number={String(index + 1)}
                            title={title}
-                           active={index === activeStep}
                         />
                         {index < steps.length - 1 && (
-                           <div className="h-[1px] w-24 bg-gray-200" />
+                           <Box className="h-px w-24 bg-gray-200" />
                         )}
                      </React.Fragment>
                   ))}
-               </div>
-            </div>
+               </Box>
+            </Box>
 
             {/* ================= BODY ================= */}
-            <div className="grid grid-cols-[1fr_270px]">
-               <div className="border-r p-6">{renderStep()}</div>
+            <Box className="grid grid-cols-[1fr_270px]">
+               <Box className="border-r p-6">{renderStep()}</Box>
 
                <JobSummarySidebar data={jobSummaryData} />
-            </div>
+            </Box>
 
             {/* ================= FOOTER ================= */}
-            <div className="flex justify-between border-t px-6 py-4">
-               <button
-                  onClick={activeStep === 0 ? handleClose : handleBack}
-                  className="app-button-secondary rounded-lg px-5 py-2.5 text-sm">
+            <Box className="flex justify-between border-t px-6 py-4">
+               <Button
+                  className="normal-case!"
+                  variant="outlined"
+                  onClick={activeStep === 0 ? handleClose : handleBack}>
                   {activeStep === 0 ? "Cancel" : "Back"}
-               </button>
+               </Button>
 
-               {/* <button
-                  onClick={handleNext}
-                  className="flex items-center gap-2 rounded-lg bg-[#5421e8] px-6 py-2.5 text-sm font-semibold text-white">
-                  {activeStep === steps.length - 1 ? "Submit Application" : "Next"}
-                  {activeStep < steps.length - 1 && <ArrowForward fontSize="small" />}
-               </button> */}
-               <button
-                  onClick={handleNext}
+               <Button
+                  className="text-sm! normal-case! disabled:opacity-60!"
                   disabled={
                      isSubmitting ||
                      (activeStep === 1 && (isLoadingQuestions || isQuestionsError))
                   }
-                  className="app-button-primary flex items-center gap-2 rounded-lg px-6 py-2.5 text-sm font-semibold disabled:opacity-60">
+                  variant="contained"
+                  onClick={handleNext}>
                   {activeStep === steps.length - 1
                      ? isSubmitting
                         ? "Submitting..."
@@ -338,9 +341,9 @@ const ApplyModal: React.FC<ApplyModalProps> = ({
                          : "Next"}
 
                   {activeStep < steps.length - 1 && <ArrowForward fontSize="small" />}
-               </button>
-            </div>
-         </div>
+               </Button>
+            </Box>
+         </Box>
       </Dialog>
    )
 }

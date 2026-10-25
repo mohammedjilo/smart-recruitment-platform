@@ -12,10 +12,10 @@ const ApplicationStatusChip = ({ status }: ApplicationStatusChipProps) => {
 
    return (
       <Chip
-         label={config.label}
-         icon={<Icon fontSize="small" />}
-         size="small"
          className={`w-24! rounded-md! text-xs! font-bold! ${config.className}`}
+         icon={<Icon fontSize="small" />}
+         label={config.label}
+         size="small"
          sx={{
             "& .MuiChip-icon": {
                color: "inherit"

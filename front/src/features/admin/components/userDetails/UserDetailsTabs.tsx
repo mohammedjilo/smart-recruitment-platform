@@ -19,14 +19,14 @@ const UserDetailsTabs = ({ user, stats }: Props) => {
          <Box className="border-b border-border">
             <Tabs
                value={activeTab}
-               onChange={(_, value) => setActiveTab(value)}
+               scrollButtons="auto"
                variant="scrollable"
-               scrollButtons="auto">
+               onChange={(_, value) => setActiveTab(value)}>
                {tabs.map(label => (
                   <Tab
+                     className="min-h-12! px-5! text-xs! font-medium! normal-case!"
                      key={label}
                      label={label}
-                     className="min-h-12! px-5! text-xs! font-medium! normal-case!"
                   />
                ))}
             </Tabs>
@@ -35,8 +35,8 @@ const UserDetailsTabs = ({ user, stats }: Props) => {
          <Box className="pt-6">
             {activeTab === 0 && (
                <UserOverview
-                  user={user}
                   stats={stats}
+                  user={user}
                />
             )}
 

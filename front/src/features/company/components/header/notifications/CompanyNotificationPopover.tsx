@@ -27,31 +27,31 @@ const CompanyNotificationPopover = ({
 }: Props) => {
    return (
       <Popover
-         open={open}
          anchorEl={anchorEl}
-         onClose={onClose}
          anchorOrigin={{
             vertical: "bottom",
             horizontal: "right"
          }}
-         transformOrigin={{
-            vertical: "top",
-            horizontal: "right"
-         }}
+         open={open}
          slotProps={{
             paper: {
                className:
                   "mt-2 w-[calc(100vw-24px)] max-w-97.5 overflow-hidden rounded-lg border border-border shadow-[0_12px_40px_rgba(0,0,0,0.10)] sm:w-97.5"
             }
-         }}>
+         }}
+         transformOrigin={{
+            vertical: "top",
+            horizontal: "right"
+         }}
+         onClose={onClose}>
          <CompanyNotificationHeader
-            onMarkAllAsRead={onMarkAllAsRead}
             isMarkingAllAsRead={isMarkingAllAsRead}
+            onMarkAllAsRead={onMarkAllAsRead}
          />
 
          <CompanyNotificationList
-            notifications={notifications}
             isLoading={isLoading}
+            notifications={notifications}
             onClose={onClose}
             onMarkAsRead={onMarkAsRead}
          />

@@ -3,6 +3,7 @@ import React, { useState } from "react"
 import { Alert, Box } from "@mui/material"
 import type { ApplicationStatus } from "@/features/user/components/dashboard/RecentApplicationItem"
 import type {
+   ApplicationMatchScore,
    CompanyApplication,
    GetCompanyApplicationsParams
 } from "@/types/application"
@@ -27,6 +28,8 @@ const ApplicationsPage: React.FC = () => {
    const [page, setPage] = useState(1)
    const [search, setSearch] = useState("")
    const [status, setStatus] = useState<ApplicationStatus | "ALL">("ALL")
+   const [matchScore, setMatchScore] =
+      useState<ApplicationMatchScore>("ALL")
    const [sort, setSort] = useState<"newest" | "oldest">("newest")
    const [selectedApplication, setSelectedApplication] =
       useState<CompanyApplication | null>(null)
@@ -35,6 +38,7 @@ const ApplicationsPage: React.FC = () => {
       pageSize: PAGE_SIZE,
       search: search || undefined,
       status: status === "ALL" ? undefined : status,
+      matchScore: matchScore === "ALL" ? undefined : matchScore,
       sort
    }
 
@@ -44,6 +48,7 @@ const ApplicationsPage: React.FC = () => {
       noResults:
          Boolean(search.trim()) ||
          status !== "ALL" ||
+         matchScore !== "ALL" ||
          sort !== "newest" ||
          (query.currentData?.data.length === 0 &&
             (query.currentData?.meta?.totalCount ?? 0) > 0)
@@ -65,6 +70,11 @@ const ApplicationsPage: React.FC = () => {
       setPage(1)
    }
 
+   const handleMatchScoreChange = (value: ApplicationMatchScore) => {
+      setMatchScore(value)
+      setPage(1)
+   }
+
    const handleSortChange = (value: "newest" | "oldest") => {
       setSort(value)
       setPage(1)
@@ -74,8 +84,8 @@ const ApplicationsPage: React.FC = () => {
       <Box className="min-h-screen">
          <Box className="mx-auto max-w-362.5">
             <PageHeader
-               title="Applications"
                description="Review and manage applications received for your job postings."
+               title="Applications"
             />
 
             {/* Statistics */}
@@ -88,9 +98,9 @@ const ApplicationsPage: React.FC = () => {
               queryPresentation.category === "access_denied" ||
               queryPresentation.category === "resource_not_found" ? (
                <Alert
-                  severity="error"
+                  aria-live="assertive"
                   role="alert"
-                  aria-live="assertive">
+                  severity="error">
                   {queryPresentation.message}
                </Alert>
             ) : null}
@@ -99,15 +109,17 @@ const ApplicationsPage: React.FC = () => {
             <Box className="mt-6 overflow-hidden">
                {/* Toolbar */}
                {isLoading ? (
-                  <FiltersBarSkeleton fields={["search", "control", "control"]} />
+                  <FiltersBarSkeleton fields={["search", "control", "control", "control"]} />
                ) : (
                   <ApplicationsToolbar
+                     matchScore={matchScore}
                      search={search}
-                     status={status}
                      sort={sort}
+                     status={status}
+                     onMatchScoreChange={handleMatchScoreChange}
                      onSearchChange={handleSearchChange}
-                     onStatusChange={handleStatusChange}
                      onSortChange={handleSortChange}
+                     onStatusChange={handleStatusChange}
                   />
                )}
 
@@ -123,22 +135,22 @@ const ApplicationsPage: React.FC = () => {
                         ) : (
                            <ApplicationsTable
                               applications={applications}
-                              onViewApplication={setSelectedApplication}
                               queryState={queryState}
                               onRetry={query.refetch}
+                              onViewApplication={setSelectedApplication}
                            />
                         )}
                      </Box>
 
                      {pagination && pagination.totalCount > 0 && (
                         <PaginationFooter
-                           page={pagination.page}
-                           totalCount={pagination.totalCount}
-                           pageSize={pagination.pageSize}
-                           setPage={setPage}
-                           itemLabel="applications"
                            isFetching={queryPresentation.category === "refreshing"}
+                           itemLabel="applications"
+                           page={pagination.page}
+                           pageSize={pagination.pageSize}
                            queryState={queryState}
+                           setPage={setPage}
+                           totalCount={pagination.totalCount}
                         />
                      )}
                   </Box>
@@ -147,6 +159,13 @@ const ApplicationsPage: React.FC = () => {
                      <ApplicationDetails
                         application={selectedApplication}
                         onClose={() => setSelectedApplication(null)}
+                        onStatusUpdated={(applicationId, nextStatus) =>
+                           setSelectedApplication(current =>
+                              current?.id === applicationId
+                                 ? { ...current, status: nextStatus }
+                                 : current
+                           )
+                        }
                      />
                   )}
                </Box>

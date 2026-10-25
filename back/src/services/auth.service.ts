@@ -119,20 +119,20 @@ const issueTokens = (payload: AuthTokenPayload) => ({
 });
 
 const throwCompanyRegistrationConflict = (
-  approvalStatus: string | undefined,
+  approvalStatus: string | undefined
 ): never => {
   if (approvalStatus === "PENDING") {
     throw new AppError(
       "Your company registration is already under review. Please log in.",
       409,
-      "COMPANY_REGISTRATION_PENDING",
+      "COMPANY_REGISTRATION_PENDING"
     );
   }
   if (approvalStatus === "APPROVED") {
     throw new AppError(
       "This email is already associated with an approved company account. Please log in.",
       409,
-      "COMPANY_ALREADY_REGISTERED",
+      "COMPANY_ALREADY_REGISTERED"
     );
   }
   throw new AppError("Company registration could not be completed", 409);
@@ -140,7 +140,7 @@ const throwCompanyRegistrationConflict = (
 
 export const registerAccount = async (
   input: RegisterInput,
-  uploadedFile?: Request["file"],
+  uploadedFile?: Request["file"]
 ): Promise<number | CompanyRegistrationResult> => {
   const safeRole = input.role === "company" ? "company" : "user";
   const normalizedInput = { ...input, role: safeRole } as RegisterInput;
@@ -170,7 +170,7 @@ export const registerAccount = async (
     if (uploadedFile?.buffer) {
       const uploadResult = await cloudinaryUploadImage(
         uploadedFile.buffer,
-        uploadedFile.mimetype,
+        uploadedFile.mimetype
       );
 
       uploadedImage = {
@@ -234,7 +234,7 @@ export const registerAccount = async (
   if (uploadedFile?.buffer) {
     const uploadResult = await cloudinaryUploadImage(
       uploadedFile.buffer,
-      uploadedFile.mimetype,
+      uploadedFile.mimetype
     );
 
     uploadedImage = {
@@ -363,9 +363,10 @@ export const registerAccount = async (
           userId: adminId,
           message: `New company registration request: ${normalizedInput.companyName}. Please review and approve this company.`,
           type: "COMPANY_REQUEST",
+          companyRequestId: company.id,
         },
-      }),
-    ),
+      })
+    )
   );
 
   return {
@@ -423,7 +424,7 @@ export const loginAccount = async (input: LoginInput) => {
       throw new AppError(
         "Your user account has been deactivated.",
         403,
-        "ACCOUNT_DEACTIVATED",
+        "ACCOUNT_DEACTIVATED"
       );
     }
 
@@ -479,7 +480,7 @@ export const loginAccount = async (input: LoginInput) => {
     throw new AppError(
       "Your company account has been deactivated.",
       403,
-      "ACCOUNT_DEACTIVATED",
+      "ACCOUNT_DEACTIVATED"
     );
   }
 
@@ -530,7 +531,7 @@ export const verifySupportAccessCredentials = async (input: LoginInput) => {
       throw new AppError(
         "Support-only access is not available for admin accounts",
         403,
-        "FORBIDDEN",
+        "FORBIDDEN"
       );
     }
     return user.accountStatus === "DEACTIVATED"
@@ -588,7 +589,7 @@ export const refreshAccessToken = async (refreshToken: string) => {
       throw new AppError(
         "Your user account has been deactivated.",
         403,
-        "ACCOUNT_DEACTIVATED",
+        "ACCOUNT_DEACTIVATED"
       );
     }
   } else {
@@ -603,7 +604,7 @@ export const refreshAccessToken = async (refreshToken: string) => {
       throw new AppError(
         "Your company account has been deactivated.",
         403,
-        "ACCOUNT_DEACTIVATED",
+        "ACCOUNT_DEACTIVATED"
       );
     }
     if (company.approvalStatus !== "APPROVED") {

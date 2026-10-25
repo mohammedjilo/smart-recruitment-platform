@@ -4,18 +4,13 @@ import { AppError } from "../utils/appError.js";
 import {
   addSupportMessage,
   assignSupportTicket,
-  closeSupportTicket,
-  createSupportCategory,
   createSupportTicket,
   getMySupportTickets,
   getSupportCategories,
   getSupportTicketById,
   getSupportDashboard,
   listAllSupportTickets,
-  listAssignedSupportTickets,
-  listUnassignedSupportTickets,
   unassignSupportTicket,
-  updateSupportCategory,
   updateSupportTicketPriority,
   updateSupportTicketStatus,
 } from "../services/support.service.js";
@@ -40,12 +35,25 @@ const getSupportActor = (req: Request) => {
   throw new AppError("Authentication required", 401);
 };
 
+/**
+ * @desc Get the support administration dashboard
+ * @route /api/support/admin/dashboard
+ * @method GET
+ * @access private
+ */
 export const getSupportDashboardController = asyncHandler(
   async (req: Request, res: Response) => {
     sendSuccess(res, 200, await getSupportDashboard(getSupportActor(req)));
   }
 );
 
+/**
+ * @desc Create a support ticket
+ * @route /api/support/tickets
+ * @route /api/support-only/tickets
+ * @method POST
+ * @access private
+ */
 export const createSupportTicketController = asyncHandler(
   async (req: Request, res: Response) => {
     const actor = getSupportActor(req);
@@ -57,6 +65,13 @@ export const createSupportTicketController = asyncHandler(
   }
 );
 
+/**
+ * @desc List support tickets belonging to the authenticated account
+ * @route /api/support/tickets
+ * @route /api/support-only/tickets
+ * @method GET
+ * @access private
+ */
 export const getMySupportTicketsController = asyncHandler(
   async (req: Request, res: Response) => {
     const actor = getSupportActor(req);
@@ -69,6 +84,13 @@ export const getMySupportTicketsController = asyncHandler(
   }
 );
 
+/**
+ * @desc Get a support ticket by ID
+ * @route /api/support/tickets/:ticketId
+ * @route /api/support-only/tickets/:ticketId
+ * @method GET
+ * @access private
+ */
 export const getSupportTicketByIdController = asyncHandler(
   async (req: Request, res: Response) => {
     const actor = getSupportActor(req);
@@ -81,6 +103,13 @@ export const getSupportTicketByIdController = asyncHandler(
   }
 );
 
+/**
+ * @desc Add a message to a support ticket
+ * @route /api/support/tickets/:ticketId/messages
+ * @route /api/support-only/tickets/:ticketId/messages
+ * @method POST
+ * @access private
+ */
 export const addSupportMessageController = asyncHandler(
   async (req: Request, res: Response) => {
     const actor = getSupportActor(req);
@@ -97,6 +126,12 @@ export const addSupportMessageController = asyncHandler(
   }
 );
 
+/**
+ * @desc List support categories available to the authenticated account
+ * @route /api/support/categories
+ * @method GET
+ * @access private
+ */
 export const getSupportCategoriesController = asyncHandler(
   async (req: Request, res: Response) => {
     const actor = getSupportActor(req);
@@ -108,6 +143,12 @@ export const getSupportCategoriesController = asyncHandler(
   }
 );
 
+/**
+ * @desc List support categories available in support-only mode
+ * @route /api/support-only/categories
+ * @method GET
+ * @access private
+ */
 export const getSupportOnlyCategoriesController = asyncHandler(
   async (req: Request, res: Response) => {
     const categories = await getSupportCategories(getSupportActor(req));
@@ -116,32 +157,12 @@ export const getSupportOnlyCategoriesController = asyncHandler(
   }
 );
 
-export const createSupportCategoryController = asyncHandler(
-  async (req: Request, res: Response) => {
-    const actor = getSupportActor(req);
-    const category = await createSupportCategory(actor, req.body as any);
-
-    sendSuccess(res, 201, category, {
-      message: "Support category created successfully",
-    });
-  }
-);
-
-export const updateSupportCategoryController = asyncHandler(
-  async (req: Request, res: Response) => {
-    const actor = getSupportActor(req);
-    const category = await updateSupportCategory(
-      actor,
-      req.params.categoryId as string,
-      req.body as any
-    );
-
-    sendSuccess(res, 200, category, {
-      message: "Support category updated successfully",
-    });
-  }
-);
-
+/**
+ * @desc List and filter all support tickets for administrators
+ * @route /api/support/admin/tickets
+ * @method GET
+ * @access private
+ */
 export const listAllSupportTicketsController = asyncHandler(
   async (req: Request, res: Response) => {
     const actor = getSupportActor(req);
@@ -185,30 +206,12 @@ export const listAllSupportTicketsController = asyncHandler(
   }
 );
 
-export const listUnassignedSupportTicketsController = asyncHandler(
-  async (req: Request, res: Response) => {
-    const actor = getSupportActor(req);
-    const page = Number(req.query.page ?? 1);
-    const pageSize = Number(req.query.pageSize ?? 20);
-
-    const result = await listUnassignedSupportTickets(actor, page, pageSize);
-
-    sendSuccess(res, 200, result.data, { meta: result.meta });
-  }
-);
-
-export const listAssignedSupportTicketsController = asyncHandler(
-  async (req: Request, res: Response) => {
-    const actor = getSupportActor(req);
-    const page = Number(req.query.page ?? 1);
-    const pageSize = Number(req.query.pageSize ?? 20);
-
-    const result = await listAssignedSupportTickets(actor, page, pageSize);
-
-    sendSuccess(res, 200, result.data, { meta: result.meta });
-  }
-);
-
+/**
+ * @desc Assign a support ticket to an administrator
+ * @route /api/support/admin/tickets/:ticketId/assign
+ * @method PATCH
+ * @access private
+ */
 export const assignSupportTicketController = asyncHandler(
   async (req: Request, res: Response) => {
     const actor = getSupportActor(req);
@@ -224,6 +227,12 @@ export const assignSupportTicketController = asyncHandler(
   }
 );
 
+/**
+ * @desc Remove the administrator assigned to a support ticket
+ * @route /api/support/admin/tickets/:ticketId/unassign
+ * @method PATCH
+ * @access private
+ */
 export const unassignSupportTicketController = asyncHandler(
   async (req: Request, res: Response) => {
     const actor = getSupportActor(req);
@@ -238,6 +247,12 @@ export const unassignSupportTicketController = asyncHandler(
   }
 );
 
+/**
+ * @desc Update the status of a support ticket
+ * @route /api/support/admin/tickets/:ticketId/status
+ * @method PATCH
+ * @access private
+ */
 export const updateSupportTicketStatusController = asyncHandler(
   async (req: Request, res: Response) => {
     const actor = getSupportActor(req);
@@ -253,6 +268,12 @@ export const updateSupportTicketStatusController = asyncHandler(
   }
 );
 
+/**
+ * @desc Update the priority of a support ticket
+ * @route /api/support/admin/tickets/:ticketId/priority
+ * @method PATCH
+ * @access private
+ */
 export const updateSupportTicketPriorityController = asyncHandler(
   async (req: Request, res: Response) => {
     const actor = getSupportActor(req);
@@ -264,20 +285,6 @@ export const updateSupportTicketPriorityController = asyncHandler(
 
     sendSuccess(res, 200, ticket, {
       message: "Support ticket priority updated successfully",
-    });
-  }
-);
-
-export const closeSupportTicketController = asyncHandler(
-  async (req: Request, res: Response) => {
-    const actor = getSupportActor(req);
-    const ticket = await closeSupportTicket(
-      actor,
-      req.params.ticketId as string
-    );
-
-    sendSuccess(res, 200, ticket, {
-      message: "Support ticket closed successfully",
     });
   }
 );

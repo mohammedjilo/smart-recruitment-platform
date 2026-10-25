@@ -103,13 +103,13 @@ const LanguageForm = ({ onSave, onCancel }: Props) => {
                render={({ field }) => (
                   <TextField
                      {...field}
-                     autoFocus
-                     fullWidth
-                     label="Language Name"
                      placeholder="e.g. English"
                      disabled={isLoading}
+                     autoFocus
                      error={!!errors.languageName}
+                     fullWidth
                      helperText={errors.languageName?.message}
+                     label="Language Name"
                   />
                )}
             />
@@ -120,16 +120,16 @@ const LanguageForm = ({ onSave, onCancel }: Props) => {
                render={({ field }) => (
                   <TextField
                      {...field}
-                     select
-                     fullWidth
-                     label="Language Level"
+                     disabled={isLoading}
                      value={field.value ?? ""}
+                     error={!!errors.level}
+                     fullWidth
+                     helperText={errors.level?.message}
+                     label="Language Level"
+                     select
                      onChange={event =>
                         field.onChange(event.target.value as LanguageLevel)
-                     }
-                     disabled={isLoading}
-                     error={!!errors.level}
-                     helperText={errors.level?.message}>
+                     }>
                      {languageLevels.map(level => (
                         <MenuItem
                            key={level}
@@ -144,17 +144,17 @@ const LanguageForm = ({ onSave, onCancel }: Props) => {
 
          <DialogActions className="px-6! pb-4!">
             <Button
-               onClick={onCancel}
-               variant="outlined"
+               className="normal-case!"
                disabled={isLoading}
-               className="normal-case!">
+               variant="outlined"
+               onClick={onCancel}>
                Cancel
             </Button>
             <Button
+               className="normal-case!"
                type="submit"
-               variant="contained"
                disabled={isLoading}
-               className="normal-case!">
+               variant="contained">
                {isLoading ? "Creating..." : "Create"}
             </Button>
          </DialogActions>

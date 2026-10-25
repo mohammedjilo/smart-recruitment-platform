@@ -33,16 +33,18 @@ const CompanyProfilePage = () => {
       return (
          <Box className="flex min-h-125 items-center justify-center">
             <Box className="text-center">
-               <Typography className="text-xl font-semibold text-content">
+               <Typography className="text-content! text-xl! font-semibold!">
                   {queryPresentation.message}
                </Typography>
 
                <Typography
-                  variant="body2"
-                  className="mt-2 text-muted">
+                  className="mt-2!"
+                  color="textSecondary">
                   The company profile request failed.
                </Typography>
-               <Button onClick={query.refetch} className="mt-3! normal-case!">
+               <Button
+                  className="mt-3! normal-case!"
+                  onClick={query.refetch}>
                   Retry
                </Button>
             </Box>
@@ -57,7 +59,7 @@ const CompanyProfilePage = () => {
    }
    if (!response?.data) {
       return (
-         <Box className="py-10 text-center text-sm text-muted">
+         <Box className="text-muted py-10 text-center text-sm">
             Company profile could not be determined.
          </Box>
       )
@@ -72,11 +74,16 @@ const CompanyProfilePage = () => {
    return (
       <Box className="min-h-screen">
          {queryPresentation.category === "stale_error" && (
-            <Box className="mb-4 flex items-center justify-between gap-3 rounded-lg border border-amber-200 bg-amber-50 px-4 py-3" role="status" aria-live="polite">
+            <Box
+               className="mb-4 flex items-center justify-between gap-3 rounded-lg border border-amber-200 bg-amber-50 px-4 py-3"
+               aria-live="polite"
+               role="status">
                <Typography className="text-sm! text-amber-900!">
                   {queryPresentation.message}
                </Typography>
-               <Button onClick={query.refetch} className="normal-case!">
+               <Button
+                  className="normal-case!"
+                  onClick={query.refetch}>
                   Retry
                </Button>
             </Box>
@@ -94,8 +101,8 @@ const CompanyProfilePage = () => {
             <Box className="grid grid-cols-1 gap-5 xl:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
                <AboutCompanyCard
                   company={company}
-                  totalJobsPosted={company.stats.totalJobsPosted}
                   totalApplicationsReceived={company.stats.totalApplicationsReceived}
+                  totalJobsPosted={company.stats.totalJobsPosted}
                />
 
                <CompanyDetailsCard company={company} />

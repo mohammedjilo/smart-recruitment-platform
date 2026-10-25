@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
-# تحويل آلي لألوان Tailwind المحايدة إلى الـ tokens (بدون قرارات، تحويل 1:1).
+# Automatically map neutral Tailwind colors to tokens without judgment (1:1).
 #
-# الاستخدام:
-#   bash scripts/migrate-neutrals.sh --dry                 عدّ فقط، بدون تعديل
-#   bash scripts/migrate-neutrals.sh                       تنفيذ على src كامل
-#   bash scripts/migrate-neutrals.sh src/features/user     تنفيذ على مجلد محدد
+# Usage:
+#   bash scripts/migrate-neutrals.sh --dry                 Count only; make no changes.
+#   bash scripts/migrate-neutrals.sh                       Process all of src.
+#   bash scripts/migrate-neutrals.sh src/features/user     Process a specific directory.
 #   bash scripts/migrate-neutrals.sh --brand src/features/user
-#        (يضيف أيضاً: bg-violet-50/100 → bg-primary-tint ، 600 → bg-primary ، 700 → bg-primary-dark)
+#        (Also maps bg-violet-50/100 to bg-primary-tint, 600 to bg-primary, and 700 to bg-primary-dark.)
 set -euo pipefail
 
 DRY=0
@@ -22,13 +22,13 @@ done
 TARGET="${ARGS[0]:-src}"
 export DRY BRAND
 
-# ملفات لا نلمسها (ألوان دلالية أو تخص Auth أو تعريف الـ tokens نفسه)
+# Files to exclude (semantic colors, Auth-specific colors, or token definitions).
 EXCLUDE='(^|/)theme/|status\.ts|statusStyles\.ts|ApplicationStatusChip|EmploymentTypeChip|EmploymentTypeBadge|notificationItem\.utils|companyNotificationItem\.utils|CustomCard'
 
-# أمان: لا تعمل إلا على تعديلات محفوظة (commit) حتى يسهل التراجع
+# Safety: run only on committed changes so they can be reverted easily.
 if [ "$DRY" -eq 0 ] && git rev-parse --is-inside-work-tree >/dev/null 2>&1; then
   if [ -n "$(git status --porcelain -- "$TARGET")" ]; then
-    echo "عندك تعديلات غير محفوظة في $TARGET. اعمل commit أولاً ثم أعد التشغيل."
+    echo "Uncommitted changes exist in $TARGET. Commit them before running this script."
     exit 1
   fi
 fi
@@ -37,15 +37,15 @@ read -r -d '' PERL <<'EOF' || true
 use strict; use warnings;
 my $dry = $ENV{DRY};
 my @map = (
-  # نصوص
+  # Text.
   ['text-(?:slate|gray)-(?:400|500|600)',          'text-muted'],
   ['text-(?:slate|gray)-(?:700|800|900)',          'text-content'],
-  # حدود
+  # Borders.
   ['border-(?:slate|gray)-(?:100|200)',            'border-border'],
   ['border-blue-100',                              'border-border'],
   ['divide-(?:slate|gray)-(?:100|200)',            'divide-border'],
   ['ring-(?:slate|gray)-(?:100|200)',              'ring-border'],
-  # خلفيات
+  # Backgrounds.
   ['bg-(?:slate|gray)-50',                         'bg-bg'],
   ['bg-white',                                     'bg-surface'],
 );
@@ -81,19 +81,19 @@ RESULT=$(find "$TARGET" -type f \( -name '*.ts' -o -name '*.tsx' \) \
   | while IFS= read -r f; do perl -e "$PERL" "$f"; done)
 
 if [ -z "$RESULT" ]; then
-  echo "لا يوجد شيء للتحويل."
+  echo "Nothing to convert."
 else
   echo "$RESULT" | sort -rn | head -40
   FILES=$(echo "$RESULT" | wc -l)
   TOTAL=$(echo "$RESULT" | awk -F'\t' '{s+=$1} END{print s}')
   if [ "$DRY" -eq 1 ]; then
-    echo "--- (تجربة فقط) $TOTAL استبدال في $FILES ملف، لم يتم تعديل شيء ---"
+    echo "--- (Dry run) $TOTAL replacements in $FILES files; no files were changed ---"
   else
-    echo "--- تم: $TOTAL استبدال في $FILES ملف ---"
+    echo "--- Done: $TOTAL replacements in $FILES files ---"
   fi
 fi
 
 echo
-echo "--- المتبقي ويحتاج قراراً (أعلى 25) ---"
+echo "--- Remaining items requiring a decision (top 25) ---"
 grep -rhoE "(text|bg|border|ring)-(violet|purple|indigo|blue)-[0-9]{2,3}|mui-(blue|purple)[a-z0-9-]*|#[0-9A-Fa-f]{6}\b" "$TARGET" \
   --include=*.tsx --include=*.ts 2>/dev/null | sort | uniq -c | sort -rn | head -25 || true

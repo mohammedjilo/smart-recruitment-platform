@@ -16,31 +16,28 @@ type Props = {
 
 const CompanyDetailsHeader = ({ company }: Props) => {
    return (
-      <Box className="mb-6 rounded-xl border border-border bg-surface px-6 py-8 shadow-sm lg:px-8">
+      <Box className="border-border bg-surface mb-6 rounded-xl border px-6 py-8 shadow-sm lg:px-8">
          <Box className="flex flex-col gap-8 xl:flex-row xl:items-center">
             {/* Left Side */}
             <Box className="flex min-w-0 flex-1 flex-col gap-6 sm:flex-row sm:items-start">
                {/* Logo */}
-               <Box className="flex h-37.5 w-37.5 shrink-0 items-center justify-center overflow-hidden rounded-2xl border border-border bg-bg">
+               <Box className="border-border bg-bg flex h-37.5 w-37.5 shrink-0 items-center justify-center overflow-hidden rounded-2xl border">
                   {company.logoUrl ? (
                      <img
-                        src={company.logoUrl}
-                        alt={company.companyName}
                         className="h-full w-full object-cover"
+                        alt={company.companyName}
+                        src={company.logoUrl}
                      />
                   ) : (
-                     <BusinessOutlinedIcon
-                        className="text-violet-600"
-                        sx={{ fontSize: 52 }}
-                     />
+                     <BusinessOutlinedIcon className="text-[52px]! text-violet-600" />
                   )}
                </Box>
 
                {/* Main Information */}
                <Box className="min-w-0 flex-1">
                   <Typography
-                     component="h1"
-                     className="text-content! text-[26px]! leading-[1.2]! font-bold! tracking-[-0.02em]!">
+                     className="text-content! text-[26px]! leading-[1.2]! font-bold! tracking-[-0.02em]!"
+                     component="h1">
                      {company.companyName}
                   </Typography>
 
@@ -52,19 +49,13 @@ const CompanyDetailsHeader = ({ company }: Props) => {
 
                   <Box className="mt-6 grid grid-cols-1 gap-x-10 gap-y-4 sm:grid-cols-2">
                      <Box className="flex items-center gap-3">
-                        <PhoneOutlinedIcon
-                           className="text-muted"
-                           sx={{ fontSize: 18 }}
-                        />
+                        <PhoneOutlinedIcon className="text-muted text-lg!" />
 
                         <Typography className="text-sm!">{company.phone}</Typography>
                      </Box>
 
                      <Box className="flex items-center gap-3">
-                        <EmailOutlinedIcon
-                           className="text-muted"
-                           sx={{ fontSize: 18 }}
-                        />
+                        <EmailOutlinedIcon className="text-muted text-lg!" />
 
                         <Typography className="text-sm! break-all!">
                            {company.email}
@@ -73,10 +64,7 @@ const CompanyDetailsHeader = ({ company }: Props) => {
 
                      {company.website && (
                         <Box className="flex items-center gap-3">
-                           <LanguageOutlinedIcon
-                              className="text-muted"
-                              sx={{ fontSize: 18 }}
-                           />
+                           <LanguageOutlinedIcon className="text-muted text-lg!" />
 
                            <Typography className="text-sm!">{company.website}</Typography>
                         </Box>
@@ -84,10 +72,7 @@ const CompanyDetailsHeader = ({ company }: Props) => {
 
                      {company.location && (
                         <Box className="flex items-center gap-3">
-                           <LocationOnOutlinedIcon
-                              className="text-muted"
-                              sx={{ fontSize: 18 }}
-                           />
+                           <LocationOnOutlinedIcon className="text-muted text-lg!" />
 
                            <Typography className="text-sm!">
                               {company.location}
@@ -99,7 +84,7 @@ const CompanyDetailsHeader = ({ company }: Props) => {
             </Box>
 
             {/* Right Side */}
-            <Box className="border-t border-border pt-6 xl:w-107.5 xl:border-t-0 xl:border-l xl:pt-0 xl:pl-11">
+            <Box className="border-border border-t pt-6 xl:w-107.5 xl:border-t-0 xl:border-l xl:pt-0 xl:pl-11">
                <Box className="space-y-4">
                   <Box className="grid grid-cols-[1fr_auto] items-center gap-4">
                      <Typography className="text-sm! font-semibold!">

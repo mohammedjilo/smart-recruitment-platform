@@ -4,7 +4,6 @@ import { validate } from "../middlewares/validate";
 import {
   createCertificateController,
   updateCertificateController,
-  deleteCertificateController,
 } from "../controllers/certificateControllers";
 import {
   certificateSchema,
@@ -25,10 +24,4 @@ certificateRouter.put(
   validate(updateCertificateSchema),
   updateCertificateController
 );
-certificateRouter.delete(
-  "/:certificateId",
-  authMiddleware,
-  deleteCertificateController
-);
-
 export default certificateRouter;

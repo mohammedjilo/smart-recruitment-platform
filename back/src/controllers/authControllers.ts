@@ -88,6 +88,12 @@ export const loginController = asyncHandler(
   }
 );
 
+/**
+ * @desc Verify credentials and start support-only access when applicable
+ * @route /api/auth/support-access
+ * @method POST
+ * @access public
+ */
 export const supportAccessController = asyncHandler(
   async (req: Request, res: Response) => {
     const result = await verifySupportAccessCredentials(req.body);
@@ -105,6 +111,12 @@ export const supportAccessController = asyncHandler(
   }
 );
 
+/**
+ * @desc End support-only access
+ * @route /api/auth/support-access/logout
+ * @method POST
+ * @access public
+ */
 export const supportAccessLogoutController = asyncHandler(
   async (_req: Request, res: Response) => {
     clearSupportAccessCookie(res);
@@ -126,6 +138,12 @@ export const logoutController = asyncHandler(
   }
 );
 
+/**
+ * @desc Refresh the access token using the refresh cookie
+ * @route /api/auth/refresh
+ * @method POST
+ * @access public
+ */
 export const refreshController = asyncHandler(
   async (req: Request, res: Response) => {
     const refreshToken = req.cookies.refreshToken;

@@ -11,9 +11,9 @@ export default function SearchSubmitAdornment({ onSearch }: Props) {
          <IconButton
             type="button"
             aria-label="Search"
+            edge="start"
             size="small"
-            onClick={onSearch}
-            edge="start">
+            onClick={onSearch}>
             <SearchOutlinedIcon fontSize="small" />
          </IconButton>
       </InputAdornment>

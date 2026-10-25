@@ -46,10 +46,7 @@ const CompanyDetailsPage = () => {
    ) {
       return (
          <Box className="border-border bg-surface flex min-h-125 flex-col items-center justify-center rounded-xl border px-6 text-center">
-            <ErrorOutlineOutlinedIcon
-               className="mb-3 text-red-400"
-               sx={{ fontSize: 44 }}
-            />
+            <ErrorOutlineOutlinedIcon className="mb-3 text-[44px]! text-red-400" />
 
             <Typography className="text-content text-lg font-semibold">
                {queryPresentation.message}
@@ -60,7 +57,9 @@ const CompanyDetailsPage = () => {
                color="textSecondary">
                The company details request failed.
             </Typography>
-            <Button onClick={query.refetch} className="mt-3! normal-case!">
+            <Button
+               className="mt-3! normal-case!"
+               onClick={query.refetch}>
                Retry
             </Button>
          </Box>
@@ -74,7 +73,7 @@ const CompanyDetailsPage = () => {
    }
    if (!company || !jobs) {
       return (
-         <Box className="py-10 text-center text-sm text-muted">
+         <Box className="text-muted py-10 text-center text-sm">
             Company details could not be determined.
          </Box>
       )
@@ -88,8 +87,8 @@ const CompanyDetailsPage = () => {
    if (requestedPath !== canonicalPath) {
       return (
          <Navigate
-            to={canonicalPath}
             replace
+            to={canonicalPath}
          />
       )
    }
@@ -97,11 +96,16 @@ const CompanyDetailsPage = () => {
    return (
       <Box className="w-full">
          {queryPresentation.category === "stale_error" && (
-            <Box className="mb-4 flex items-center justify-between gap-3 rounded-lg border border-amber-200 bg-amber-50 px-4 py-3" role="status" aria-live="polite">
+            <Box
+               className="mb-4 flex items-center justify-between gap-3 rounded-lg border border-amber-200 bg-amber-50 px-4 py-3"
+               aria-live="polite"
+               role="status">
                <Typography className="text-sm! text-amber-900!">
                   {queryPresentation.message}
                </Typography>
-               <Button onClick={query.refetch} className="normal-case!">
+               <Button
+                  className="normal-case!"
+                  onClick={query.refetch}>
                   Retry
                </Button>
             </Box>
@@ -127,9 +131,9 @@ const CompanyDetailsPage = () => {
 
                <Box className="xl:col-span-5">
                   <AccountApprovalInformation
-                     status={company.status}
                      approvalStatus={company.approvalStatus}
                      createdAt={company.createdAt}
+                     status={company.status}
                      updatedAt={company.updatedAt}
                   />
                </Box>

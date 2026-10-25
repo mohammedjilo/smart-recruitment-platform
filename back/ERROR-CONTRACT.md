@@ -1,13 +1,41 @@
 # Backend Error Contract
 
-All API errors use the same JSON envelope:
+## Scope
+
+This document describes responses produced by the backend global error
+middleware. Clients should branch on `error.code`, not on human-readable
+messages. The code catalogue reflects the current TypeScript `ErrorCode` type;
+it does not imply that every endpoint can emit every code.
+
+## Successful responses
+
+The API response middleware normalizes successful controller responses to
+this envelope:
+
+```json
+{
+  "success": true,
+  "message": "Optional message",
+  "data": {},
+  "meta": {},
+  "stats": {}
+}
+```
+
+`data` is passed through resource DTO serialization. `message`, `meta`, and
+`stats` are optional and are included only when supplied. The controller or
+route sets the HTTP status. The exact data and metadata depend on the endpoint.
+
+## Error response
+
+Errors handled by the global error middleware use this envelope:
 
 ```json
 {
   "success": false,
   "error": {
     "code": "VALIDATION_ERROR",
-    "message": "Validation failed",
+    "message": "Please correct the highlighted fields.",
     "fieldErrors": {
       "email": "Invalid email"
     }
@@ -16,174 +44,138 @@ All API errors use the same JSON envelope:
 }
 ```
 
-`fieldErrors` is included only when a request field can be identified. The
-`requestId` is included when request ID middleware has assigned one. Clients
-should branch on `error.code`, not on human-readable messages.
+- `error.code` is the machine-readable error code.
+- `error.message` is the public message selected by the error source or
+  middleware.
+- `error.fieldErrors` is optional. Validation issues are keyed by their
+  dot-separated field path; a form-level issue may use `form`.
+- Top-level `requestId` is included when assigned to the request. The
+  application uses the incoming `x-request-id` value when present, or
+  generates a UUID otherwise.
+- The HTTP status is in the HTTP response, not duplicated in the JSON body.
+- The global error envelope does not include `stack`, `cause`, `source`,
+  `classification`, `retryable`, raw Prisma errors, or provider diagnostics.
 
-Only `globalErrorHandler` serializes API error responses. Controllers and
-middleware must pass errors to Express with `next(error)` or throw/reject from
-an async handler. `apiContract` remains responsible for success response
-compatibility; if it encounters a legacy `{ "success": false }` JSON body, it
-converts it to a generic `AppError` and forwards it to the global handler
-instead of returning the supplied error body.
+`apiContract` converts legacy `{ "success": false }` JSON responses into an
+error passed to the global handler. It does not return the legacy error body as
+the public response.
 
-## Status and code mapping
+## Error normalization and HTTP statuses
 
-| HTTP status | Error code | Used for |
-| --- | --- | --- |
-| 400 | `BAD_REQUEST` | Malformed JSON and invalid request payloads |
-| 400 | `VALIDATION_ERROR` | Zod validation failures; may include `fieldErrors` |
-| 400 | `INVALID_RELATION` | Invalid foreign-key relation |
-| 400 | `INVALID_UPLOAD` | Invalid multipart upload, file type, or file signature |
-| 401 | `UNAUTHORIZED` | Missing, invalid, or expired credentials |
-| 403 | `FORBIDDEN` | Authenticated but disallowed or inactive account |
-| 404 | `RESOURCE_NOT_FOUND` | Missing route or resource |
-| 409 | `CONFLICT` | Conflicting update or transaction |
-| 409 | `DUPLICATE_RESOURCE` | Unique constraint violation |
-| 413 | `PAYLOAD_TOO_LARGE` | Request body exceeds configured parser limits |
-| 429 | `RATE_LIMITED` | Rate limiting |
-| 500 | `INTERNAL_ERROR` | Unexpected failures; implementation details are not sent to clients |
-| 500 | `DATABASE_FAILURE` | Unknown or unexpected Prisma/database failure |
-| 503 | `SERVICE_UNAVAILABLE` | Database or upstream service unavailable |
-| 504 | `TIMEOUT` | Database request timed out |
+The global handler preserves the HTTP status and code of an `AppError`.
+Middleware also normalizes known error classes and infrastructure failures.
+Mappings verified in the current implementation include:
 
-Known Prisma errors are mapped to stable public codes. Unknown Prisma errors
-and unexpected exceptions produce the generic 500 envelope. Server-side logs
-include the request ID and original error for 5xx failures; original exception
-details are never returned to the client.
+| HTTP status | Code / behavior |
+| --- | --- |
+| 400 | `BAD_REQUEST` for malformed or invalid JSON request bodies; `VALIDATION_ERROR` for Zod validation; `INVALID_UPLOAD` for Multer/upload validation errors; `INVALID_RELATION` for Prisma foreign-key errors (`P2003`) |
+| 401 | `UNAUTHORIZED` for missing, malformed, or expired credentials |
+| 403 | `FORBIDDEN` for access denial; `ACCOUNT_DEACTIVATED` for inactive accounts |
+| 404 | `RESOURCE_NOT_FOUND` for missing routes and normalized missing records (`P2025`) |
+| 409 | `DUPLICATE_RESOURCE` for unique constraint errors (`P2002`); `CONFLICT` for Prisma relation/state conflicts (`P2014`, `P2034`) |
+| 413 | `PAYLOAD_TOO_LARGE` for an oversized parsed request body |
+| 500 | `INTERNAL_ERROR` for an unrecognized thrown error; `DATABASE_FAILURE` for an unexpected Prisma operation or validation failure |
+| 502 | `AI_INVALID_RESPONSE` for an invalid AI response; `AI_UNAVAILABLE` when an AI response has no usable text |
+| 503 | `SERVICE_UNAVAILABLE` for database initialization/availability errors; `DATABASE_FAILURE` for Prisma panic/unknown-request failures; `AI_UNAVAILABLE` for AI provider failures |
+| 504 | `TIMEOUT` for a database initialization timeout; `AI_TIMEOUT` for an AI timeout |
 
-## Error-code catalogue
+The `AppError` constructor has default codes for some statuses when a caller
+does not supply a code. Many domain errors supply both status and code
+explicitly. Therefore, there is no universal HTTP status for each domain code;
+the status and code from the endpoint response are authoritative.
 
-The TypeScript `ErrorCode` union contains the codes inventoried from all
-`new AppError(...)` call sites in `src` plus the infrastructure mappings in the
-global handler. It intentionally keeps generic and domain codes distinct:
+The `/api/auth/support-access` route also uses `express-rate-limit`. Its
+rate-limit response is produced by that middleware rather than by the global
+error handler, so it is not guaranteed to use the JSON envelope above.
 
-### Infrastructure
+## Error codes
+
+The following generic codes are declared by the current `ErrorCode` type:
 
 - `BAD_REQUEST`
+- `CONFLICT`
 - `DATABASE_FAILURE`
+- `DUPLICATE_RESOURCE`
+- `FORBIDDEN`
 - `INTERNAL_ERROR`
+- `INVALID_RELATION`
+- `INVALID_UPLOAD`
 - `PAYLOAD_TOO_LARGE`
 - `RATE_LIMITED`
+- `RESOURCE_NOT_FOUND`
 - `SERVICE_UNAVAILABLE`
 - `TIMEOUT`
-
-### Authentication and authorization
-
 - `UNAUTHORIZED`
-- `FORBIDDEN`
-
-### Validation and uploads
-
 - `VALIDATION_ERROR`
-- `INVALID_PAGINATION`
-- `INVALID_UPLOAD`
 
-### Resource errors
-
-- `INVALID_RELATION`
-- `RESOURCE_NOT_FOUND`
-- `COMPANY_NOT_FOUND`
-- `JOB_NOT_FOUND`
-- `USER_NOT_FOUND`
-
-### Conflict errors
-
-- `CONFLICT`
-- `DUPLICATE_RESOURCE`
-- `DUPLICATE_APPLICATION`
-- `APPLICATION_STATUS_FINAL`
-- `INVALID_APPLICATION_STATUS_TRANSITION`
-- `QUESTION_HAS_HISTORICAL_ANSWERS`
-- `WITHDRAWN_APPLICATION_HISTORY_IMMUTABLE`
-
-### Business and domain errors
-
-- `COMPANY_NOT_APPROVED`
-- `INVALID_QUESTION_ANSWER`
-- `JOB_DEADLINE_INVALID`
-- `JOB_DEADLINE_PASSED`
-- `JOB_NOT_OPEN`
-- `JOB_NOT_OWNED`
-- `JOB_REOPEN_DEADLINE_REQUIRED`
-- `QUESTION_JOB_MISMATCH`
-- `REQUIRED_QUESTION_MISSING`
-- `RESUME_REQUIRED`
-
-### External service errors
+The current domain codes are:
 
 - `AI_INVALID_RESPONSE`
 - `AI_TIMEOUT`
 - `AI_UNAVAILABLE`
+- `APPLICATION_STATUS_FINAL`
+- `ACCOUNT_DEACTIVATED`
+- `COMPANY_ALREADY_REGISTERED`
+- `COMPANY_NOT_APPROVED`
+- `COMPANY_NOT_FOUND`
+- `COMPANY_REGISTRATION_PENDING`
+- `DUPLICATE_APPLICATION`
+- `INVALID_APPLICATION_STATUS_TRANSITION`
+- `INVALID_PAGINATION`
+- `INVALID_QUESTION_ANSWER`
+- `JOB_DEADLINE_INVALID`
+- `JOB_DEADLINE_PASSED`
+- `JOB_NOT_FOUND`
+- `JOB_NOT_OPEN`
+- `JOB_NOT_OWNED`
+- `JOB_REOPEN_DEADLINE_REQUIRED`
+- `QUESTION_HAS_HISTORICAL_ANSWERS`
+- `QUESTION_JOB_MISMATCH`
+- `REQUIRED_QUESTION_MISSING`
+- `RESUME_REQUIRED`
+- `USER_NOT_FOUND`
+- `WITHDRAWN_APPLICATION_HISTORY_IMMUTABLE`
 
-`AppError` codes are compile-time restricted to this inventory. Add a code to
-the appropriate union and this catalogue when introducing a new public error.
+When adding a public error code, update the `ErrorCode` type and this
+catalogue, and add or update tests for the relevant behavior.
 
-## Error Classification & Logging
+## Validation, persistence, and unexpected errors
 
-### Classification model
+- Zod validation issues are returned as `VALIDATION_ERROR`; the middleware
+  returns the first message for each field path in `fieldErrors`.
+- Multer upload errors are returned as `INVALID_UPLOAD`. The configured
+  maximum file size is 5 MB.
+- Prisma known errors are normalized: `P2002` to `DUPLICATE_RESOURCE`,
+  `P2025` to `RESOURCE_NOT_FOUND`, `P2003` to `INVALID_RELATION`, and `P2014`
+  or `P2034` to `CONFLICT`.
+- Other Prisma failures are returned using `DATABASE_FAILURE`,
+  `SERVICE_UNAVAILABLE`, or `TIMEOUT` according to their type and code.
+- Malformed JSON and oversized request bodies are normalized to
+  `BAD_REQUEST` and `PAYLOAD_TOO_LARGE`, respectively.
+- Unrecognized thrown errors are returned as `INTERNAL_ERROR`.
 
-Classification uses the thrown error type and its public error code, with
-source and explicitly supplied classification metadata for wrapped errors.
-HTTP status is recorded and used for the safe response, but is not by itself
-the expected/unexpected decision.
+These are global normalization rules; endpoint-specific `AppError` call sites
+may produce other codes and statuses from the catalogue.
 
-| Error type | Expected / unexpected | HTTP status | Error code | Log level |
-| --- | --- | --- | --- | --- |
-| Zod/request validation | Expected | 400 | `VALIDATION_ERROR` | No error log |
-| Invalid/expired credentials | Expected | 401 | `UNAUTHORIZED` | No error log |
-| Permission/account denial | Expected | 403 | `FORBIDDEN` | No error log |
-| Missing resource or route | Expected | 404 | Domain not-found code or `RESOURCE_NOT_FOUND` | No error log |
-| Known unique/relation/state conflict | Expected | 400/409 | `DUPLICATE_RESOURCE`, `INVALID_RELATION`, `CONFLICT`, or domain code | No error log |
-| Known Multer/upload rejection | Expected | 400 | `INVALID_UPLOAD` | No error log |
-| Other recognized client/business error | Expected by code | Original 4xx status | Domain code | No error log |
-| Database unavailable/timeout/unknown Prisma failure | Unexpected infrastructure | 500/503/504 | `DATABASE_FAILURE`, `SERVICE_UNAVAILABLE`, or `TIMEOUT` | ERROR |
-| Cloudinary or Google AI provider failure | Unexpected external service | 502/503/504 | Existing `SERVICE_UNAVAILABLE`, `AI_UNAVAILABLE`, `AI_TIMEOUT`, or `AI_INVALID_RESPONSE` | ERROR |
-| Unhandled exception or unknown rejection | Unexpected internal | 500 | `INTERNAL_ERROR` | ERROR |
-| Optional AI recommendation fallback | Handled degradation | Response remains successful | AI error code in warning metadata | WARN |
-| Optional notification side-effect failure | Handled degradation | Response remains successful | Event metadata only | WARN |
-| Development fallback JWT secret | Development-only warning | N/A | Event name | WARN |
-| Server/database startup success | Operational event | N/A | Event name | INFO |
+## Logging and sensitive data
 
-Expectedness comes from known error classes/codes or an explicit classification
-on an `AppError`. Infrastructure codes such as `DATABASE_FAILURE`,
-`SERVICE_UNAVAILABLE`, `TIMEOUT`, and AI provider codes are unexpected even
-when their status is a 4xx/5xx response. Unknown Prisma request codes are
-classified as database failures rather than authentication or validation
-errors.
+Expected and unexpected classifications are internal and are not included in
+the public JSON envelope. Unexpected request failures are written as
+structured logs with request ID, error code, HTTP status, route, method,
+classification, source, and diagnostics. The logger traverses a bounded cause
+chain and redacts common credential, token, and connection-string patterns.
+Redaction is pattern-based and does not guarantee detection of arbitrary
+sensitive content.
 
-### Structured logging
+Do not put secrets, tokens, request bodies, or provider response payloads in
+error messages. Never return stack traces, causes, database details, internal
+paths, credentials, authorization headers, cookies, or raw provider responses
+to API clients.
 
-The focused `structuredLogger` utility emits one JSON record with timestamp,
-level, event, and environment. The global error handler classifies first, logs
-unexpected failures second, then produces the sanitized public envelope.
-Unexpected request-error records include request ID, error code, HTTP status,
-route, method, source, classification, error name/message/stack, and up to five
-cause entries. Expected client and business errors are not logged as server
-errors, avoiding noisy 400/401/403/404 logs.
+## Verification coverage
 
-INFO is reserved for startup and successful scheduled operational work. WARN
-is used for deliberate recommendation/notification fallbacks and development
-secret fallback. ERROR is used for unexpected request, startup, database, and
-scheduler failures. The backend has no separate fatal-level policy; fatal
-termination continues to be determined by startup/process control.
-
-### Request ID and causes
-
-HTTP error logs use the request ID assigned by the existing request middleware;
-the same value is returned to the client. Background startup/scheduler logs
-have no request ID because they are outside an HTTP request lifecycle.
-`AppError` uses the native `Error.cause` chain. External-service errors,
-database startup errors, and duplicate-application translations preserve their
-original error as a cause; diagnostics traverse a bounded five-level chain.
-
-### Public and internal data
-
-Only the stable error code, safe public message, optional field errors, and
-request ID are returned to clients. Causes, stacks, provider messages, Prisma
-messages, and internal paths remain internal. The structured logger does not
-record request bodies, authorization headers, cookies, tokens, or provider
-response payloads. Its diagnostic text redacts common credential assignments,
-authorization credentials, and JWT-shaped tokens before recording error
-messages, stacks, or cause summaries. Prisma query logging is disabled so
-parameter values do not bypass this redaction policy.
+The backend error integration tests exercise representative behavior,
+including request IDs, malformed JSON, authentication and permission errors,
+validation field errors, missing resources, Prisma and upload normalization,
+legacy error responses, and sanitized unexpected failures. This test coverage
+does not imply that every code in the catalogue has a dedicated test.

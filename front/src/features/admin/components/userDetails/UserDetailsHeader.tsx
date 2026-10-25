@@ -9,10 +9,16 @@ import {
 } from "@mui/icons-material"
 
 import { useNavigate } from "react-router-dom"
-import type { AdminUserDetails } from "@/types/admin"
+import type { AdminUserDetails, UserStatus } from "@/types/admin"
 import UserRoleChip from "@/components/common/UserRoleChip"
 import UserStatusChip from "@/components/common/UserStatusChip"
 import { formatDate } from "@/utils/formatDate"
+import { useUpdateUserStatusByAdminMutation } from "@/features/admin/services/adminApiCalls"
+import { usePermissions } from "@/features/admin/authorization/usePermissions"
+import { ADMIN_PERMISSIONS } from "@/types/adminPermissions"
+import { showAlert } from "@/utils/swal"
+import { getMutationErrorState, getMutationState } from "@/utils/mutationState"
+import { getMutationPresentation } from "@/utils/presentationPolicy"
 
 type Props = {
    user: AdminUserDetails
@@ -20,47 +26,112 @@ type Props = {
 
 const UserDetailsHeader = ({ user }: Props) => {
    const navigate = useNavigate()
+   const { hasPermission } = usePermissions()
+   const canChangeStatus = hasPermission(ADMIN_PERMISSIONS.SUSPEND_USERS)
+   const [updateUserStatus, statusResult] = useUpdateUserStatusByAdminMutation()
+   const statusState = getMutationState(statusResult)
+   const statusPresentation = getMutationPresentation(statusState, {
+      surface: "action",
+      importance: "important"
+   })
+   const isUpdatingStatus = statusPresentation.category === "loading"
 
    const fullName = `${user.firstName} ${user.lastName}`
 
    const formattedBirthdate = formatDate(user.birthdate)
    const formattedCreatedAt = formatDate(user.createdAt)
 
+   const handleStatusChange = async () => {
+      const nextStatus: UserStatus =
+         user.accountStatus === "ACTIVE" ? "DEACTIVATED" : "ACTIVE"
+      const actionLabel = nextStatus === "ACTIVE" ? "reactivate" : "deactivate"
+
+      const confirmation = await showAlert({
+         type: "confirm",
+         title: `${nextStatus === "ACTIVE" ? "Reactivate" : "Deactivate"} user?`,
+         text: `Are you sure you want to ${actionLabel} ${fullName}?`,
+         confirmText: nextStatus === "ACTIVE" ? "Reactivate" : "Deactivate"
+      })
+
+      if (!confirmation || !confirmation.isConfirmed) {
+         return
+      }
+
+      try {
+         await updateUserStatus({
+            id: user.id,
+            status: nextStatus
+         }).unwrap()
+
+         if (
+            getMutationPresentation(
+               { status: "success" },
+               { surface: "action", importance: "important" }
+            ).category === "contextual_success"
+         ) {
+            await showAlert({
+               type: "success",
+               title: "Status updated",
+               text: `${fullName} is now ${nextStatus.toLowerCase()}.`
+            })
+         }
+      } catch (error) {
+         const errorPresentation = getMutationPresentation(getMutationErrorState(error), {
+            surface: "action",
+            importance: "important"
+         })
+         if (errorPresentation.category === "silent") return
+         await showAlert({
+            type: "error",
+            title: "Update failed",
+            text: errorPresentation.message
+         })
+      }
+   }
+
    return (
-      <Box className="overflow-hidden rounded-xl border bg-surface shadow-sm">
+      <Box className="bg-surface overflow-hidden rounded-xl border shadow-sm">
          {/* Top */}
          <Box className="flex items-center justify-between border-b px-6 py-5">
             <Box>
-               <Typography className="font-bold! text-content">User Details</Typography>
+               <Typography className="text-content font-bold!">User Details</Typography>
 
-               <Typography className="mt-1! text-muted">
+               <Typography className="text-muted mt-1!">
                   View user information.
                </Typography>
             </Box>
 
-            <Button
-               variant="outlined"
-               color="primary"
-               startIcon={<ArrowBack />}
-               onClick={() => navigate(-1)}
-               className="px-5! normal-case!">
-               Back to Users
-            </Button>
+            <Box className="flex flex-wrap items-center justify-end gap-2">
+               {canChangeStatus && (
+                  <Button
+                     className="normal-case!"
+                     disabled={isUpdatingStatus}
+                     color={user.accountStatus === "ACTIVE" ? "error" : "success"}
+                     variant="contained"
+                     onClick={handleStatusChange}>
+                     {user.accountStatus === "ACTIVE"
+                        ? "Deactivate User"
+                        : "Reactivate User"}
+                  </Button>
+               )}
+               <Button
+                  className="px-5! normal-case!"
+                  color="primary"
+                  startIcon={<ArrowBack />}
+                  variant="outlined"
+                  onClick={() => navigate("/admin/users")}>
+                  Back to Users
+               </Button>
+            </Box>
          </Box>
 
          {/* User Info */}
          <Box className="grid grid-cols-1 gap-8 px-6 py-7 lg:grid-cols-[1.4fr_0.9fr]">
             <Box className="flex gap-6">
                <Avatar
-                  src={user.profilePicUrl || undefined}
+                  className="h-24! w-24! bg-[#ede9fe]! text-2xl! font-semibold! text-[#6d28d9]!"
                   alt={fullName}
-                  className="h-24 w-24 text-2xl font-semibold"
-                  sx={{
-                     width: 96,
-                     height: 96,
-                     bgcolor: "#ede9fe",
-                     color: "#6d28d9"
-                  }}>
+                  src={user.profilePicUrl || undefined}>
                   {!user.profilePicUrl &&
                      `${user.firstName?.[0] || ""}${user.lastName?.[0] || ""}`}
                </Avatar>
@@ -114,9 +185,9 @@ const UserDetailsHeader = ({ user }: Props) => {
                      </Box>
 
                      <Divider
-                        orientation="vertical"
-                        flexItem
                         className="hidden sm:block"
+                        flexItem
+                        orientation="vertical"
                      />
 
                      <Typography color="textSecondary">

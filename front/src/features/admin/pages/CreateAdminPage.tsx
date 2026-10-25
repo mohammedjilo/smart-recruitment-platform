@@ -77,16 +77,16 @@ export default function CreateAdminPage() {
    return (
       <Box className="max-w-3xl space-y-5">
          <Button
+            className="normal-case!"
             startIcon={<ArrowBackRoundedIcon />}
-            onClick={() => navigate("/admin/admins")}
-            className="normal-case!">
+            onClick={() => navigate("/admin/admins")}>
             Back to Admin Management
          </Button>
          <Box>
             <Typography className="text-content! text-2xl! font-bold!">
                Create Admin
             </Typography>
-            <Typography className="text-muted! mt-1! text-sm!">
+            <Typography className="mt-1! text-sm!" color="textSecondary">
                Create an administrative account with a managed role. Admin accounts do not
                receive candidate profiles.
             </Typography>
@@ -95,62 +95,62 @@ export default function CreateAdminPage() {
          <FormErrorAlert message={errorMessage} />
 
          <form
-            onSubmit={handleSubmit(onSubmit)}
-            className="border-border bg-surface space-y-5 rounded-xl border p-6">
+            className="border-border bg-surface space-y-5 rounded-xl border p-6"
+            onSubmit={handleSubmit(onSubmit)}>
             <Box className="grid grid-cols-1 gap-4 md:grid-cols-2">
                <TextField
                   {...register("firstName")}
-                  label="First name"
                   error={Boolean(errors.firstName)}
                   helperText={errors.firstName?.message}
+                  label="First name"
                />
                <TextField
                   {...register("lastName")}
-                  label="Last name"
                   error={Boolean(errors.lastName)}
                   helperText={errors.lastName?.message}
+                  label="Last name"
                />
                <TextField
                   {...register("email")}
                   type="email"
-                  label="Email"
                   error={Boolean(errors.email)}
                   helperText={errors.email?.message}
+                  label="Email"
                />
                <TextField
                   {...register("password")}
                   type="password"
-                  label="Initial password"
-                  helperText="Invitation email is not configured in this project yet."
                   error={Boolean(errors.password)}
+                  helperText="Invitation email is not configured in this project yet."
+                  label="Initial password"
                />
                <TextField
                   {...register("phone")}
-                  label="Phone"
                   error={Boolean(errors.phone)}
                   helperText={errors.phone?.message}
+                  label="Phone"
                />
                <TextField
                   {...register("country")}
-                  label="Country"
                   error={Boolean(errors.country)}
                   helperText={errors.country?.message}
+                  label="Country"
                />
             </Box>
 
             <FormControl
-               fullWidth
-               error={Boolean(errors.roleName)}>
+               error={Boolean(errors.roleName)}
+               fullWidth>
                <InputLabel>Admin role</InputLabel>
                <Select
                   {...register("roleName")}
-                  label="Admin role"
+                  defaultValue={defaultValues.roleName}
                   disabled={isLoadingRoles}
-                  defaultValue={defaultValues.roleName}>
+                  label="Admin role">
                   {isLoadingRoles ? (
                      <MenuItem
-                        value="LOADING"
-                        disabled>
+                        disabled
+                        value="LOADING">
                         <Skeleton
                            variant="text"
                            width={120}
@@ -172,7 +172,7 @@ export default function CreateAdminPage() {
             </FormControl>
 
             <Box className="bg-bg rounded-lg p-4">
-               <Typography className="text-muted! text-xs! font-semibold! uppercase!">
+               <Typography className="text-xs! font-semibold! uppercase!" color="textSecondary">
                   Permission summary
                </Typography>
                <Typography className="text-content! mt-2! text-sm!">
@@ -184,16 +184,16 @@ export default function CreateAdminPage() {
 
             <Box className="flex justify-end gap-3">
                <Button
+                  className="normal-case!"
                   type="button"
-                  onClick={() => navigate("/admin/admins")}
-                  className="normal-case!">
+                  onClick={() => navigate("/admin/admins")}>
                   Cancel
                </Button>
                <Button
+                  className="normal-case!"
                   type="submit"
-                  variant="contained"
                   disabled={isLoading || isLoadingRoles}
-                  className="normal-case!">
+                  variant="contained">
                   {isLoading ? "Creating..." : "Create Admin"}
                </Button>
             </Box>

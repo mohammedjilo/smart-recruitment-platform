@@ -26,20 +26,20 @@ const FiltersBarSkeleton = ({
             <Box className="flex flex-wrap items-center gap-2 rounded-xl border border-[#E3EAF4] bg-[#F8FAFD] p-1">
                {Array.from({ length: pillCount }).map((_, index) => (
                   <Skeleton
+                     className="rounded-lg!"
                      key={index}
+                     height={32}
                      variant="rounded"
                      width={index % 2 === 0 ? 72 : 94}
-                     height={32}
-                     className="rounded-lg!"
                   />
                ))}
             </Box>
             {showAction && (
                <Skeleton
+                  className="rounded-md!"
+                  height={36}
                   variant="rounded"
                   width={132}
-                  height={36}
-                  className="rounded-md!"
                />
             )}
          </Box>
@@ -48,14 +48,11 @@ const FiltersBarSkeleton = ({
 
    return (
       <FiltersBar
+         className={className}
          layout={layout}
-         responsiveAt={responsiveAt}
-         className={className}>
+         responsiveAt={responsiveAt}>
          {fields.map((field, index) => (
             <Skeleton
-               key={`${field}-${index}`}
-               variant="rounded"
-               height={field === "search" ? 44 : 40}
                className={
                   layout === "grid"
                      ? "w-full"
@@ -63,6 +60,9 @@ const FiltersBarSkeleton = ({
                        ? "w-full md:max-w-70 md:flex-1"
                        : "w-full md:w-45"
                }
+               key={`${field}-${index}`}
+               height={field === "search" ? 44 : 40}
+               variant="rounded"
             />
          ))}
       </FiltersBar>

@@ -5,7 +5,8 @@ import {
    DialogActions,
    DialogContent,
    DialogTitle,
-   TextField
+   TextField,
+   Typography
 } from "@mui/material"
 import {
    currentDateOnlyKey,
@@ -53,37 +54,37 @@ const ReopenJobDialog = ({
 
    return (
       <Dialog
-         open={open}
-         onClose={isSubmitting ? undefined : onClose}
          fullWidth
-         maxWidth="xs">
+         maxWidth="xs"
+         open={open}
+         onClose={isSubmitting ? undefined : onClose}>
          <DialogTitle>Reopen job</DialogTitle>
          <DialogContent className="space-y-3!">
-            <p className="text-muted text-sm">
+            <Typography className="text-sm!" color="textSecondary">
                Set a new application deadline for {jobTitle}.
-            </p>
+            </Typography>
             <TextField
+               type="date"
+               required
+               value={deadline}
                autoFocus
                fullWidth
-               required
-               type="date"
-               value={deadline}
-               onChange={event => setDeadline(event.target.value)}
                slotProps={{ htmlInput: { min: currentDateOnlyKey() } }}
+               onChange={event => setDeadline(event.target.value)}
             />
          </DialogContent>
          <DialogActions>
             <Button
-               onClick={onClose}
+               className="normal-case!"
                disabled={isSubmitting}
-               className="normal-case!">
+               onClick={onClose}>
                Cancel
             </Button>
             <Button
-               variant="contained"
-               onClick={() => void submit()}
+               className="normal-case!"
                disabled={isSubmitting || !isValidDeadline()}
-               className="normal-case!">
+               variant="contained"
+               onClick={() => void submit()}>
                Reopen job
             </Button>
          </DialogActions>

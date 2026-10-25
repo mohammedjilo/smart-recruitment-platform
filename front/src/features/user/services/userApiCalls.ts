@@ -5,8 +5,10 @@ import type {
    GetCompaniesParams,
    GetCompanyDetailsForUserResult,
    GetCompanyJobsResult,
-   GetCompanyJobsParams
+   GetCompanyJobsParams,
+   UpdateUserPersonalInformationResult
 } from "@/types/api/user"
+import type { PersonalInformationUpdateInput } from "@smart-recruitment/validation"
 import { smartApi } from "@/services/api/baseApi"
 const extendedSmartApi = smartApi.injectEndpoints({
    endpoints: builder => ({
@@ -14,6 +16,20 @@ const extendedSmartApi = smartApi.injectEndpoints({
          query: userId => `/api/user/profile/${userId}`,
 
          providesTags: (_result, _error, userId) => [
+            "ProfessionalProfile",
+            { type: "ProfessionalProfile", id: userId }
+         ]
+      }),
+      updateUserPersonalInformation: builder.mutation<
+         UpdateUserPersonalInformationResult,
+         { userId: string; data: PersonalInformationUpdateInput }
+      >({
+         query: ({ data }) => ({
+            url: "/api/user/profile",
+            method: "PUT",
+            body: data
+         }),
+         invalidatesTags: (_result, _error, { userId }) => [
             "ProfessionalProfile",
             { type: "ProfessionalProfile", id: userId }
          ]
@@ -53,12 +69,11 @@ const extendedSmartApi = smartApi.injectEndpoints({
          providesTags: (_result, _error, id) => [{ type: "Companies", id }]
       }),
       getCompanyJobsForUser: builder.query<GetCompanyJobsResult, GetCompanyJobsParams>({
-         query: ({ companyId, pageNumber = 1, search, status }) => ({
+         query: ({ companyId, pageNumber = 1, search }) => ({
             url: `/api/user/companies/${companyId}/jobs`,
             params: {
                pageNumber,
-               search: search || undefined,
-               status
+               search: search || undefined
             }
          }),
          providesTags: (result, _error, { companyId }) => [
@@ -74,6 +89,7 @@ const extendedSmartApi = smartApi.injectEndpoints({
 
 export const {
    useGetCompleteUserProfileQuery,
+   useUpdateUserPersonalInformationMutation,
    useGetDashboardDataQuery,
    useGetCompaniesQuery,
    useGetCompanyDetailsForUserQuery,

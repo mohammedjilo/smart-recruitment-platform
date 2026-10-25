@@ -8,7 +8,7 @@ import WorkOutlineOutlinedIcon from "@mui/icons-material/WorkOutlineOutlined"
 import type {
    SupportPortalConfig,
    SupportTopicDetailsData
-} from "@/features/support/types"
+} from "@/features/shared/support/types"
 
 export const userSupportConfig: SupportPortalConfig = {
    portalType: "user",

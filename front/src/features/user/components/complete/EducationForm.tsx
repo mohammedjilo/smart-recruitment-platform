@@ -78,8 +78,8 @@ const EducationForm: React.FC<Props> = ({ onSave, onCancel }) => {
          {formError && (
             <Box
                className="mb-4"
-               role="alert"
-               aria-live="assertive">
+               aria-live="assertive"
+               role="alert">
                <Typography color="error">{formError}</Typography>
             </Box>
          )}
@@ -93,14 +93,14 @@ const EducationForm: React.FC<Props> = ({ onSave, onCancel }) => {
                      render={({ field }) => (
                         <TextField
                            {...field}
-                           fullWidth
-                           label="University"
                            placeholder="e.g. Harvard University"
-                           variant="outlined"
-                           size="medium"
                            error={!!errors.university}
+                           fullWidth
                            helperText={errors.university?.message}
+                           label="University"
+                           size="medium"
                            slotProps={{ inputLabel: { shrink: true } }}
+                           variant="outlined"
                         />
                      )}
                   />
@@ -113,14 +113,14 @@ const EducationForm: React.FC<Props> = ({ onSave, onCancel }) => {
                   render={({ field }) => (
                      <TextField
                         {...field}
-                        fullWidth
-                        label="Degree"
                         placeholder="e.g. Bachelor's, Master's"
-                        variant="outlined"
-                        size="medium"
                         error={!!errors.degree}
+                        fullWidth
                         helperText={errors.degree?.message}
+                        label="Degree"
+                        size="medium"
                         slotProps={{ inputLabel: { shrink: true } }}
+                        variant="outlined"
                      />
                   )}
                />
@@ -132,14 +132,14 @@ const EducationForm: React.FC<Props> = ({ onSave, onCancel }) => {
                   render={({ field }) => (
                      <TextField
                         {...field}
-                        fullWidth
-                        label="Major"
                         placeholder="e.g. Computer Science"
-                        variant="outlined"
-                        size="medium"
                         error={!!errors.major}
+                        fullWidth
                         helperText={errors.major?.message}
+                        label="Major"
+                        size="medium"
                         slotProps={{ inputLabel: { shrink: true } }}
+                        variant="outlined"
                      />
                   )}
                />
@@ -151,14 +151,14 @@ const EducationForm: React.FC<Props> = ({ onSave, onCancel }) => {
                   render={({ field }) => (
                      <TextField
                         {...field}
-                        fullWidth
-                        label="Start Date"
                         type="date"
-                        variant="outlined"
-                        size="medium"
                         error={!!errors.startDate}
+                        fullWidth
                         helperText={errors.startDate?.message}
+                        label="Start Date"
+                        size="medium"
                         slotProps={{ inputLabel: { shrink: true } }}
+                        variant="outlined"
                      />
                   )}
                />
@@ -170,14 +170,14 @@ const EducationForm: React.FC<Props> = ({ onSave, onCancel }) => {
                   render={({ field }) => (
                      <TextField
                         {...field}
-                        fullWidth
-                        label="End Date (Optional)"
                         type="date"
-                        variant="outlined"
-                        size="medium"
                         error={!!errors.endDate}
+                        fullWidth
                         helperText={errors.endDate?.message}
+                        label="End Date (Optional)"
+                        size="medium"
                         slotProps={{ inputLabel: { shrink: true } }}
+                        variant="outlined"
                      />
                   )}
                />
@@ -185,16 +185,16 @@ const EducationForm: React.FC<Props> = ({ onSave, onCancel }) => {
 
             <Box className="mt-5 flex justify-end gap-3">
                <Button
+                  className="normal-case!"
                   variant="outlined"
-                  onClick={onCancel}
-                  className="normal-case!">
+                  onClick={onCancel}>
                   Cancel
                </Button>
                <Button
                   className="normal-case!"
                   type="submit"
-                  variant="contained"
-                  disabled={isLoading}>
+                  disabled={isLoading}
+                  variant="contained">
                   {isLoading ? "saving..." : "Save Education"}
                </Button>
             </Box>

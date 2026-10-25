@@ -34,10 +34,10 @@ const JobHero = ({ job }: JobHeroProps) => {
             <Box className="p-6">
                <Box className="flex flex-col gap-5 sm:flex-row sm:items-center">
                   <Avatar
-                     src={job.company.logoUrl ?? undefined}
+                     className="bg-primary/10 text-primary h-20 w-20 rounded-2xl text-3xl font-bold"
                      alt={job.company.companyName}
-                     variant="rounded"
-                     className="bg-primary/10 text-primary h-20 w-20 rounded-2xl text-3xl font-bold">
+                     src={job.company.logoUrl ?? undefined}
+                     variant="rounded">
                      {job.company.companyName.charAt(0)}
                   </Avatar>
 
@@ -60,27 +60,27 @@ const JobHero = ({ job }: JobHeroProps) => {
 
                <Box className="border-border mt-6 grid grid-cols-2 gap-5 border-t pt-5 lg:grid-cols-4">
                   <MetaItem
+                     value={formatDate(job.createdAt)}
                      icon={<CalendarMonthOutlinedIcon />}
                      label="Posted On"
-                     value={formatDate(job.createdAt)}
                   />
 
                   <MetaItem
+                     value={formatJobDeadline(job.deadline)}
                      icon={<CalendarMonthOutlinedIcon />}
                      label="Deadline"
-                     value={formatJobDeadline(job.deadline)}
                   />
 
                   <MetaItem
+                     value={String(job._count.applications)}
                      icon={<BusinessCenterOutlinedIcon />}
                      label="Applications"
-                     value={String(job._count.applications)}
                   />
 
                   <MetaItem
+                     value={job.id.slice(0, 12)}
                      icon={<AccountTreeOutlinedIcon />}
                      label="Job ID"
-                     value={job.id.slice(0, 12)}
                   />
                </Box>
             </Box>
@@ -90,33 +90,33 @@ const JobHero = ({ job }: JobHeroProps) => {
             <Box className="border-t p-6 xl:border-t-0 xl:border-l">
                <Box className="space-y-5">
                   <SideInfo
+                     value={<EmploymentTypeChip employmentType={job.employmentType} />}
                      icon={<WorkOutlineOutlinedIcon />}
                      label="Employment Type"
-                     value={<EmploymentTypeChip employmentType={job.employmentType} />}
                   />
 
                   <SideInfo
+                     value={`${job.experienceRequired} years`}
                      icon={<PersonOutlineRoundedIcon />}
                      label="Experience Required"
-                     value={`${job.experienceRequired} years`}
                   />
 
                   <SideInfo
+                     value={formatSalary(job.salary)}
                      icon={<AttachMoneyOutlinedIcon />}
                      label="Salary"
-                     value={formatSalary(job.salary)}
                   />
 
                   <SideInfo
+                     value={job.status}
                      icon={<BusinessCenterOutlinedIcon />}
                      label="Status"
-                     value={job.status}
                   />
 
                   <SideInfo
+                     value={job.company.companyName}
                      icon={<BusinessCenterOutlinedIcon />}
                      label="Posted By"
-                     value={job.company.companyName}
                   />
                </Box>
             </Box>

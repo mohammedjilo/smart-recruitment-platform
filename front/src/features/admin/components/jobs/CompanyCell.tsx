@@ -9,9 +9,9 @@ const CompanyCell = ({ companyName, logoUrl }: CompanyCellProps) => {
    return (
       <Box className="flex items-center gap-3 whitespace-nowrap">
          <Avatar
-            src={logoUrl ?? undefined}
+            className="text-primary h-9 w-9 rounded-lg bg-slate-100 text-sm font-bold"
             alt={companyName}
-            className="text-primary h-9 w-9 rounded-lg bg-slate-100 text-sm font-bold">
+            src={logoUrl ?? undefined}>
             {companyName.charAt(0)}
          </Avatar>
 

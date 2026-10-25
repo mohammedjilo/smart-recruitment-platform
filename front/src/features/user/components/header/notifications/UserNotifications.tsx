@@ -1,5 +1,6 @@
 import { useState } from "react"
 import { useLocation } from "react-router-dom"
+import { Box } from "@mui/material"
 import { usePermissions } from "@/features/admin/authorization/usePermissions"
 import { getAdminNotificationTypes } from "@/features/admin/utils/adminNotificationTypes"
 import NotificationButton from "./NotificationButton"
@@ -91,7 +92,7 @@ const UserNotifications = () => {
    const open = Boolean(anchorEl)
 
    return (
-      <>
+      <Box className="contents">
          <NotificationButton
             unreadCount={unreadCount}
             onClick={handleOpen}
@@ -99,15 +100,15 @@ const UserNotifications = () => {
 
          <NotificationPopover
             anchorEl={anchorEl}
-            open={open}
-            onClose={handleClose}
-            onMarkAsRead={handleMarkAsRead}
-            onMarkAllAsRead={handleMarkAllAsRead}
+            isLoading={isLoading}
             isMarkingAllAsRead={isMarkingAllAsRead}
             notifications={notifications}
-            isLoading={isLoading}
+            open={open}
+            onClose={handleClose}
+            onMarkAllAsRead={handleMarkAllAsRead}
+            onMarkAsRead={handleMarkAsRead}
          />
-      </>
+      </Box>
    )
 }
 

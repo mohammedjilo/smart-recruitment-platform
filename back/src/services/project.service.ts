@@ -54,19 +54,3 @@ export const updateProject = async (
     },
   });
 };
-
-export const deleteProject = async (userId: string, projectId: string) => {
-  const profile = await getProfileOrThrow(userId);
-
-  const project = await prisma.project.findFirst({
-    where: { id: projectId, profileId: profile.id },
-  });
-
-  if (!project) {
-    throw new AppError("Project not found", 404);
-  }
-
-  await prisma.project.delete({ where: { id: projectId } });
-
-  return { message: "Project deleted successfully" };
-};

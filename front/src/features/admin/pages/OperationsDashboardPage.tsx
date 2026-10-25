@@ -25,13 +25,13 @@ export default function OperationsDashboardPage() {
          <Box className="flex min-h-80 flex-col items-center justify-center gap-3">
             <Typography
                className="text-sm! text-red-500!"
-               role="alert"
-               aria-live="assertive">
+               aria-live="assertive"
+               role="alert">
                {queryPresentation.message}
             </Typography>
             <Button
-               onClick={query.refetch}
-               className="normal-case!">
+               className="normal-case!"
+               onClick={query.refetch}>
                Retry
             </Button>
          </Box>
@@ -47,7 +47,7 @@ export default function OperationsDashboardPage() {
 
    if (!dashboard) {
       return (
-         <Typography className="text-sm! text-muted!">
+         <Typography className="text-sm!" color="textSecondary">
             Operations dashboard data could not be determined.
          </Typography>
       )
@@ -65,14 +65,14 @@ export default function OperationsDashboardPage() {
          {queryPresentation.category === "stale_error" && (
             <Box
                className="flex items-center justify-between gap-3 rounded-lg border border-amber-200 bg-amber-50 px-4 py-3"
-               role="status"
-               aria-live="polite">
+               aria-live="polite"
+               role="status">
                <Typography className="text-sm! text-amber-900!">
                   {queryPresentation.message}
                </Typography>
                <Button
-                  onClick={query.refetch}
-                  className="normal-case!">
+                  className="normal-case!"
+                  onClick={query.refetch}>
                   Retry
                </Button>
             </Box>
@@ -81,16 +81,16 @@ export default function OperationsDashboardPage() {
             <Typography className="text-content! text-2xl! font-bold!">
                Operations Dashboard
             </Typography>
-            <Typography className="text-muted! mt-1! text-sm!">
+            <Typography className="mt-1! text-sm!" color="textSecondary">
                Overview of platform operations.
             </Typography>
          </Box>
          <Box className="grid grid-cols-2 gap-3 md:grid-cols-4">
             {cards.map(([label, value]) => (
                <Box
-                  key={String(label)}
-                  className="border-border bg-surface rounded-xl border p-4">
-                  <Typography className="text-muted! text-xs!">{label}</Typography>
+                  className="border-border bg-surface rounded-xl border p-4"
+                  key={String(label)}>
+                  <Typography className="text-xs!" color="textSecondary">{label}</Typography>
                   <Typography className="text-content! mt-2! text-2xl! font-bold!">
                      {value}
                   </Typography>

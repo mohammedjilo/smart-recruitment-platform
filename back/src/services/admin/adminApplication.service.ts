@@ -169,6 +169,32 @@ export const getApplicationsByAdmin = async (
       return false;
     }
 
+    const score = application.matchScore;
+    if (
+      options.matchScore === "HIGH" &&
+      (score === null || score < 85)
+    ) {
+      return false;
+    }
+    if (
+      options.matchScore === "GOOD" &&
+      (score === null || score < 70 || score >= 85)
+    ) {
+      return false;
+    }
+    if (
+      options.matchScore === "FAIR" &&
+      (score === null || score < 50 || score >= 70)
+    ) {
+      return false;
+    }
+    if (
+      options.matchScore === "LOW" &&
+      (score === null || score >= 50)
+    ) {
+      return false;
+    }
+
     if (options.experience === "ALL") return true;
 
     const snapshot = application.profileSnapshot;

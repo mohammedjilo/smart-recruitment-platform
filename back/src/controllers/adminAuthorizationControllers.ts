@@ -7,8 +7,6 @@ import {
   getCurrentAdminPermissions,
   listAdminRoles,
   listAdmins,
-  listAuditLogs,
-  listPermissions,
   updateAdminStatus,
 } from "../services/adminAuthorization.service.js";
 import { sendSuccess } from "../utils/apiResponse";
@@ -20,12 +18,24 @@ const getAdminId = (req: Request) => {
   return req.user.id;
 };
 
+/**
+ * @desc Get the current administrator's permissions
+ * @route /api/admin/me/permissions
+ * @method GET
+ * @access private
+ */
 export const getCurrentAdminPermissionsController = asyncHandler(
   async (req: Request, res: Response) => {
     sendSuccess(res, 200, await getCurrentAdminPermissions(getAdminId(req)));
   }
 );
 
+/**
+ * @desc Create an administrator account
+ * @route /api/admin/admins
+ * @method POST
+ * @access private
+ */
 export const createAdminController = asyncHandler(
   async (req: Request, res: Response) => {
     sendSuccess(res, 201, await createAdmin(getAdminId(req), req.body), {
@@ -34,24 +44,36 @@ export const createAdminController = asyncHandler(
   }
 );
 
+/**
+ * @desc List available administrator roles
+ * @route /api/admin/roles
+ * @method GET
+ * @access private
+ */
 export const listAdminRolesController = asyncHandler(
   async (req: Request, res: Response) => {
     sendSuccess(res, 200, await listAdminRoles(getAdminId(req)));
   }
 );
 
-export const listPermissionsController = asyncHandler(
-  async (req: Request, res: Response) => {
-    sendSuccess(res, 200, await listPermissions(getAdminId(req)));
-  }
-);
-
+/**
+ * @desc List administrator accounts
+ * @route /api/admin/admins
+ * @method GET
+ * @access private
+ */
 export const listAdminsController = asyncHandler(
   async (req: Request, res: Response) => {
     sendSuccess(res, 200, await listAdmins(getAdminId(req)));
   }
 );
 
+/**
+ * @desc Get an administrator's role and permissions
+ * @route /api/admin/admins/:userId/permissions
+ * @method GET
+ * @access private
+ */
 export const getAdminAuthorizationController = asyncHandler(
   async (req: Request, res: Response) => {
     sendSuccess(
@@ -62,6 +84,12 @@ export const getAdminAuthorizationController = asyncHandler(
   }
 );
 
+/**
+ * @desc Assign a role to an administrator
+ * @route /api/admin/admins/:userId/role
+ * @method PATCH
+ * @access private
+ */
 export const assignAdminRoleController = asyncHandler(
   async (req: Request, res: Response) => {
     sendSuccess(
@@ -76,6 +104,12 @@ export const assignAdminRoleController = asyncHandler(
   }
 );
 
+/**
+ * @desc Update an administrator account's status
+ * @route /api/admin/admins/:userId/status
+ * @method PATCH
+ * @access private
+ */
 export const updateAdminStatusController = asyncHandler(
   async (req: Request, res: Response) => {
     sendSuccess(
@@ -87,11 +121,5 @@ export const updateAdminStatusController = asyncHandler(
         req.body.status
       )
     );
-  }
-);
-
-export const listAuditLogsController = asyncHandler(
-  async (req: Request, res: Response) => {
-    sendSuccess(res, 200, await listAuditLogs(getAdminId(req)));
   }
 );

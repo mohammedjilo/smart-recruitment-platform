@@ -4,7 +4,6 @@ import { AppError } from "../utils/appError.js";
 import {
   createEducation,
   updateEducation,
-  deleteEducation,
 } from "../services/education.service.js";
 import { sendSuccess } from "../utils/apiResponse";
 /**
@@ -30,7 +29,7 @@ export const createEducationController = asyncHandler(
 );
 /**
  * @desc Update an existing education entry for the authenticated user
- * @route /api/education/:id
+ * @route /api/education/:educationId
  * @method PUT
  * @access private
  */
@@ -52,25 +51,5 @@ export const updateEducationController = asyncHandler(
     sendSuccess(res, 200, education, {
       message: "Education updated successfully",
     });
-  }
-);
-/**
- * @desc Delete an existing education entry for the authenticated user
- * @route /api/education/:id
- * @method DELETE
- * @access private
- */
-export const deleteEducationController = asyncHandler(
-  async (req: Request, res: Response) => {
-    const userId = req.user?.id;
-    const educationId = req.params.educationId as string;
-
-    if (!userId) {
-      throw new AppError("User authentication required", 401);
-    }
-
-    const result = await deleteEducation(userId, educationId);
-
-    sendSuccess(res, 200, undefined, { message: result.message });
   }
 );

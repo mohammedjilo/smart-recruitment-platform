@@ -56,8 +56,8 @@ const RecommendationCard = ({
                   {strengthItems.map((item, index) => (
                      <ListItem
                         key={`${item}-${index}`}
-                        icon={<CheckCircleOutlineOutlinedIcon />}
                         value={item}
+                        icon={<CheckCircleOutlineOutlinedIcon />}
                         iconClassName="text-emerald-600"
                      />
                   ))}
@@ -79,8 +79,8 @@ const RecommendationCard = ({
                   {missingItems.map((item, index) => (
                      <ListItem
                         key={`${item}-${index}`}
-                        icon={<ErrorOutlineOutlinedIcon />}
                         value={item}
+                        icon={<ErrorOutlineOutlinedIcon />}
                         iconClassName="text-orange-500"
                      />
                   ))}
@@ -105,7 +105,7 @@ const ListItem = ({ icon, value, iconClassName }: ListItemProps) => {
    return (
       <Box className="flex items-start gap-2">
          <Box
-            className={`mt-[1px] flex h-4 w-4 shrink-0 items-center justify-center ${iconClassName} `}>
+            className={`mt-px flex h-4 w-4 shrink-0 items-center justify-center ${iconClassName} `}>
             {icon}
          </Box>
 

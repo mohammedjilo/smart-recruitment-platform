@@ -17,30 +17,30 @@ const ApplicationSummary = ({ application }: ApplicationSummaryProps) => {
 
          <Box className="mt-6 space-y-5">
             <SummaryRow
-               label="Status"
                value={<ApplicationStatusChip status={application.status} />}
+               label="Status"
             />
 
             <SummaryRow
-               label="Match Score"
                value={
                   application.matchScore === null ? "—" : `${application.matchScore}%`
                }
+               label="Match Score"
             />
 
             <SummaryRow
-               label="Resume Type"
                value={application.resumeType}
+               label="Resume Type"
             />
 
             <SummaryRow
-               label="Applied On"
                value={formatDate(application.createdAt, { format: "dateTime" })}
+               label="Applied On"
             />
 
             <SummaryRow
-               label="Last Updated"
                value={formatDate(application.updatedAt, { format: "dateTime" })}
+               label="Last Updated"
             />
          </Box>
       </Box>

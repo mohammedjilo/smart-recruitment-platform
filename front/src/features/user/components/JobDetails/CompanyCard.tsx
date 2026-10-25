@@ -1,5 +1,5 @@
 import { LocationOnOutlined, Verified } from "@mui/icons-material"
-import { Avatar, Box, Button } from "@mui/material"
+import { Avatar, Box, Button, Typography } from "@mui/material"
 import type { JobDetails } from "@/types/api/jobs"
 
 type CompanyCardProps = {
@@ -14,9 +14,9 @@ const CompanyCard = ({ company, onViewCompany }: CompanyCardProps) => (
             {company.logoUrl ? (
                <Avatar
                   className="h-full! w-full!"
-                  variant="rounded"
-                  src={company.logoUrl}
                   alt={company.companyName}
+                  src={company.logoUrl}
+                  variant="rounded"
                />
             ) : (
                <span className="text-xl font-bold text-[#4f20e8]">
@@ -25,23 +25,28 @@ const CompanyCard = ({ company, onViewCompany }: CompanyCardProps) => (
             )}
          </Box>
          <Box className="flex items-center gap-1.5">
-            <h2 className="text-[18px] font-semibold text-[#10142c]">
+            <Typography
+               className="text-[18px]! font-semibold!"
+               variant="h2">
                {company.companyName}
-            </h2>
-            <Verified sx={{ fontSize: 17, color: "#1477e8" }} />
+            </Typography>
+            <Verified className="text-[17px]! text-[#1477e8]!" />
          </Box>
       </Box>
 
-      <p className="mt-5 text-[14px] leading-6 text-[#424b67]">{company.description}</p>
+      <Typography className="mt-5! text-[14px]! leading-6! text-[#424b67]!">
+         {company.description}
+      </Typography>
 
       <Box className="mt-4 flex items-start gap-2 text-[14px] text-[#424b67]">
-         <LocationOnOutlined sx={{ fontSize: 19 }} />
+         <LocationOnOutlined className="text-[19px]!" />
          <span>{company.location}</span>
       </Box>
 
       <Button
-         onClick={onViewCompany}
-         className="app-button-secondary mt-5! flex! items-center! gap-2! text-sm! font-semibold! transition!">
+         className="mt-5! flex! items-center! gap-2! text-sm! font-semibold! normal-case! transition!"
+         variant="outlined"
+         onClick={onViewCompany}>
          View company profile
          <span className="text-xl!">→</span>
       </Button>

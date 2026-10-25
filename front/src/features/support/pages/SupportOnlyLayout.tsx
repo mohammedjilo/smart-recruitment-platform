@@ -50,8 +50,8 @@ export default function SupportOnlyLayout() {
             <Box className="bg-surface border-border w-full max-w-lg rounded-xl border p-6">
                <Alert severity="error">Support-only access could not be verified.</Alert>
                <Button
-                  onClick={() => void session.refetch()}
-                  className="mt-3">
+                  className="mt-3"
+                  onClick={() => void session.refetch()}>
                   Try again
                </Button>
             </Box>
@@ -65,8 +65,8 @@ export default function SupportOnlyLayout() {
             <Box className="mx-auto flex max-w-5xl items-center justify-between gap-4 px-4 py-4">
                <Box>
                   <Typography
-                     component="h1"
-                     className="text-content font-semibold">
+                     className="text-content font-semibold"
+                     component="h1">
                      Support access
                   </Typography>
                   <Typography className="text-muted text-xs">
@@ -75,16 +75,16 @@ export default function SupportOnlyLayout() {
                </Box>
                <Box className="flex items-center gap-3">
                   <Button
+                     className="normal-case"
                      component={Link}
-                     to="/support-only"
-                     className="normal-case">
+                     to="/support-only">
                      My requests
                   </Button>
                   <Button
-                     onClick={() => void logout()}
+                     className="normal-case"
                      disabled={endState.isLoading}
                      variant="outlined"
-                     className="normal-case">
+                     onClick={() => void logout()}>
                      {endState.isLoading ? "Signing out..." : "Log out"}
                   </Button>
                </Box>

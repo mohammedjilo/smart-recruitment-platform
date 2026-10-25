@@ -111,19 +111,19 @@ export const getAdminUsersColumns = ({
       render: user => (
          <Box className="flex items-center justify-center gap-2">
             <Button
-               size="small"
-               variant="text"
+               className="min-w-22! rounded-lg! text-xs! font-medium! normal-case!"
                color="primary"
+               size="small"
                startIcon={<VisibilityOutlinedIcon />}
-               onClick={() => onView(user.id)}
-               className="min-w-22! rounded-lg! text-xs! font-medium! normal-case!">
+               variant="text"
+               onClick={() => onView(user.id)}>
                View
             </Button>
 
             <IconButton
+               className="rounded-lg! border!"
                size="small"
-               onClick={event => onOpenActionsMenu(event, user)}
-               className="rounded-lg! border!">
+               onClick={event => onOpenActionsMenu(event, user)}>
                <MoreVertOutlinedIcon fontSize="small" />
             </IconButton>
          </Box>

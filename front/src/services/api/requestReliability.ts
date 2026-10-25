@@ -28,6 +28,7 @@ export type RefreshOutcome =
 interface RequestReliabilityOptions {
    execute: ApiRequestExecutor
    refresh: (api: BaseQueryApi, extraOptions: {}) => Promise<RefreshOutcome>
+   shouldRefresh?: (args: ApiRequestArgs, api: BaseQueryApi) => boolean
    getToken: (api: BaseQueryApi) => string | null
    setToken: (api: BaseQueryApi, token: string) => void | Promise<void>
    invalidateSession: (api: BaseQueryApi) => void
@@ -163,6 +164,7 @@ export const interpretRefreshResult = (result: ApiRequestResult): RefreshOutcome
 export const createReliableBaseQuery = ({
    execute,
    refresh,
+   shouldRefresh = () => true,
    getToken,
    setToken,
    invalidateSession,
@@ -239,6 +241,7 @@ export const createReliableBaseQuery = ({
       const tokenAtStart = getToken(api)
       const initialResult = await executeWithQueryRetry(args, api, extraOptions)
       if (!isUnauthorized(initialResult)) return initialResult
+      if (!shouldRefresh(args, api)) return initialResult
 
       const latestToken = getToken(api)
       if (latestToken && latestToken !== tokenAtStart) {

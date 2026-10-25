@@ -7,7 +7,7 @@ import MailOutlineOutlinedIcon from "@mui/icons-material/MailOutlineOutlined"
 import type {
    SupportPortalConfig,
    SupportTopicDetailsData
-} from "@/features/support/types"
+} from "@/features/shared/support/types"
 
 export const companySupportConfig: SupportPortalConfig = {
    portalType: "company",

@@ -43,11 +43,11 @@ const PaginationFooter = ({
          </Typography>
 
          <CustomPagination
+            isFetching={queryBusy}
             page={page}
-            totalCount={totalCount}
             pageSize={pageSize}
             setPage={setPage}
-            isFetching={queryBusy}
+            totalCount={totalCount}
          />
       </Box>
    )

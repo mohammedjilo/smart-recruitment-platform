@@ -16,13 +16,11 @@ const CompanyTabs = ({
    onChange
 }: Props) => {
    return (
-      <Box className="border-border mt-3 border-b">
+      <Box className="border-border my-3 border-b">
          <Tabs
+            className="min-h-10.5!"
             value={activeTab}
-            onChange={(_, value) => onChange(value)}
             sx={{
-               minHeight: 42,
-
                "& .MuiTab-root": {
                   minHeight: 42,
                   minWidth: 95,
@@ -32,16 +30,15 @@ const CompanyTabs = ({
                   fontWeight: 500,
                   color: "#64748B"
                },
-
                "& .Mui-selected": {
                   color: "#5425D4 !important",
                   fontWeight: 700
                },
-
                "& .MuiTabs-indicator": {
                   backgroundColor: "#6D28D9"
                }
-            }}>
+            }}
+            onChange={(_, value) => onChange(value)}>
             <Tab
                value="overview"
                label="Overview"

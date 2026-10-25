@@ -1,5 +1,5 @@
 import { Box, Button, Typography } from "@mui/material"
-import SupportChip from "@/features/support/components/SupportChip"
+import SupportChip from "@/features/shared/support/components/SupportChip"
 import { useGetSupportDashboardQuery } from "@/services/shared/supportApiCalls"
 import { AdminSupportDashboardSkeleton } from "@/features/admin/components/AdminSkeletons"
 import { getQueryState } from "@/utils/queryState"
@@ -22,10 +22,10 @@ export default function SupportDashboardPage() {
    ) {
       return (
          <Box className="flex min-h-80 flex-col items-center justify-center gap-3">
-            <Typography className="text-sm! text-red-600!" role="alert" aria-live="assertive">
+            <Typography className="text-sm! text-red-600!" aria-live="assertive" role="alert">
                {queryPresentation.message}
             </Typography>
-            <Button onClick={query.refetch} className="normal-case!">
+            <Button className="normal-case!" onClick={query.refetch}>
                Retry
             </Button>
          </Box>
@@ -39,7 +39,7 @@ export default function SupportDashboardPage() {
    }
    if (!dashboard) {
       return (
-         <Typography className="text-sm! text-muted!">
+         <Typography className="text-sm!" color="textSecondary">
             Support dashboard data could not be determined.
          </Typography>
       )
@@ -56,11 +56,11 @@ export default function SupportDashboardPage() {
    return (
       <Box className="space-y-5">
          {queryPresentation.category === "stale_error" && (
-            <Box className="flex items-center justify-between gap-3 rounded-lg border border-amber-200 bg-amber-50 px-4 py-3" role="status" aria-live="polite">
+            <Box className="flex items-center justify-between gap-3 rounded-lg border border-amber-200 bg-amber-50 px-4 py-3" aria-live="polite" role="status">
                <Typography className="text-sm! text-amber-900!">
                   {queryPresentation.message}
                </Typography>
-               <Button onClick={query.refetch} className="normal-case!">
+               <Button className="normal-case!" onClick={query.refetch}>
                   Retry
                </Button>
             </Box>
@@ -69,16 +69,16 @@ export default function SupportDashboardPage() {
             <Typography className="text-content! text-2xl! font-bold!">
                Support Dashboard
             </Typography>
-            <Typography className="text-muted! mt-1! text-sm!">
+            <Typography className="mt-1! text-sm!" color="textSecondary">
                Support queue activity and ticket workload.
             </Typography>
          </Box>
          <Box className="grid grid-cols-2 gap-3 md:grid-cols-5">
             {cards.map(([label, value]) => (
                <Box
-                  key={String(label)}
-                  className="border-border bg-surface rounded-xl border p-4">
-                  <Typography className="text-muted! text-xs!">{label}</Typography>
+                  className="border-border bg-surface rounded-xl border p-4"
+                  key={String(label)}>
+                  <Typography className="text-xs!" color="textSecondary">{label}</Typography>
                   <Typography className="text-content! mt-2! text-2xl! font-bold!">
                      {value}
                   </Typography>
@@ -92,19 +92,19 @@ export default function SupportDashboardPage() {
             <Box className="mt-4 space-y-3">
                {dashboard.recent.map(ticket => (
                   <Box
-                     key={ticket.id}
-                     className="border-border flex flex-wrap items-center justify-between gap-3 border-b pb-3 last:border-0">
+                     className="border-border flex flex-wrap items-center justify-between gap-3 border-b pb-3 last:border-0"
+                     key={ticket.id}>
                      <Box>
                         <Typography className="text-content! text-sm! font-semibold!">
                            {ticket.subject}
                         </Typography>
-                        <Typography className="text-muted! text-xs!">
+                        <Typography className="text-xs!" color="textSecondary">
                            {ticket.category?.name ?? "General"}
                         </Typography>
                      </Box>
                      <SupportChip
-                        kind="status"
                         value={ticket.status}
+                        kind="status"
                      />
                   </Box>
                ))}

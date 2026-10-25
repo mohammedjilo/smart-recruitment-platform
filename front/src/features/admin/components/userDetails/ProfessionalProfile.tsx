@@ -5,15 +5,17 @@ import {
    AccountTreeOutlined,
    BusinessCenterOutlined,
    DescriptionOutlined,
+   LanguageOutlined,
    OpenInNewOutlined,
    SchoolOutlined,
    WorkspacePremiumOutlined,
    WorkOutlined
 } from "@mui/icons-material"
-import { Box, Button, Chip, Skeleton, Typography } from "@mui/material"
+import { Box, Button, Chip, Typography } from "@mui/material"
 import type { ReactNode } from "react"
 import { getQueryState } from "@/utils/queryState"
 import { getQueryPresentation } from "@/utils/presentationPolicy"
+import ProfessionalProfileSkeleton from "./ProfessionalProfileSkeleton"
 
 type Props = {
    userId: string
@@ -75,68 +77,37 @@ const ProfessionalProfile = ({ userId }: Props) => {
          </Box>
 
          {queryPresentation.category === "stale_error" && (
-            <Box className="flex items-center justify-between gap-3 border-b border-amber-200 bg-amber-50 px-4 py-3" role="status" aria-live="polite">
+            <Box className="flex items-center justify-between gap-3 border-b border-amber-200 bg-amber-50 px-4 py-3" aria-live="polite" role="status">
                <Typography className="text-sm! text-amber-900!">
                   {queryPresentation.message}
                </Typography>
                <Button
-                  onClick={() => void query.refetch()}
-                  className="normal-case!">
+                  className="normal-case!"
+                  onClick={() => void query.refetch()}>
                   Retry
                </Button>
             </Box>
          )}
 
          {isLoading ? (
-            <Box className="space-y-4 pt-5">
-               <Skeleton
-                  variant="text"
-                  width="42%"
-                  height={30}
-               />
-               <Skeleton
-                  variant="text"
-                  width="30%"
-               />
-               {[0, 1, 2, 3].map(item => (
-                  <Box
-                     key={item}
-                     className="border-border flex gap-3 border-t pt-4">
-                     <Skeleton
-                        variant="rounded"
-                        width={36}
-                        height={36}
-                     />
-                     <Box className="flex-1 space-y-2">
-                        <Skeleton
-                           variant="text"
-                           width="28%"
-                        />
-                        <Skeleton
-                           variant="text"
-                           width="75%"
-                        />
-                     </Box>
-                  </Box>
-               ))}
-            </Box>
+            <ProfessionalProfileSkeleton />
          ) : queryPresentation.category === "section_error" ||
            queryPresentation.category === "access_denied" ||
            queryPresentation.category === "authentication_notice" ||
            queryPresentation.category === "resource_not_found" ? (
-            <Box className="flex min-h-64 items-center justify-center px-6 text-center" role="alert" aria-live="assertive">
+            <Box className="flex min-h-64 items-center justify-center px-6 text-center" aria-live="assertive" role="alert">
                <Typography className="text-sm! text-red-600">
                   {queryPresentation.message}
                </Typography>
                <Button
-                  onClick={() => void query.refetch()}
-                  className="ml-3! normal-case!">
+                  className="ml-3! normal-case!"
+                  onClick={() => void query.refetch()}>
                   Retry
                </Button>
             </Box>
          ) : queryPresentation.category === "silent" ? null : queryState.status === "idle" ? (
             <Box className="flex min-h-64 items-center justify-center px-6 text-center">
-               <Typography className="text-sm! text-muted!">
+               <Typography className="text-sm!" color="textSecondary">
                   No professional profile query has started.
                </Typography>
             </Box>
@@ -173,37 +144,37 @@ const ProfileContent = ({ profile }: { profile: AdminUserProfessionalProfile }) 
          </Box>
          {profile.cvPath && /^https?:\/\//i.test(profile.cvPath) && (
             <Button
-               component="a"
+               className="border-border! bg-surface! text-content! rounded-lg! normal-case!"
                href={profile.cvPath}
-               target="_blank"
+               component="a"
+               endIcon={<OpenInNewOutlined />}
                rel="noreferrer"
                size="small"
-               endIcon={<OpenInNewOutlined />}
-               className="border-border! bg-surface! text-content! rounded-lg! normal-case!">
+               target="_blank">
                Open CV
             </Button>
          )}
       </Box>
 
       <ProfileSection
-         title="Summary"
-         icon={<DescriptionOutlined fontSize="small" />}>
+         icon={<DescriptionOutlined fontSize="small" />}
+         title="Summary">
          <Typography className="text-sm! whitespace-pre-wrap!">
             {profile.summary || "No summary provided."}
          </Typography>
       </ProfileSection>
 
       <ProfileSection
-         title="Skills"
-         icon={<BusinessCenterOutlined fontSize="small" />}>
+         icon={<BusinessCenterOutlined fontSize="small" />}
+         title="Skills">
          {profile.skills.length ? (
             <Box className="flex flex-wrap gap-2">
                {profile.skills.map(skill => (
                   <Chip
+                     className="border! border-violet-100! bg-violet-50! text-violet-700!"
                      key={skill.id}
                      label={skill.skillName}
                      size="small"
-                     className="border! border-violet-100! bg-violet-50! text-violet-700!"
                   />
                ))}
             </Box>
@@ -213,14 +184,35 @@ const ProfileContent = ({ profile }: { profile: AdminUserProfessionalProfile }) 
       </ProfileSection>
 
       <ProfileSection
-         title="Experience"
-         icon={<WorkOutlined fontSize="small" />}>
+         icon={<LanguageOutlined fontSize="small" />}
+         title="Languages">
+         {profile.languages.length ? (
+            <Box className="flex flex-wrap gap-2">
+               {profile.languages.map(language => (
+                  <Chip
+                     className="border! border-violet-100! bg-violet-50! text-violet-700!"
+                     key={language.userLanguageId}
+                     label={`${language.languageName} · ${language.level.charAt(0) + language.level.slice(1).toLowerCase()}`}
+                     size="small"
+                  />
+               ))}
+            </Box>
+         ) : (
+            <Typography className="text-muted text-sm!">
+               No languages added.
+            </Typography>
+         )}
+      </ProfileSection>
+
+      <ProfileSection
+         icon={<WorkOutlined fontSize="small" />}
+         title="Experience">
          {profile.experiences.length ? (
             <Box className="divide-border divide-y">
                {profile.experiences.map(experience => (
                   <Box
-                     key={experience.id}
-                     className="py-3 first:pt-0 last:pb-0">
+                     className="py-3 first:pt-0 last:pb-0"
+                     key={experience.id}>
                      <Typography className="text-sm! font-semibold!">
                         {experience.position} · {experience.companyName}
                      </Typography>
@@ -245,14 +237,14 @@ const ProfileContent = ({ profile }: { profile: AdminUserProfessionalProfile }) 
       </ProfileSection>
 
       <ProfileSection
-         title="Education"
-         icon={<SchoolOutlined fontSize="small" />}>
+         icon={<SchoolOutlined fontSize="small" />}
+         title="Education">
          {profile.educations.length ? (
             <Box className="divide-border divide-y">
                {profile.educations.map(education => (
                   <Box
-                     key={education.id}
-                     className="py-3 first:pt-0 last:pb-0">
+                     className="py-3 first:pt-0 last:pb-0"
+                     key={education.id}>
                      <Typography className="text-sm! font-semibold!">
                         {education.degree} in {education.major}
                      </Typography>
@@ -275,14 +267,14 @@ const ProfileContent = ({ profile }: { profile: AdminUserProfessionalProfile }) 
       </ProfileSection>
 
       <ProfileSection
-         title="Projects"
-         icon={<AccountTreeOutlined fontSize="small" />}>
+         icon={<AccountTreeOutlined fontSize="small" />}
+         title="Projects">
          {profile.projects.length ? (
             <Box className="divide-border divide-y">
                {profile.projects.map(project => (
                   <Box
-                     key={project.id}
-                     className="py-3 first:pt-0 last:pb-0">
+                     className="py-3 first:pt-0 last:pb-0"
+                     key={project.id}>
                      <Typography className="text-sm! font-semibold!">
                         {project.title}
                      </Typography>
@@ -302,14 +294,14 @@ const ProfileContent = ({ profile }: { profile: AdminUserProfessionalProfile }) 
       </ProfileSection>
 
       <ProfileSection
-         title="Certificates"
-         icon={<WorkspacePremiumOutlined fontSize="small" />}>
+         icon={<WorkspacePremiumOutlined fontSize="small" />}
+         title="Certificates">
          {profile.certificates.length ? (
             <Box className="divide-border divide-y">
                {profile.certificates.map(certificate => (
                   <Box
-                     key={certificate.id}
-                     className="py-3 first:pt-0 last:pb-0">
+                     className="py-3 first:pt-0 last:pb-0"
+                     key={certificate.id}>
                      <Typography className="text-sm! font-semibold!">
                         {certificate.certificateName}
                      </Typography>

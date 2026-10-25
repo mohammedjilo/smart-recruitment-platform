@@ -1,28 +1,29 @@
 import Express from "express";
 import { authMiddleware } from "../middlewares/auth";
-import {
-  handleUploadError,
-  imageUpload,
-  validateUploadedFile,
-} from "../utils/upload";
 import { validate } from "../middlewares/validate";
 import {
-  professionalProfileSchema,
+  personalInformationUpdateSchema,
   updateProfessionalProfileSchema,
-} from "../validation/professionalProfile.validation";
+} from "@smart-recruitment/validation";
 import {
-  updateUserPhotoController,
+  updateUserPersonalInformationController,
   getCompleteUserProfileController,
   getCompaniesController,
   getCompanyDetailsController,
   getCompanyJobsController,
-  upsertProfessionalProfileController,
+  updateProfessionalProfileController,
   getDashboardUserController,
 } from "../controllers/userControllers";
 
 const userRouter = Express.Router();
 
 userRouter.get("/profile", authMiddleware, getCompleteUserProfileController);
+userRouter.put(
+  "/profile",
+  authMiddleware,
+  validate(personalInformationUpdateSchema),
+  updateUserPersonalInformationController
+);
 userRouter.get(
   "/profile/:userId",
   authMiddleware,
@@ -40,26 +41,11 @@ userRouter.get(
   getCompanyJobsController
 );
 
-userRouter.post(
-  "/photo",
-  authMiddleware,
-  handleUploadError(imageUpload.single("photo")),
-  validateUploadedFile("image"),
-  updateUserPhotoController
-);
-
 userRouter.put(
   "/professional-profile",
   authMiddleware,
   validate(updateProfessionalProfileSchema),
-  upsertProfessionalProfileController
-);
-
-userRouter.post(
-  "/professional-profile",
-  authMiddleware,
-  validate(professionalProfileSchema),
-  upsertProfessionalProfileController
+  updateProfessionalProfileController
 );
 userRouter.get("/dashboard", authMiddleware, getDashboardUserController);
 

@@ -168,8 +168,8 @@ const CompanyRequestsPage = () => {
    if (isLoading) {
       return (
          <AdminListSkeleton
-            statCount={4}
             filterFields={["search", "control", "control", "control"]}
+            statCount={4}
          />
       )
    }
@@ -189,51 +189,51 @@ const CompanyRequestsPage = () => {
               queryPresentation.category === "access_denied" ||
               queryPresentation.category === "resource_not_found" ? (
                <Box
-                  role="alert"
+                  className="text-sm text-red-600"
                   aria-live="assertive"
-                  className="text-sm text-red-600">
+                  role="alert">
                   {queryPresentation.message}
                </Box>
             ) : null}
 
             {/* Filters */}
             <CompanyRequestsFilters
-               search={search}
                approvalStatus={approvalStatus}
-               status={companyStatus}
                requestDate={requestDate}
-               onSearchChange={setSearch}
+               search={search}
+               status={companyStatus}
                onApprovalStatusChange={setApprovalStatus}
-               onStatusChange={setCompanyStatus}
                onRequestDateChange={setRequestDate}
+               onSearchChange={setSearch}
+               onStatusChange={setCompanyStatus}
             />
 
             {/* Table */}
             <Box>
                <CompanyRequestsTable
                   companies={companies}
-                  onView={handleView}
-                  onApprove={handleApprove}
-                  onReject={handleReject}
+                  isFetching={queryPresentation.category === "refreshing"}
                   isUpdating={
                      approvePresentation.category === "loading" ||
                      rejectPresentation.category === "loading"
                   }
-                  isFetching={queryPresentation.category === "refreshing"}
                   queryState={queryState}
+                  onApprove={handleApprove}
+                  onReject={handleReject}
                   onRetry={query.refetch}
+                  onView={handleView}
                />
             </Box>
 
             {pagination && companies.length > 0 && (
                <PaginationFooter
-                  page={pagination.page}
-                  totalCount={pagination.totalCount}
-                  pageSize={pagination.pageSize}
-                  setPage={setPageNumber}
-                  itemLabel="requests"
                   isFetching={queryPresentation.category === "refreshing"}
+                  itemLabel="requests"
+                  page={pagination.page}
+                  pageSize={pagination.pageSize}
                   queryState={queryState}
+                  setPage={setPageNumber}
+                  totalCount={pagination.totalCount}
                />
             )}
          </Box>

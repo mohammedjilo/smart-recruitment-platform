@@ -15,7 +15,7 @@
     // Emit
     "sourceMap": true,
     "removeComments": true,
-    "noEmitOnError": false, // مهم: يسمح بإنتاج الملفات حتى مع وجود أخطاء
+    "noEmitOnError": false, // Allow output generation even when errors exist.
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
 
@@ -30,7 +30,7 @@
     "useUnknownInCatchVariables": true,
     "alwaysStrict": true,
 
-    // أقل صرامة لتجنب أخطاء كثيرة أثناء التطوير
+    // Less strict to avoid excessive errors during development.
     "noUnusedLocals": false,
     "noUnusedParameters": false,
     "exactOptionalPropertyTypes": false,

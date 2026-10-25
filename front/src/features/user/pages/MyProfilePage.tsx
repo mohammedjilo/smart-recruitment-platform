@@ -38,10 +38,10 @@ const MyProfilePage = () => {
    ) {
       return (
          <Box className="flex min-h-[60vh] flex-col items-center justify-center gap-3">
-            <Typography color="error" role="alert" aria-live="assertive">
+            <Typography aria-live="assertive" color="error" role="alert">
                {queryPresentation.message}
             </Typography>
-            <Button onClick={query.refetch} className="normal-case!">
+            <Button className="normal-case!" onClick={query.refetch}>
                Retry
             </Button>
          </Box>
@@ -57,7 +57,7 @@ const MyProfilePage = () => {
    if (!response?.data) {
       return (
          <Box className="py-10 text-center">
-            <Typography className="text-sm! text-muted!">
+            <Typography className="text-sm!" color="textSecondary">
                Profile data could not be determined.
             </Typography>
          </Box>
@@ -70,18 +70,18 @@ const MyProfilePage = () => {
    return (
       <Box className="w-full">
          {queryPresentation.category === "stale_error" && (
-            <Box className="mb-4 flex items-center justify-between gap-3 rounded-lg border border-amber-200 bg-amber-50 px-4 py-3" role="status" aria-live="polite">
+            <Box className="mb-4 flex items-center justify-between gap-3 rounded-lg border border-amber-200 bg-amber-50 px-4 py-3" aria-live="polite" role="status">
                <Typography className="text-sm! text-amber-900!">
                   {queryPresentation.message}
                </Typography>
-               <Button onClick={query.refetch} className="normal-case!">
+               <Button className="normal-case!" onClick={query.refetch}>
                   Retry
                </Button>
             </Box>
          )}
          <PageHeader
-            title="My Profile"
             description="View and manage your personal and professional information."
+            title="My Profile"
          />
 
          {/* Personal Information */}

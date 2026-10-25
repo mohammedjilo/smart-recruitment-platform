@@ -10,8 +10,8 @@ export default function UserGuard() {
    if (company) {
       return (
          <Navigate
-            to="/dashboard"
             replace
+            to="/dashboard"
          />
       )
    }
@@ -19,9 +19,9 @@ export default function UserGuard() {
    if (!user || user.role !== "USER") {
       return (
          <Navigate
-            to="/login"
             replace
             state={{ from: location }}
+            to="/login"
          />
       )
    }

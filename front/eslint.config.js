@@ -1,13 +1,13 @@
-import eslint from "@eslint/js"
 import tseslint from "@typescript-eslint/eslint-plugin"
 import tsparser from "@typescript-eslint/parser"
 import reactHooks from "eslint-plugin-react-hooks"
 import globals from "globals"
+import { jsxProps } from "@smart-recruitment/eslint-config"
 
 export default [
-   // إعدادات عامة للمشروع
+   // General project settings.
    {
-      files: ["**/*.{js,jsx,ts,tsx,vue}"], // حدد الامتدادات المطلوبة
+      files: ["**/*.{js,jsx,ts,tsx,vue}"], // Specify the file extensions.
       languageOptions: {
          parser: tsparser,
          parserOptions: {
@@ -39,8 +39,9 @@ export default [
          "react-hooks/exhaustive-deps": "warn"
       }
    },
-   // تجاهل بعض الملفات إذا أردت
+   // Ignore selected files.
    {
       ignores: ["node_modules", "dist", "build", "*.config.js"]
-   }
+   },
+   jsxProps
 ]

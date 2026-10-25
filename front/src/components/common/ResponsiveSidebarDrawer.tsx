@@ -20,13 +20,11 @@ export default function ResponsiveSidebarDrawer({
 
    return (
       <Drawer
-         variant={desktop ? "permanent" : "temporary"}
-         open={desktop || open}
-         onClose={onClose}
+         className="shrink-0!"
          ModalProps={{ keepMounted: true }}
+         open={desktop || open}
          sx={{
             width: desktop ? width : undefined,
-            flexShrink: 0,
             ...(desktop
                ? {
                     position: "fixed",
@@ -37,6 +35,7 @@ export default function ResponsiveSidebarDrawer({
             "& .MuiDrawer-paper": {
                boxSizing: "border-box",
                width,
+               overflow: "hidden",
                ...(top
                   ? {
                        top,
@@ -44,7 +43,9 @@ export default function ResponsiveSidebarDrawer({
                     }
                   : {})
             }
-         }}>
+         }}
+         variant={desktop ? "permanent" : "temporary"}
+         onClose={onClose}>
          {children}
       </Drawer>
    )

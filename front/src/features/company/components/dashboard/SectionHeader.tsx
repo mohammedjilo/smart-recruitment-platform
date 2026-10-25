@@ -1,3 +1,4 @@
+import { Box, Typography } from "@mui/material"
 import { Link } from "react-router-dom"
 
 interface SectionHeaderProps {
@@ -7,17 +8,21 @@ interface SectionHeaderProps {
 
 const SectionHeader = ({ title, href }: SectionHeaderProps) => {
    return (
-      <div className="flex items-center justify-between px-5 pt-4">
-         <h2 className="text-[16px] font-semibold text-[#101828]">{title}</h2>
+      <Box className="flex items-center justify-between px-5 pt-4">
+         <Typography
+            className="text-[16px]! font-semibold!"
+            variant="h2">
+            {title}
+         </Typography>
 
          {href && (
             <Link
-               to={href}
-               className="text-link hover:text-link-hover text-[13px] font-medium transition">
+               className="text-link hover:text-link-hover text-[13px] font-medium transition"
+               to={href}>
                View all
             </Link>
          )}
-      </div>
+      </Box>
    )
 }
 export default SectionHeader

@@ -87,12 +87,12 @@ export const getAdminJobsColumns = ({
       align: "center",
       render: job => (
          <Button
-            size="small"
-            variant="text"
+            className="min-w-22! rounded-lg! text-xs! font-medium! normal-case!"
             color="primary"
+            size="small"
             startIcon={<VisibilityOutlinedIcon />}
-            onClick={() => onView(job)}
-            className="min-w-22! rounded-lg! text-xs! font-medium! normal-case!">
+            variant="text"
+            onClick={() => onView(job)}>
             View
          </Button>
       )

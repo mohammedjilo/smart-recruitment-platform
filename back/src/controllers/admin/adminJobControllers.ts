@@ -8,7 +8,6 @@ import {
   getQuestionsByAdmin,
   getJobApplicationsByAdmin,
   updateJobStatusByAdmin,
-  deleteJobByAdmin,
 } from "../../services/admin/adminJob.service";
 import {
   getCompanyJobsQuerySchema,
@@ -16,6 +15,12 @@ import {
   getJobApplicationsQuerySchema,
 } from "../../validation/admin.validation";
 
+/**
+ * @desc List and filter all jobs
+ * @route /api/admin/jobs
+ * @method GET
+ * @access private
+ */
 export const getAllJobsController = asyncHandler(
   async (req: Request, res: Response) => {
     const query = getAdminJobsQuerySchema.parse(req.query);
@@ -27,6 +32,12 @@ export const getAllJobsController = asyncHandler(
   }
 );
 
+/**
+ * @desc List jobs belonging to a company
+ * @route /api/admin/companies/:companyId/jobs
+ * @method GET
+ * @access private
+ */
 export const getCompanyJobsByAdminController = asyncHandler(
   async (req: Request, res: Response) => {
     const query = getCompanyJobsQuerySchema.parse(req.query);
@@ -42,6 +53,12 @@ export const getCompanyJobsByAdminController = asyncHandler(
   }
 );
 
+/**
+ * @desc Get a job by ID
+ * @route /api/admin/jobs/:jobId
+ * @method GET
+ * @access private
+ */
 export const getJobByAdminController = asyncHandler(
   async (req: Request, res: Response) => {
     const job = await getJobByAdmin(req.params.jobId as string);
@@ -49,6 +66,12 @@ export const getJobByAdminController = asyncHandler(
   }
 );
 
+/**
+ * @desc Get application questions for a job
+ * @route /api/admin/jobs/:jobId/questions
+ * @method GET
+ * @access private
+ */
 export const getQuestionsByAdminController = asyncHandler(
   async (req: Request, res: Response) => {
     const questions = await getQuestionsByAdmin(req.params.jobId as string);
@@ -56,6 +79,12 @@ export const getQuestionsByAdminController = asyncHandler(
   }
 );
 
+/**
+ * @desc List applications submitted to a job
+ * @route /api/admin/jobs/:jobId/applications
+ * @method GET
+ * @access private
+ */
 export const getJobApplicationsByAdminController = asyncHandler(
   async (req: Request, res: Response) => {
     const query = getJobApplicationsQuerySchema.parse(req.query);
@@ -71,6 +100,12 @@ export const getJobApplicationsByAdminController = asyncHandler(
   }
 );
 
+/**
+ * @desc Update a job's status
+ * @route /api/admin/jobs/:jobId/status
+ * @method PATCH
+ * @access private
+ */
 export const updateJobStatusController = asyncHandler(
   async (req: Request, res: Response) => {
     const job = await updateJobStatusByAdmin(
@@ -78,12 +113,5 @@ export const updateJobStatusController = asyncHandler(
       req.body as any
     );
     sendSuccess(res, 200, job, { message: "Job status updated" });
-  }
-);
-
-export const deleteJobController = asyncHandler(
-  async (req: Request, res: Response) => {
-    const result = await deleteJobByAdmin(req.params.jobId as string);
-    sendSuccess(res, 200, undefined, { message: result.message });
   }
 );

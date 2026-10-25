@@ -6,10 +6,7 @@ import { AdminDetailsSkeleton } from "@/features/admin/components/AdminSkeletons
 import JobDetailsHeader from "@/features/admin/components/jobDetails/JobDetailsHeader"
 import JobHero from "@/features/admin/components/jobDetails/JobHero"
 import JobTabs from "@/features/admin/components/jobDetails/JobTabs"
-import JobDescription from "@/features/admin/components/jobDetails/JobDescription"
-import JobSkills from "@/features/admin/components/jobDetails/JobSkills"
-import JobInformation from "@/features/admin/components/jobDetails/JobInformation"
-import CompanyInformation from "@/features/admin/components/jobDetails/CompanyInformation"
+import OverviewStep from "@/features/admin/components/jobDetails/OverviewStep/OverviewStep"
 import ApplicationQuestionsStep from "@/features/admin/components/jobDetails/ApplicationQuestionsStep/ApplicationQuestionsStep"
 import ApplicationsStep from "@/features/admin/components/jobDetails/ApplicationsStep/ApplicationsStep"
 import { getQueryState } from "@/utils/queryState"
@@ -51,10 +48,15 @@ const JobDetailsPage = () => {
    ) {
       return (
          <Box className="flex min-h-100 flex-col items-center justify-center gap-3">
-            <Typography className="text-sm! text-red-600!" role="alert" aria-live="assertive">
+            <Typography
+               className="text-sm! text-red-600!"
+               aria-live="assertive"
+               role="alert">
                {queryPresentation.message}
             </Typography>
-            <Button onClick={query.refetch} className="normal-case!">
+            <Button
+               className="normal-case!"
+               onClick={query.refetch}>
                Retry
             </Button>
          </Box>
@@ -64,7 +66,7 @@ const JobDetailsPage = () => {
    if (!response?.data) {
       return (
          <Box className="flex min-h-100 items-center justify-center">
-            <Typography className="text-sm! text-muted!">
+            <Typography className="text-sm!" color="textSecondary">
                Job details could not be determined.
             </Typography>
          </Box>
@@ -76,11 +78,16 @@ const JobDetailsPage = () => {
    return (
       <Box className="w-full">
          {queryPresentation.category === "stale_error" && (
-            <Box className="mb-4 flex items-center justify-between gap-3 rounded-lg border border-amber-200 bg-amber-50 px-4 py-3" role="status" aria-live="polite">
+            <Box
+               className="mb-4 flex items-center justify-between gap-3 rounded-lg border border-amber-200 bg-amber-50 px-4 py-3"
+               aria-live="polite"
+               role="status">
                <Typography className="text-sm! text-amber-900!">
                   {queryPresentation.message}
                </Typography>
-               <Button onClick={query.refetch} className="normal-case!">
+               <Button
+                  className="normal-case!"
+                  onClick={query.refetch}>
                   Retry
                </Button>
             </Box>
@@ -92,34 +99,20 @@ const JobDetailsPage = () => {
          <Box className="mt-5">
             <JobTabs
                activeTab={activeTab}
-               onChange={setActiveTab}
                applicationsCount={job._count.applications}
+               onChange={setActiveTab}
             />
 
-            {activeTab === "overview" && (
-               <Box className="mt-5 grid grid-cols-1 gap-5 xl:grid-cols-[minmax(0,1.65fr)_minmax(320px,0.85fr)]">
-                  <Box className="space-y-5">
-                     <JobDescription description={job.description} />
-
-                     <JobSkills skills={job.skills} />
-
-                     <JobInformation job={job} />
-                  </Box>
-
-                  <Box>
-                     <CompanyInformation company={job.company} />
-                  </Box>
-               </Box>
-            )}
+            {activeTab === "overview" && <OverviewStep job={job} />}
 
             {activeTab === "questions" && (
-               <Box className="mt-5 rounded-xl border bg-surface p-6">
+               <Box className="mt-5 rounded-xl p-6">
                   <ApplicationQuestionsStep jobId={id!} />
                </Box>
             )}
 
             {activeTab === "applications" && (
-               <Box className="mt-5 rounded-xl border border-border bg-surface p-6">
+               <Box className="mt-5 p-6">
                   <ApplicationsStep jobId={id!} />
                </Box>
             )}

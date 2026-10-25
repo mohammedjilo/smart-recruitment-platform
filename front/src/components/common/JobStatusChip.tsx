@@ -11,9 +11,9 @@ const JobStatusChip = ({ status }: JobStatusChipProps) => {
 
    return (
       <Chip
+         className={`rounded-md! text-xs! font-bold! ${config.className}`}
          label={config.label}
          size="small"
-         className={`rounded-md! text-xs! font-bold! ${config.className}`}
       />
    )
 }

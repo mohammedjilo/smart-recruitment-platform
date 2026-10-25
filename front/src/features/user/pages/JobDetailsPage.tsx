@@ -8,7 +8,7 @@ import {
    useToggleSaveJobsMutation
 } from "@/services/shared/jobApiCalls"
 import { getUserCompanyDetailsPath } from "@/utils/companyRoutes"
-import { Box, Button } from "@mui/material"
+import { Box, Button, Typography } from "@mui/material"
 import ApplyModal from "@/features/user/components/JobDetails/application/ApplyModal"
 import JobIntroduction from "@/features/user/components/JobDetails/JobIntroduction"
 import CompanyCard from "@/features/user/components/JobDetails/CompanyCard"
@@ -65,14 +65,20 @@ const JobDetailsPage: React.FC = () => {
       return (
          <main className="flex min-h-screen items-center justify-center bg-[#f8f9fc]">
             <Box className="bg-surface rounded-xl border border-[#e9ebf1] px-10 py-12 text-center">
-               <h2 className="text-xl font-bold text-[#10142c]">Job not found</h2>
+               <Typography
+                  className="text-xl! font-bold!"
+                  variant="h2">
+                  Job not found
+               </Typography>
 
-               <p className="mt-2 text-sm text-[#69718a]">We couldn't find this job.</p>
+               <Typography className="mt-2! text-sm! text-[#69718a]!">
+                  We couldn't find this job.
+               </Typography>
                <Button
-                  variant="contained"
+                  className="mt-6 rounded-lg px-6 py-3 text-sm font-semibold"
                   color="primary"
-                  onClick={() => navigate("/jobs")}
-                  className="mt-6 rounded-lg px-6 py-3 text-sm font-semibold">
+                  variant="contained"
+                  onClick={() => navigate("/jobs")}>
                   Back to Jobs
                </Button>
             </Box>
@@ -88,19 +94,19 @@ const JobDetailsPage: React.FC = () => {
       return (
          <main className="flex min-h-screen items-center justify-center bg-[#f8f9fc]">
             <Box className="bg-surface rounded-xl border border-[#e9ebf1] px-10 py-12 text-center">
-               <h2 className="text-xl font-bold text-[#10142c]">
+               <Typography className="text-xl! font-bold!" variant="h2">
                   {queryPresentation.message}
-               </h2>
+               </Typography>
                <Button
-                  onClick={query.refetch}
-                  className="mt-4 mr-2 rounded-lg px-6 py-3 text-sm font-semibold">
+                  className="mt-4 mr-2 rounded-lg px-6 py-3 text-sm font-semibold"
+                  onClick={query.refetch}>
                   Retry
                </Button>
                <Button
-                  variant="contained"
+                  className="mt-6 rounded-lg px-6 py-3 text-sm font-semibold"
                   color="primary"
-                  onClick={() => navigate("/jobs")}
-                  className="mt-6 rounded-lg px-6 py-3 text-sm font-semibold">
+                  variant="contained"
+                  onClick={() => navigate("/jobs")}>
                   Back to Jobs
                </Button>
             </Box>
@@ -117,12 +123,12 @@ const JobDetailsPage: React.FC = () => {
       return (
          <main className="flex min-h-screen items-center justify-center bg-[#f8f9fc]">
             <Box className="bg-surface rounded-xl border border-[#e9ebf1] px-10 py-12 text-center">
-               <h2 className="text-xl font-bold text-[#10142c]">
+               <Typography className="text-xl! font-bold!" variant="h2">
                   Job details could not be determined.
-               </h2>
+               </Typography>
                <Button
-                  onClick={() => navigate("/jobs")}
-                  className="mt-6 rounded-lg px-6 py-3 text-sm font-semibold">
+                  className="mt-6 rounded-lg px-6 py-3 text-sm font-semibold"
+                  onClick={() => navigate("/jobs")}>
                   Back to Jobs
                </Button>
             </Box>
@@ -159,8 +165,8 @@ const JobDetailsPage: React.FC = () => {
                <Box className="mb-4 flex items-center justify-between gap-3 rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-900">
                   <span>{queryPresentation.message}</span>
                   <Button
-                     onClick={query.refetch}
-                     className="normal-case!">
+                     className="normal-case!"
+                     onClick={query.refetch}>
                      Retry
                   </Button>
                </Box>
@@ -170,13 +176,10 @@ const JobDetailsPage: React.FC = () => {
             ================================================= */}
 
             <Button
-               onClick={() => navigate("/jobs")}
-               className="app-button-secondary mb-5! flex! items-center! gap-2! text-sm! font-medium! capitalize! transition!">
-               <ArrowBack
-                  sx={{
-                     fontSize: 18
-                  }}
-               />
+               className="mb-5! flex! items-center! gap-2! text-sm! font-medium! normal-case! transition!"
+               variant="outlined"
+               onClick={() => navigate("/jobs")}>
+               <ArrowBack className="text-lg!" />
                Back to Jobs
             </Button>
 
@@ -194,18 +197,16 @@ const JobDetailsPage: React.FC = () => {
                />
                <JobDescription job={job} />
                <JobApplicationPanel
-                  job={job}
                   isSaving={isSavingJob}
+                  job={job}
                   onApply={() => setOpenApplyModal(true)}
                   onToggleSave={() => void handleToggleSave()}
                />
             </Box>
          </Box>
          <ApplyModal
-            open={openApplyModal}
-            handleClose={() => setOpenApplyModal(false)}
-            userId={userId ?? ""}
             companyId={job.company.id}
+            handleClose={() => setOpenApplyModal(false)}
             jobSummaryData={{
                companyName: job.company.companyName,
                title: job.title,
@@ -217,6 +218,8 @@ const JobDetailsPage: React.FC = () => {
                deadline: job.deadline,
                skills: job.skills
             }}
+            open={openApplyModal}
+            userId={userId ?? ""}
          />
       </main>
    )

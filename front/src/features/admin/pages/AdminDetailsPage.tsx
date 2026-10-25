@@ -30,38 +30,38 @@ export default function AdminDetailsPage() {
    return (
       <Box className="max-w-3xl space-y-5">
          <Button
+            className="normal-case!"
             startIcon={<ArrowBackRoundedIcon />}
-            onClick={() => navigate("/admin/admins")}
-            className="normal-case!">
+            onClick={() => navigate("/admin/admins")}>
             Back to Admin Management
          </Button>
          <Box className="border-border bg-surface rounded-xl border p-6">
             <Typography className="text-content! text-2xl! font-bold!">
                {admin.firstName} {admin.lastName}
             </Typography>
-            <Typography className="text-muted! mt-1! text-sm!">{admin.email}</Typography>
+            <Typography className="mt-1! text-sm!" color="textSecondary">{admin.email}</Typography>
             <Box className="mt-5 grid grid-cols-1 gap-4 md:grid-cols-3">
                <Box>
-                  <Typography className="text-muted! text-xs!">Role</Typography>
+                  <Typography className="text-xs!" color="textSecondary">Role</Typography>
                   <Typography className="text-content! mt-1! text-sm! font-semibold!">
                      {admin.adminRoleAssignments[0]?.adminRole.name ?? "Unassigned"}
                   </Typography>
                </Box>
                <Box>
-                  <Typography className="text-muted! text-xs!">Status</Typography>
+                  <Typography className="text-xs!" color="textSecondary">Status</Typography>
                   <Typography className="text-content! mt-1! text-sm! font-semibold!">
                      {admin.accountStatus}
                   </Typography>
                </Box>
                <Box>
-                  <Typography className="text-muted! text-xs!">Created</Typography>
+                  <Typography className="text-xs!" color="textSecondary">Created</Typography>
                   <Typography className="text-content! mt-1! text-sm!">
                      {formatDate(admin.createdAt)}
                   </Typography>
                </Box>
             </Box>
             <Box className="bg-bg mt-6 rounded-lg p-4">
-               <Typography className="text-muted! text-xs! font-semibold! uppercase!">
+               <Typography className="text-xs! font-semibold! uppercase!" color="textSecondary">
                   Permissions
                </Typography>
                <Typography className="text-content! mt-2! text-sm! leading-6!">

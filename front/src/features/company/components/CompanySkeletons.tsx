@@ -5,20 +5,20 @@ export const CompanyDashboardSkeleton = () => (
       <Box className="grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-3">
          {[1, 2, 3].map(item => (
             <Box
-               key={item}
-               className="border-border bg-surface rounded-xl border p-5">
+               className="border-border bg-surface rounded-xl border p-5"
+               key={item}>
                <Skeleton
+                  height={42}
                   variant="circular"
                   width={42}
-                  height={42}
                />
                <Skeleton
                   className="mt-3"
                   width="45%"
                />
                <Skeleton
-                  width="28%"
                   height={34}
+                  width="28%"
                />
                <Skeleton width="38%" />
             </Box>
@@ -27,18 +27,18 @@ export const CompanyDashboardSkeleton = () => (
 
       <Box className="grid grid-cols-1 gap-5 xl:grid-cols-[1.5fr_1fr]">
          <Skeleton
-            variant="rounded"
             height={280}
+            variant="rounded"
          />
          <Skeleton
-            variant="rounded"
             height={280}
+            variant="rounded"
          />
       </Box>
 
       <Skeleton
-         variant="rounded"
          height={240}
+         variant="rounded"
       />
    </Box>
 )
@@ -49,8 +49,8 @@ export const CompanyApplicationsSkeleton = () => (
       {[1, 2, 3, 4, 5, 6].map(item => (
          <Skeleton
             key={item}
-            variant="rounded"
             height={42}
+            variant="rounded"
          />
       ))}
    </Box>
@@ -60,16 +60,16 @@ export const CompanyApplicationStatsSkeleton = () => (
    <Box className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
       {Array.from({ length: 6 }).map((_, index) => (
          <Box
-            key={index}
-            className="border-border bg-surface rounded-xl border p-4">
+            className="border-border bg-surface rounded-xl border p-4"
+            key={index}>
             <Skeleton
                variant="text"
                width="58%"
             />
             <Skeleton
+               height={36}
                variant="text"
                width="36%"
-               height={36}
             />
          </Box>
       ))}
@@ -79,22 +79,22 @@ export const CompanyApplicationStatsSkeleton = () => (
 export const CompanyProfileSkeleton = () => (
    <Box className="space-y-5 p-5 lg:p-6">
       <Skeleton
-         variant="rounded"
          height={210}
+         variant="rounded"
       />
       <Box className="grid grid-cols-1 gap-5 xl:grid-cols-2">
          <Skeleton
-            variant="rounded"
             height={300}
+            variant="rounded"
          />
          <Skeleton
-            variant="rounded"
             height={300}
+            variant="rounded"
          />
       </Box>
       <Skeleton
-         variant="rounded"
          height={150}
+         variant="rounded"
       />
    </Box>
 )
@@ -103,22 +103,22 @@ export const EditCompanyProfileSkeleton = () => (
    <Box className="grid grid-cols-1 gap-6 xl:grid-cols-[minmax(0,1fr)_320px]">
       <Box className="space-y-4">
          <Skeleton
-            variant="rounded"
             height={430}
+            variant="rounded"
          />
          <Skeleton
-            variant="rounded"
             height={120}
+            variant="rounded"
          />
       </Box>
       <Box className="space-y-4">
          <Skeleton
-            variant="rounded"
             height={220}
+            variant="rounded"
          />
          <Skeleton
-            variant="rounded"
             height={320}
+            variant="rounded"
          />
       </Box>
    </Box>
@@ -129,8 +129,8 @@ export const CompanyTableSkeleton = () => (
       {[1, 2, 3, 4, 5, 6].map(item => (
          <Skeleton
             key={item}
-            variant="rounded"
             height={48}
+            variant="rounded"
          />
       ))}
    </Box>
@@ -139,21 +139,21 @@ export const CompanyTableSkeleton = () => (
 export const CompanyCandidateProfileSkeleton = () => (
    <Box className="w-full space-y-5">
       <Skeleton
+         height={38}
          variant="rounded"
          width={140}
-         height={38}
       />
       <Box className="border-border bg-surface flex min-h-28 items-center gap-4 rounded-xl border p-5">
          <Skeleton
+            height={80}
             variant="circular"
             width={80}
-            height={80}
          />
          <Box className="flex-1 space-y-2">
             <Skeleton
+               height={30}
                variant="text"
                width="34%"
-               height={30}
             />
             <Skeleton
                variant="text"
@@ -165,8 +165,8 @@ export const CompanyCandidateProfileSkeleton = () => (
          {Array.from({ length: 4 }).map((_, index) => (
             <Skeleton
                key={index}
-               variant="rounded"
                height={88}
+               variant="rounded"
             />
          ))}
       </Box>
@@ -174,28 +174,28 @@ export const CompanyCandidateProfileSkeleton = () => (
          {Array.from({ length: 5 }).map((_, index) => (
             <Skeleton
                key={index}
+               height={32}
                variant="rounded"
                width={90}
-               height={32}
             />
          ))}
       </Box>
       <Box className="grid grid-cols-1 gap-4 xl:grid-cols-2">
          <Skeleton
-            variant="rounded"
             height={260}
+            variant="rounded"
          />
          <Skeleton
-            variant="rounded"
             height={260}
+            variant="rounded"
          />
          <Skeleton
-            variant="rounded"
             height={200}
+            variant="rounded"
          />
          <Skeleton
-            variant="rounded"
             height={200}
+            variant="rounded"
          />
       </Box>
    </Box>
@@ -204,16 +204,16 @@ export const CompanyCandidateProfileSkeleton = () => (
 export const CompanyDetailsSkeleton = () => (
    <Box className="space-y-5 p-6">
       <Skeleton
-         width="35%"
          height={30}
+         width="35%"
       />
       <Skeleton
-         variant="rounded"
          height={150}
+         variant="rounded"
       />
       <Skeleton
-         variant="rounded"
          height={220}
+         variant="rounded"
       />
    </Box>
 )

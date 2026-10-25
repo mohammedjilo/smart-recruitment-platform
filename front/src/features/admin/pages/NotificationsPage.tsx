@@ -108,10 +108,11 @@ const NotificationsPage = () => {
                {notificationDescription}
             </Typography>
             <Button
-               size="small"
-               onClick={() => void handleMarkAllAsRead()}
+               className="mt-3! normal-case!"
                disabled={isMarkingAllAsRead}
-               className="app-button-secondary mt-3! normal-case!">
+               size="small"
+               variant="outlined"
+               onClick={() => void handleMarkAllAsRead()}>
                {isMarkingAllAsRead ? "Marking..." : "Mark all as read"}
             </Button>
          </Box>
@@ -120,17 +121,17 @@ const NotificationsPage = () => {
             <FiltersBarSkeleton pillCount={6} />
          ) : (
             <NotificationsToolbar
-               filter={filter}
                allowedTypes={allowedTypes}
+               filter={filter}
                onFilterChange={handleFilterChange}
             />
          )}
 
          <Box className="mt-6">
             <NotificationsList
-               notifications={notifications}
-               isLoading={isLoading}
                isFetching={isFetching}
+               isLoading={isLoading}
+               notifications={notifications}
                portal="admin"
                onMarkAsRead={handleMarkAsRead}
             />
@@ -138,12 +139,12 @@ const NotificationsPage = () => {
 
          {!isLoading && totalCount > 0 && (
             <PaginationFooter
+               isFetching={isFetching}
+               itemLabel="notifications"
                page={page}
                pageSize={ITEMS_PER_PAGE}
-               totalCount={totalCount}
                setPage={setPage}
-               itemLabel="notifications"
-               isFetching={isFetching}
+               totalCount={totalCount}
             />
          )}
       </Box>

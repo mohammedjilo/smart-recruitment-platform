@@ -9,11 +9,11 @@ describe("user jobs filters", () => {
       const onSearchSubmit = vi.fn()
       render(
          <JobsFilters
-            search=""
             employmentType=""
+            search=""
+            onEmploymentTypeChange={vi.fn()}
             onSearchChange={onSearchChange}
             onSearchSubmit={onSearchSubmit}
-            onEmploymentTypeChange={vi.fn()}
          />
       )
       const input = screen.getByPlaceholderText("Search company, job, or skill...")

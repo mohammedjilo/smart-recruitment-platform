@@ -13,6 +13,12 @@ export type Company = {
    email: string
    website: string | null
    location: string | null
+   country?: string | null
+   countryCode?: string | null
+   state?: string | null
+   stateCode?: string | null
+   city?: string | null
+   cityGeonameId?: number | null
    status: CompanyStatus
    approvalStatus?: CompanyApprovalStatus
    createdAt: string

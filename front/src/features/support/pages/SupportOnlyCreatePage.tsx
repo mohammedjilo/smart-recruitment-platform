@@ -68,16 +68,16 @@ export default function SupportOnlyCreatePage() {
    return (
       <Box className="mx-auto max-w-3xl">
          <Button
+            className="mb-4 normal-case"
             component={Link}
-            to="/support-only"
-            className="mb-4 normal-case">
+            to="/support-only">
             Back to requests
          </Button>
          <Box className="bg-surface border-border rounded-xl border p-6 sm:p-8">
             <Typography
+               className="text-content font-bold"
                component="h2"
-               variant="h5"
-               className="text-content font-bold">
+               variant="h5">
                Create Support Request
             </Typography>
             <Typography className="text-muted mt-1 text-sm">
@@ -85,40 +85,40 @@ export default function SupportOnlyCreatePage() {
             </Typography>
             {fieldError && (
                <Alert
-                  severity="error"
-                  className="mt-4">
+                  className="mt-4"
+                  severity="error">
                   {fieldError}
                </Alert>
             )}
             {createResult.isError && (
                <Alert
-                  severity="error"
-                  className="mt-4">
+                  className="mt-4"
+                  severity="error">
                   {errorText(createResult.error)}
                </Alert>
             )}
             <Box
+               className="mt-5 space-y-4"
                component="form"
-               onSubmit={event => void submit(event)}
-               className="mt-5 space-y-4">
+               onSubmit={event => void submit(event)}>
                <TextField
-                  fullWidth
                   required
-                  label="Subject"
                   value={subject}
-                  onChange={event => setSubject(event.target.value)}
+                  fullWidth
+                  label="Subject"
                   slotProps={{ htmlInput: { maxLength: 160 } }}
+                  onChange={event => setSubject(event.target.value)}
                />
                <FormControl
-                  fullWidth
-                  required>
+                  required
+                  fullWidth>
                   <InputLabel id="support-only-category">Category</InputLabel>
                   <Select
-                     labelId="support-only-category"
-                     label="Category"
+                     disabled={categories.isLoading}
                      value={categoryId}
-                     onChange={event => setCategoryId(event.target.value)}
-                     disabled={categories.isLoading}>
+                     label="Category"
+                     labelId="support-only-category"
+                     onChange={event => setCategoryId(event.target.value)}>
                      {(categories.data?.data ?? []).map(category => (
                         <MenuItem
                            key={category.id}
@@ -132,27 +132,27 @@ export default function SupportOnlyCreatePage() {
                   <Alert severity="error">Support categories could not be loaded.</Alert>
                )}
                <TextField
-                  fullWidth
                   required
-                  multiline
-                  minRows={6}
-                  label="Description"
                   value={description}
-                  onChange={event => setDescription(event.target.value)}
+                  fullWidth
+                  label="Description"
+                  minRows={6}
+                  multiline
                   slotProps={{ htmlInput: { maxLength: 10000 } }}
+                  onChange={event => setDescription(event.target.value)}
                />
                <Button
                   type="submit"
-                  variant="contained"
                   disabled={
                      createResult.isLoading ||
                      categories.isLoading ||
                      !categories.data?.data.length
-                  }>
+                  }
+                  variant="contained">
                   {createResult.isLoading ? (
                      <CircularProgress
-                        size={20}
                         color="inherit"
+                        size={20}
                      />
                   ) : (
                      "Submit request"

@@ -39,16 +39,16 @@ const DashboardRoute = () => {
             <Box className="space-y-3 p-6">
                <Typography
                   className="text-sm! text-red-600!"
-                  role="alert"
-                  aria-live="assertive">
+                  aria-live="assertive"
+                  role="alert">
                   {permissionsPresentation.category === "page_error" &&
                   permissionsState.status === "inconsistent"
                      ? "Admin permissions could not be verified."
                      : permissionsPresentation.message}
                </Typography>
                <Button
-                  onClick={() => void permissionsQuery.refetch()}
-                  className="normal-case!">
+                  className="normal-case!"
+                  onClick={() => void permissionsQuery.refetch()}>
                   Retry
                </Button>
             </Box>
@@ -62,12 +62,12 @@ const DashboardRoute = () => {
       if (company.approvalStatus !== "APPROVED") {
          return (
             <Navigate
+               replace
                to={
                   company.approvalStatus === "PENDING"
                      ? "/company/registration/pending"
                      : "/company/registration/rejected"
                }
-               replace
             />
          )
       }
@@ -92,8 +92,8 @@ const DashboardRoute = () => {
 
    return (
       <Navigate
-         to="/login"
          replace
+         to="/login"
       />
    )
 }

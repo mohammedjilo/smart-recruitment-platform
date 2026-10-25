@@ -98,18 +98,23 @@ const SkillForm: React.FC<Props> = ({ onSave, onCancel }) => {
          {formError && (
             <Box
                className="mb-4"
-               role="alert"
-               aria-live="assertive">
+               aria-live="assertive"
+               role="alert">
                <Typography color="error">{formError}</Typography>
             </Box>
          )}
          <form onSubmit={handleSubmit(onSubmit)}>
             <Box className="mt-2 flex gap-2">
                <TextField
-                  fullWidth
-                  label="Skill Name"
                   placeholder="e.g. React, TypeScript, Leadership"
                   value={skillInput}
+                  error={!!errors.skills}
+                  fullWidth
+                  helperText={errors.skills?.message as string}
+                  label="Skill Name"
+                  size="medium"
+                  slotProps={{ inputLabel: { shrink: true } }}
+                  variant="outlined"
                   onChange={e => setSkillInput(e.target.value)}
                   onKeyDown={e => {
                      if (e.key === "Enter") {
@@ -117,14 +122,9 @@ const SkillForm: React.FC<Props> = ({ onSave, onCancel }) => {
                         addSkill()
                      }
                   }}
-                  variant="outlined"
-                  size="medium"
-                  error={!!errors.skills}
-                  helperText={errors.skills?.message as string}
-                  slotProps={{ inputLabel: { shrink: true } }}
                />
                <Button
-                  className="app-button-primary h-14! normal-case!"
+                  className="h-14! normal-case!"
                   variant="contained"
                   onClick={addSkill}>
                   Add
@@ -135,7 +135,7 @@ const SkillForm: React.FC<Props> = ({ onSave, onCancel }) => {
                name="skills"
                control={control}
                render={() => (
-                  <>
+                  <Box className="contents">
                      {skills.length > 0 && (
                         <Stack
                            className="mt-4 flex-wrap"
@@ -143,30 +143,30 @@ const SkillForm: React.FC<Props> = ({ onSave, onCancel }) => {
                            spacing={1}>
                            {skills.map((skill: string) => (
                               <Chip
+                                 className="mb-2! bg-[#F3EFFF]! text-[#6741E8]!"
                                  key={skill}
                                  label={skill}
                                  onDelete={() => removeSkill(skill)}
-                                 className="mb-2! bg-[#F3EFFF]! text-[#6741E8]!"
                               />
                            ))}
                         </Stack>
                      )}
-                  </>
+                  </Box>
                )}
             />
 
             <Box className="mt-5 flex justify-end gap-3">
                <Button
+                  className="normal-case!"
                   variant="outlined"
-                  onClick={onCancel}
-                  className="normal-case!">
+                  onClick={onCancel}>
                   Cancel
                </Button>
                <Button
                   className="normal-case!"
                   type="submit"
-                  variant="contained"
-                  disabled={isLoading}>
+                  disabled={isLoading}
+                  variant="contained">
                   {isLoading ? "Saving..." : "Save Skills"}
                </Button>
             </Box>

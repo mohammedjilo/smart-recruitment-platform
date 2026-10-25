@@ -25,16 +25,18 @@ vi.mock("@/features/admin/services/adminApiCalls", () => ({
    }
 }))
 
-const makeAdmin = (id: string, permissions: AdminPermission[] = []) => ({
-   user: {
+const makeAdminUser = (id: string, permissions?: AdminPermission[]) => ({
       id,
       firstName: "Admin",
       lastName: id,
       email: `${id}@example.test`,
       profilePicUrl: "",
       role: "ADMIN" as const,
-      permissions
-   },
+      ...(permissions ? { permissions } : {})
+})
+
+const makeAdmin = (id: string, permissions: AdminPermission[] = []) => ({
+   user: makeAdminUser(id, permissions),
    company: null,
    token: "token",
    permissions
@@ -97,6 +99,18 @@ describe("AdminPermissionSynchronizer", () => {
       )
    })
 
+   it("preserves stored permissions while current server permissions are unavailable", async () => {
+      const storedPermissions = [ADMIN_PERMISSIONS.VIEW_USERS]
+      const store = createStore(storedPermissions)
+
+      renderSync(store)
+
+      await waitFor(() =>
+         expect(permissionsQuery.requestedAdminId).toBe("admin-1")
+      )
+      expect(store.getState().auth.permissions).toEqual(storedPermissions)
+   })
+
    it("clears old permissions during admin switch and logout", async () => {
       const originalPermission = ADMIN_PERMISSIONS.VIEW_USERS
       permissionsQuery.currentData = {
@@ -111,7 +125,12 @@ describe("AdminPermissionSynchronizer", () => {
 
       permissionsQuery.currentData = undefined
       act(() => {
-         store.dispatch(authActions.login({ ...makeAdmin("admin-2", [originalPermission]), token: "new-token" }))
+         store.dispatch(
+            authActions.login({
+               user: makeAdminUser("admin-2"),
+               token: "new-token"
+            })
+         )
       })
       rerender(
          <Provider store={store}>
@@ -119,7 +138,7 @@ describe("AdminPermissionSynchronizer", () => {
          </Provider>
       )
 
-      await waitFor(() => expect(store.getState().auth.permissions).toEqual([]))
+      expect(store.getState().auth.permissions).toEqual([])
       expect(permissionsQuery.requestedAdminId).toBe("admin-2")
 
       const newPermissions = [ADMIN_PERMISSIONS.VIEW_COMPANIES]

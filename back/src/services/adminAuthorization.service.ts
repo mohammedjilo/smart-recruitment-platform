@@ -27,9 +27,25 @@ const adminSummarySelect = {
   },
 } as const;
 
-export const getCurrentAdminPermissions = async (userId: string) => ({
-  permissions: await getUserPermissions(userId),
-});
+export const getCurrentAdminPermissions = async (userId: string) => {
+  const [permissions, admin] = await Promise.all([
+    getUserPermissions(userId),
+    prisma.user.findUnique({
+      where: { id: userId },
+      select: {
+        adminRoleAssignments: {
+          select: { adminRole: { select: { name: true } } },
+        },
+      },
+    }),
+  ]);
+
+  return {
+    permissions,
+    adminRoleNames:
+      admin?.adminRoleAssignments.map(({ adminRole }) => adminRole.name) ?? [],
+  };
+};
 
 export const createAdmin = async (
   actorUserId: string,
@@ -119,22 +135,6 @@ export const listAdminRoles = async (actorUserId: string) => {
         },
         orderBy: { permission: { code: "asc" } },
       },
-    },
-  });
-};
-
-export const listPermissions = async (actorUserId: string) => {
-  await assertPermission(actorUserId, PERMISSIONS.MANAGE_ADMIN_PERMISSIONS);
-
-  return prisma.permission.findMany({
-    where: { active: true },
-    orderBy: [{ resource: "asc" }, { code: "asc" }],
-    select: {
-      id: true,
-      code: true,
-      resource: true,
-      action: true,
-      description: true,
     },
   });
 };
@@ -318,25 +318,4 @@ export const updateAdminStatus = async (
   });
 
   return updated;
-};
-
-export const listAuditLogs = async (actorUserId: string) => {
-  await assertPermission(actorUserId, PERMISSIONS.VIEW_AUDIT_LOG);
-
-  return prisma.auditLog.findMany({
-    orderBy: { createdAt: "desc" },
-    take: 100,
-    select: {
-      id: true,
-      actorUserId: true,
-      action: true,
-      resource: true,
-      resourceId: true,
-      metadata: true,
-      createdAt: true,
-      actorUser: {
-        select: { id: true, firstName: true, lastName: true, email: true },
-      },
-    },
-  });
 };

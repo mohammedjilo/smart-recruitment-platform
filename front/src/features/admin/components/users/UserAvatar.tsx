@@ -12,9 +12,9 @@ const UserAvatar = ({ firstName, lastName, profilePicUrl }: UserAvatarProps) => 
 
    return (
       <Avatar
-         src={profilePicUrl || undefined}
+         className="h-10! w-10! bg-violet-100! text-xs! font-semibold! text-violet-700!"
          alt={`${firstName} ${lastName}`}
-         className="h-10! w-10! bg-violet-100! text-xs! font-semibold! text-violet-700!">
+         src={profilePicUrl || undefined}>
          {initials}
       </Avatar>
    )

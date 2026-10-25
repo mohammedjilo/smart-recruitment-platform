@@ -4,24 +4,34 @@ import { WorkOutlined } from "@mui/icons-material"
 import Swal from "sweetalert2"
 import { showAlert } from "@/utils/swal"
 import { useUpdateApplicationStatusMutation } from "@/services/shared/applicationApiCalls"
-import type { CompanyApplication, UpdateApplicationStatus } from "@/types/application"
+import type {
+   ApplicationStatus,
+   CompanyApplication,
+   UpdateApplicationStatus
+} from "@/types/application"
 import { APPLICATION_STATUS_CONFIG } from "@/types/common/status"
 import { getMutationErrorState, getMutationState } from "@/utils/mutationState"
 import { getMutationPresentation } from "@/utils/presentationPolicy"
 
-const statusOptions: UpdateApplicationStatus[] = [
-   "PENDING",
-   "REVIEWING",
-   "SHORTLISTED",
-   "INTERVIEW",
-   "ACCEPTED",
-   "REJECTED"
-]
+const allowedStatusTransitions: Record<
+   ApplicationStatus,
+   readonly UpdateApplicationStatus[]
+> = {
+   PENDING: ["REVIEWING", "REJECTED"],
+   REVIEWING: ["SHORTLISTED", "INTERVIEW", "REJECTED"],
+   SHORTLISTED: ["INTERVIEW", "ACCEPTED", "REJECTED"],
+   INTERVIEW: ["ACCEPTED", "REJECTED"],
+   ACCEPTED: [],
+   REJECTED: [],
+   WITHDRAWN: []
+}
 
 const ApplicationDetailsActions = ({
-   application
+   application,
+   onStatusUpdated
 }: {
    application: CompanyApplication
+   onStatusUpdated: (status: UpdateApplicationStatus) => void
 }) => {
    const navigate = useNavigate()
    const [updateApplicationStatus, mutationResult] = useUpdateApplicationStatusMutation()
@@ -30,15 +40,25 @@ const ApplicationDetailsActions = ({
       { surface: "action", importance: "important" }
    )
    const isWithdrawn = application.status === "WITHDRAWN"
+   const availableStatuses = [
+      application.status,
+      ...allowedStatusTransitions[application.status]
+   ]
+   const isFinalStatus =
+      application.status === "ACCEPTED" || application.status === "REJECTED"
+   const cannotChangeStatus = isWithdrawn || isFinalStatus
 
    const handleChangeStatus = async () => {
-      if (isWithdrawn) return
+      if (cannotChangeStatus) return
 
       const statusSelection = await Swal.fire({
          title: "Change application status",
          input: "select",
          inputOptions: Object.fromEntries(
-            statusOptions.map(status => [status, APPLICATION_STATUS_CONFIG[status].label])
+            availableStatuses.map(status => [
+               status,
+               APPLICATION_STATUS_CONFIG[status].label
+            ])
          ),
          inputValue: application.status,
          showCancelButton: true,
@@ -67,6 +87,7 @@ const ApplicationDetailsActions = ({
             applicationId: application.id,
             status: nextStatus
          }).unwrap()
+         onStatusUpdated(nextStatus)
          if (
             getMutationPresentation(
                { status: "success" },
@@ -96,33 +117,39 @@ const ApplicationDetailsActions = ({
    return (
       <Box className="flex flex-col">
          <Button
+            className="mx-5! flex! flex-1! items-center! justify-center! gap-2! rounded-md! px-3! py-2.5! text-[11px]! font-medium! capitalize! transition!"
+            color="primary"
+            variant="outlined"
             onClick={() =>
                navigate(`/company/jobs/${application.job.id}/${application.job.slug}`)
-            }
-            variant="outlined"
-            color="primary"
-            className="mx-5! flex! flex-1! items-center! justify-center! gap-2! rounded-md! px-3! py-2.5! text-[11px]! font-medium! capitalize! transition!">
-            <WorkOutlined sx={{ fontSize: 16 }} />
+            }>
+            <WorkOutlined className="text-base!" />
             View Job
          </Button>
          <Box className="border-border mt-5 flex gap-2 border-t px-5 py-5">
             <Button
-               onClick={() => navigate(`/company/users/${application.user.id}/profile`)}
-               variant="outlined"
+               className="flex! flex-1! items-center! justify-center! gap-2! rounded-md! px-3! py-2.5! text-[11px]! font-medium! capitalize! transition!"
                color="primary"
-               className="flex! flex-1! items-center! justify-center! gap-2! rounded-md! px-3! py-2.5! text-[11px]! font-medium! capitalize! transition!">
-               <WorkOutlined sx={{ fontSize: 16 }} />
+               variant="outlined"
+               onClick={() => navigate(`/company/users/${application.user.id}/profile`)}>
+               <WorkOutlined className="text-base!" />
                View Profile
             </Button>
             <Button
-               onClick={() => void handleChangeStatus()}
-               disabled={isWithdrawn || mutationPresentation.category === "loading"}
                className={`flex! flex-1! items-center! justify-center! rounded-md! px-3! py-2.5! text-[11px]! font-medium capitalize! transition! ${
-                  isWithdrawn
+                  cannotChangeStatus
                      ? "text-muted! cursor-not-allowed! bg-slate-200!"
                      : "bg-primary! hover:bg-primary-dark! text-white!"
-               }`}>
-               {isWithdrawn ? "Withdrawn" : "Change Status"}
+               }`}
+               disabled={
+                  cannotChangeStatus || mutationPresentation.category === "loading"
+               }
+               onClick={() => void handleChangeStatus()}>
+               {isWithdrawn
+                  ? "Withdrawn"
+                  : isFinalStatus
+                    ? APPLICATION_STATUS_CONFIG[application.status].label
+                    : "Change Status"}
             </Button>
          </Box>
       </Box>

@@ -6,13 +6,13 @@ import {
    FormControlLabel,
    Radio,
    RadioGroup,
-   Skeleton,
    TextField,
    Typography
 } from "@mui/material"
 import { Close, CloudUpload, InsertDriveFile } from "@mui/icons-material"
 import { calculateAge } from "@/utils/formatDate"
 import { useGetBasicInformationsQuery } from "@/services/shared/jobApiCalls"
+import BasicInformationStepSkeleton from "./BasicInformationStepSkeleton"
 
 // ============================================================
 // ============================================================
@@ -47,10 +47,9 @@ function InputField({ label, value, onChange }: InputFieldProps) {
       <Box>
          <Typography className="mb-2! text-xs!">{label}</Typography>
          <TextField
+            value={value || ""}
             fullWidth
             size="small"
-            value={value || ""}
-            onChange={e => onChange(e.target.value)}
             sx={{
                "& .MuiOutlinedInput-root": {
                   borderRadius: "8px",
@@ -58,6 +57,7 @@ function InputField({ label, value, onChange }: InputFieldProps) {
                   color: "#64b5f6"
                }
             }}
+            onChange={e => onChange(e.target.value)}
          />
       </Box>
    )
@@ -153,71 +153,44 @@ const BasicInformationStep: React.FC<BasicInformationStepProps> = ({
    }
 
    if (isLoading) {
-      return (
-         <Box>
-            <Skeleton
-               variant="text"
-               width={170}
-               height={28}
-            />
-            <Box className="mt-4 grid grid-cols-2 gap-5">
-               {Array.from({ length: 6 }).map((_, index) => (
-                  <Box
-                     key={index}
-                     className="space-y-2">
-                     <Skeleton
-                        variant="text"
-                        width="42%"
-                     />
-                     <Skeleton
-                        variant="rounded"
-                        height={40}
-                     />
-                  </Box>
-               ))}
-            </Box>
-            <Skeleton
-               variant="rounded"
-               height={90}
-               className="mt-6"
-            />
-         </Box>
-      )
+      return <BasicInformationStepSkeleton />
    }
 
    return (
       <Box>
-         <h3 className="mb-5 text-[13px] font-semibold">Your Information</h3>
+         <Typography className="mb-5! text-[13px]! font-semibold!" variant="h3">
+            Your Information
+         </Typography>
 
          <Box className="grid grid-cols-2 gap-5">
             <InputField
-               label="Full Name *"
                value={formData.fullName}
+               label="Full Name *"
                onChange={val => updateField("fullName", val)}
             />
             <InputField
-               label="Email Address *"
                value={formData.email}
+               label="Email Address *"
                onChange={val => updateField("email", val)}
             />
             <InputField
-               label="Job Title"
                value={formData.jobTitle}
+               label="Job Title"
                onChange={val => updateField("jobTitle", val)}
             />
             <InputField
-               label="Phone Number *"
                value={formData.phone}
+               label="Phone Number *"
                onChange={val => updateField("phone", val)}
             />
             <InputField
-               label="Current Location *"
                value={formData.country}
+               label="Current Location *"
                onChange={val => updateField("country", val)}
             />
             <InputField
-               label="Age"
                value={formData.age}
+               label="Age"
                onChange={val => updateField("age", val)}
             />
          </Box>
@@ -227,9 +200,9 @@ const BasicInformationStep: React.FC<BasicInformationStepProps> = ({
          <Box className="mt-6">
             <FormControl component="fieldset">
                <RadioGroup
+                  className="gap-2!"
                   value={selectedOption}
-                  onChange={handleRadioChange}
-                  sx={{ gap: 1 }}>
+                  onChange={handleRadioChange}>
                   <FormControlLabel
                      value="profile"
                      control={<Radio />}
@@ -261,22 +234,22 @@ const BasicInformationStep: React.FC<BasicInformationStepProps> = ({
                   {formData.cv ? (
                      <Box className="flex items-center justify-between gap-4">
                         <Box className="flex items-center gap-2">
-                           <InsertDriveFile sx={{ color: "#5421e8" }} />
+                           <InsertDriveFile className="text-[#5421e8]!" />
                            <Typography
-                              variant="body2"
-                              sx={{ fontWeight: 500 }}>
+                              className="font-medium!"
+                              variant="body2">
                               {formData.cv.name}
                            </Typography>
                            <Typography
-                              variant="caption"
-                              color="text.secondary">
+                              color="text.secondary"
+                              variant="caption">
                               ({(formData.cv.size / 1024).toFixed(1)} KB)
                            </Typography>
                         </Box>
 
                         <Button
-                           size="small"
                            color="error"
+                           size="small"
                            startIcon={<Close />}
                            onClick={handleRemoveFile}>
                            Remove
@@ -285,18 +258,16 @@ const BasicInformationStep: React.FC<BasicInformationStepProps> = ({
                   ) : (
                      <Box>
                         <Button
-                           className="bg-surface!"
+                           className="bg-surface! border-[#5421e8]! text-[#5421e8]!"
                            component="label"
-                           variant="outlined"
                            startIcon={<CloudUpload />}
                            sx={{
-                              borderColor: "#5421e8",
-                              color: "#5421e8",
                               "&:hover": {
                                  borderColor: "#3a17b0",
                                  backgroundColor: "rgba(84, 33, 232, 0.04)"
                               }
-                           }}>
+                           }}
+                           variant="outlined">
                            Choose PDF File
                            <input
                               type="file"
@@ -307,9 +278,9 @@ const BasicInformationStep: React.FC<BasicInformationStepProps> = ({
                         </Button>
 
                         <Typography
-                           variant="caption"
+                           className="mt-2! block!"
                            color="text.secondary"
-                           sx={{ mt: 1, display: "block" }}>
+                           variant="caption">
                            Maximum file size: 5MB
                         </Typography>
                      </Box>

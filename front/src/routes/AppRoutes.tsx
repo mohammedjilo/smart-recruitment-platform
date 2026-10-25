@@ -1,7 +1,7 @@
 import "../App.css"
 import { useEffect, useState } from "react"
 import { createBrowserRouter, Navigate, RouterProvider } from "react-router-dom"
-import { Typography } from "@mui/material"
+import { Box, Typography } from "@mui/material"
 import AdminPermissionSynchronizer from "@/features/admin/authorization/AdminPermissionSynchronizer"
 import AdminRoutes from "@/routes/groups/AdminRoutes"
 import CompanyRoutes from "@/routes/groups/CompanyRoutes"
@@ -24,8 +24,8 @@ const router = createBrowserRouter([
       path: "/",
       element: (
          <Navigate
-            to="/login"
             replace
+            to="/login"
          />
       )
    },
@@ -33,9 +33,9 @@ const router = createBrowserRouter([
       path: "*",
       element: (
          <Typography
-            variant="h6"
+            className="mt-8!"
             align="center"
-            sx={{ mt: 4 }}>
+            variant="h6">
             Page not found
          </Typography>
       )
@@ -62,10 +62,10 @@ function App() {
    }, [locationKey])
 
    return (
-      <>
+      <Box className="contents">
          <AdminPermissionSynchronizer />
          <RouterProvider router={router} />
-      </>
+      </Box>
    )
 }
 

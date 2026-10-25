@@ -14,14 +14,14 @@ const RecentApplications = ({ applications }: RecentApplicationsProps) => {
    return (
       <Box className="bg-surface overflow-hidden rounded-xl border shadow-[0_1px_2px_rgba(16,24,40,0.03)]">
          <SectionHeader
-            title="Recent Applications"
             href="/company/applications"
+            title="Recent Applications"
          />
 
          <Box
             className="responsive-scroll-region mt-4 overflow-x-auto"
-            role="region"
             aria-label="Recent applications; scroll horizontally to see all columns"
+            role="region"
             tabIndex={0}>
             <Box className="min-w-150 px-5 pb-5">
                {/* Header */}
@@ -47,14 +47,8 @@ const RecentApplications = ({ applications }: RecentApplicationsProps) => {
                            {/* Candidate */}
                            <Box className="flex min-w-0 items-center gap-3">
                               <Avatar
+                                 className="h-9! w-9! bg-[#EDE9FE]! text-[13px]! text-[#5B35D5]!"
                                  src={application.user.profilePicUrl}
-                                 sx={{
-                                    width: 36,
-                                    height: 36,
-                                    fontSize: 13,
-                                    backgroundColor: "#EDE9FE",
-                                    color: "#5B35D5"
-                                 }}
                               />
 
                               <Box className="min-w-0">
@@ -73,8 +67,8 @@ const RecentApplications = ({ applications }: RecentApplicationsProps) => {
 
                            {/* Job */}
                            <Link
-                              to={`/company/jobs/${application.job.id}/${application.job.slug}`}
-                              className="hover:text-mui-blue-900 truncate! pr-3! text-[13px]! font-medium">
+                              className="hover:text-mui-blue-900 truncate! pr-3! text-[13px]! font-medium"
+                              to={`/company/jobs/${application.job.id}/${application.job.slug}`}>
                               {application.job.title}
                            </Link>
 

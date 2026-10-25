@@ -10,8 +10,8 @@ export default function CompanyGuard() {
    if (user) {
       return (
          <Navigate
-            to="/dashboard"
             replace
+            to="/dashboard"
          />
       )
    }
@@ -19,9 +19,9 @@ export default function CompanyGuard() {
    if (!company) {
       return (
          <Navigate
-            to="/login"
             replace
             state={{ from: location }}
+            to="/login"
          />
       )
    }
@@ -29,12 +29,12 @@ export default function CompanyGuard() {
    if (company.approvalStatus !== "APPROVED") {
       return (
          <Navigate
+            replace
             to={
                company.approvalStatus === "PENDING"
                   ? "/company/registration/pending"
                   : "/company/registration/rejected"
             }
-            replace
          />
       )
    }

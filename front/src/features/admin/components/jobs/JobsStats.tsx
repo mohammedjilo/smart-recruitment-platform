@@ -28,11 +28,11 @@ const StatCard = ({
 }: StatCardProps) => {
    return (
       <CommonStatCard
-         label={label}
+         className="shadow-sm"
          value={value}
          icon={icon}
          iconClassName={`${iconClassName} ${iconColorClassName}`}
-         className="shadow-sm"
+         label={label}
       />
    )
 }
@@ -41,35 +41,35 @@ const JobsStats = ({ stats }: JobsStatsProps) => {
    return (
       <Box className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
          <StatCard
-            label="Total Jobs"
             value={stats?.totalJobs ?? 0}
             icon={<WorkOutlinedIcon />}
             iconClassName="bg-primary/10"
             iconColorClassName="text-primary"
+            label="Total Jobs"
          />
 
          <StatCard
-            label="Open Jobs"
             value={stats?.openJobs ?? 0}
             icon={<LockOpenOutlinedIcon />}
             iconClassName="bg-emerald-50"
             iconColorClassName="text-emerald-600"
+            label="Open Jobs"
          />
 
          <StatCard
-            label="Closed Jobs"
             value={stats?.closedJobs ?? 0}
             icon={<LockOutlinedIcon />}
             iconClassName="bg-orange-50"
             iconColorClassName="text-orange-500"
+            label="Closed Jobs"
          />
 
          <StatCard
-            label="Expired Jobs"
             value={stats?.expiredJobs ?? 0}
             icon={<EventBusyOutlinedIcon />}
             iconClassName="bg-red-50"
             iconColorClassName="text-red-500"
+            label="Expired Jobs"
          />
       </Box>
    )

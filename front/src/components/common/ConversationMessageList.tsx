@@ -140,9 +140,9 @@ const ConversationMessageList = ({ conversationId, participant, color }: Props) 
 
    return (
       <Box
+         className="bg-bg relative flex min-h-0 flex-1 flex-col gap-3 overflow-y-auto p-4"
          ref={scrollContainerRef}
-         onScroll={handleScroll}
-         className="bg-bg relative flex min-h-0 flex-1 flex-col gap-3 overflow-y-auto p-4">
+         onScroll={handleScroll}>
          {isLoadingOlder && (
             <Box className="bg-surface pointer-events-none absolute top-2 left-1/2 z-10 flex -translate-x-1/2 items-center gap-2 rounded-full px-3 py-1.5 shadow-sm">
                <CircularProgress size={15} />
@@ -160,9 +160,9 @@ const ConversationMessageList = ({ conversationId, participant, color }: Props) 
                   Could not load earlier messages.
                </Typography>
                <Button
+                  className="min-w-0! px-2! py-0! text-xs! normal-case!"
                   size="small"
-                  onClick={() => void loadOlderMessages()}
-                  className="min-w-0! px-2! py-0! text-xs! normal-case!">
+                  onClick={() => void loadOlderMessages()}>
                   Retry
                </Button>
             </Box>
@@ -186,8 +186,8 @@ const ConversationMessageList = ({ conversationId, participant, color }: Props) 
 
                return (
                   <Box
-                     key={message.id}
-                     className={`flex ${isMine ? "justify-end" : "justify-start"}`}>
+                     className={`flex ${isMine ? "justify-end" : "justify-start"}`}
+                     key={message.id}>
                      <Box
                         className={`max-w-[80%] rounded-2xl px-3 py-2 text-sm ${
                            isMine ? mineBubble : "bg-surface text-content"

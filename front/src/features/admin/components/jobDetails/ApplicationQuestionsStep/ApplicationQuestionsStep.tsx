@@ -23,8 +23,8 @@ const ApplicationQuestionsStep = ({ jobId }: ApplicationQuestionsStepProps) => {
 
          <Box className="mt-5">
             <QuestionsList
-               questions={questions}
                queryState={queryState}
+               questions={questions}
                onRetry={query.refetch}
             />
          </Box>

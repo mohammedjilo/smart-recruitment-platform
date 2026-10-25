@@ -12,8 +12,8 @@ const TopJobs = ({ jobs }: TopJobsProps) => {
    return (
       <Box className="bg-surface overflow-hidden rounded-xl border shadow-[0_1px_2px_rgba(16,24,40,0.03)]">
          <SectionHeader
-            title="Most Applications"
             href="/company/jobs"
+            title="Most Applications"
          />
 
          <Box className="mt-4 px-5 pb-3">
@@ -24,8 +24,8 @@ const TopJobs = ({ jobs }: TopJobsProps) => {
             ) : (
                jobs.map((job, index) => (
                   <Box
-                     key={job.id}
-                     className="flex min-h-16 items-center border-b last:border-b-0">
+                     className="flex min-h-16 items-center border-b last:border-b-0"
+                     key={job.id}>
                      {/* Rank */}
                      <Box className="flex h-8.5 w-8.5 shrink-0 items-center justify-center rounded-lg bg-[#F3EFFF] text-[14px] font-semibold text-[#5B35D5]">
                         {index + 1}
@@ -34,8 +34,8 @@ const TopJobs = ({ jobs }: TopJobsProps) => {
                      {/* Job Info */}
                      <Box className="ml-4 min-w-0 flex-1">
                         <Link
-                           to={`/company/jobs/${job.id}/${job.slug}`}
-                           className="hover:text-mui-blue-900 block truncate text-[13px]! font-semibold hover:underline">
+                           className="hover:text-mui-blue-900 block truncate text-[13px]! font-semibold hover:underline"
+                           to={`/company/jobs/${job.id}/${job.slug}`}>
                            {job.title}
                         </Link>
 

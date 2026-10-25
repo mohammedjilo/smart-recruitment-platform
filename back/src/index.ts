@@ -15,7 +15,6 @@ import projectRouter from "./routes/project";
 import certificateRouter from "./routes/certificate";
 import skillRouter from "./routes/skill";
 import adminRouter from "./routes/admin";
-import languageRouter from "./routes/language";
 import userLanguageRouter from "./routes/user-language";
 import applicationRouter from "./routes/application";
 import notificationRouter from "./routes/notification";
@@ -74,7 +73,6 @@ export const createApp = (testRoutes?: Router) => {
   app.use("/api/certificate", certificateRouter);
   app.use("/api/skill", skillRouter);
   app.use("/api/admin", adminRouter);
-  app.use("/api/languages", languageRouter);
   app.use("/api/application", applicationRouter);
   app.use("/api/notification", notificationRouter);
   app.use("/api/message", messageRouter);

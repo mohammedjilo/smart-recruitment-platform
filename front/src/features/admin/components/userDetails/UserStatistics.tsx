@@ -51,11 +51,11 @@ const UserStatistics = ({ stats }: UserStatisticsProps) => {
          <Box className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-3">
             {statistics.map(item => (
                <StatCard
-                  key={item.label}
-                  label={item.label}
-                  value={item.value}
-                  layout="vertical"
                   className="bg-bg! min-h-25 justify-center"
+                  key={item.label}
+                  value={item.value}
+                  label={item.label}
+                  layout="vertical"
                />
             ))}
          </Box>

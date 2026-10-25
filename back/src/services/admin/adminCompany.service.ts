@@ -319,7 +319,7 @@ export const getCompanyByAdmin = async (companyId: string) => {
       prisma.job.count({ where: { companyId } }),
       prisma.application.count({ where: { job: { companyId } } }),
       prisma.job.findMany({
-        where: { companyId },
+        where: { companyId, status: { not: "DRAFT" } },
         orderBy: { createdAt: "desc" },
         take: 3,
         select: {
@@ -370,12 +370,4 @@ export const updateCompanyStatusByAdmin = async (
   }
 
   return updatedCompany;
-};
-
-export const deleteCompanyByAdmin = async (companyId: string) => {
-  const company = await prisma.company.findUnique({ where: { id: companyId } });
-  if (!company) throw new AppError("Company not found", 404);
-
-  await prisma.company.delete({ where: { id: companyId } });
-  return { message: "Company deleted successfully" };
 };

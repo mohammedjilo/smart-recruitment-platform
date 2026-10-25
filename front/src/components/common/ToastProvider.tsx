@@ -85,22 +85,22 @@ export function ToastProvider({ children }: { children: ReactNode }) {
 
             return (
                <Snackbar
+                  className="mt-2!"
                   key={item.id}
-                  open
+                  anchorOrigin={{ vertical: "top", horizontal: "right" }}
                   autoHideDuration={item.duration ?? 4000}
+                  open
                   onClose={(_event, reason) => {
                      if (reason === "clickaway") {
                         return
                      }
                      removeToast(item.id)
-                  }}
-                  anchorOrigin={{ vertical: "top", horizontal: "right" }}
-                  sx={{ mt: 1 }}>
+                  }}>
                   <Alert
-                     onClose={() => removeToast(item.id)}
+                     className="w-full!"
                      severity={severity}
                      variant="filled"
-                     sx={{ width: "100%" }}>
+                     onClose={() => removeToast(item.id)}>
                      {title && (
                         <strong
                            style={{ display: "block", marginBottom: message ? 4 : 0 }}>

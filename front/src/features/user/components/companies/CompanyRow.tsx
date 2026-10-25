@@ -44,10 +44,7 @@ const CompanyRow = ({ company, isLast }: Props) => {
                   <Box className="mt-3 flex flex-wrap items-center gap-x-5 gap-y-2">
                      {company.location && (
                         <Box className="flex items-center gap-1.5">
-                           <LocationOnOutlinedIcon
-                              className="text-muted"
-                              sx={{ fontSize: 16 }}
-                           />
+                           <LocationOnOutlinedIcon className="text-muted text-base!" />
 
                            <Typography
                               className="text-xs!"
@@ -59,11 +56,11 @@ const CompanyRow = ({ company, isLast }: Props) => {
 
                      {company.website && (
                         <a
+                           className="text-link hover:text-link-hover flex items-center gap-1.5 text-xs font-medium transition-colors"
                            href={company.website}
-                           target="_blank"
                            rel="noreferrer"
-                           className="text-link hover:text-link-hover flex items-center gap-1.5 text-xs font-medium transition-colors">
-                           <LanguageOutlinedIcon sx={{ fontSize: 16 }} />
+                           target="_blank">
+                           <LanguageOutlinedIcon className="text-base!" />
 
                            <Typography className="text-xs! font-medium!">
                               Visit Website
@@ -78,10 +75,10 @@ const CompanyRow = ({ company, isLast }: Props) => {
          {/* Actions */}
          <Box className="flex shrink-0 items-center gap-2 self-end lg:self-auto">
             <Button
-               onClick={handleViewDetails}
-               variant="outlined"
+               className="min-w-31.25! px-5! py-2! text-sm! font-semibold! normal-case!"
                color="primary"
-               className="min-w-31.25! px-5! py-2! text-sm! font-semibold! normal-case!">
+               variant="outlined"
+               onClick={handleViewDetails}>
                View Details
             </Button>
 

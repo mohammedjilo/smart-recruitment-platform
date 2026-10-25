@@ -27,7 +27,7 @@ type DetailRowProps = {
 const DetailRow = ({ icon, label, value, showBorder = false }: DetailRowProps) => {
    return (
       <Box
-         className={`flex items-center justify-between gap-4 py-3 ${showBorder ? "border-t border-border" : ""} `}>
+         className={`flex items-center justify-between gap-4 py-3 ${showBorder ? "border-border border-t" : ""} `}>
          <Box className="flex min-w-0 items-center gap-3">
             <Box className="text-[#5425d4]">{icon}</Box>
 
@@ -55,14 +55,11 @@ const AboutCompanyCard = ({
    totalApplicationsReceived
 }: AboutCompanyCardProps) => {
    return (
-      <Box className="rounded-xl border bg-surface p-6">
+      <Box className="bg-surface rounded-xl border p-6">
          <Box className="flex items-center gap-3">
-            <ArticleOutlinedIcon
-               className="text-muted"
-               sx={{ fontSize: 20 }}
-            />
+            <ArticleOutlinedIcon className="text-muted text-xl!" />
 
-            <Typography className="text-lg! font-semibold! text-content">
+            <Typography className="text-content text-lg! font-semibold!">
                About Company
             </Typography>
          </Box>
@@ -79,40 +76,40 @@ const AboutCompanyCard = ({
 
          <Box className="mt-4">
             <DetailRow
-               icon={<BadgeOutlinedIcon sx={{ fontSize: 18 }} />}
-               label="Company ID"
                value={company.id}
+               icon={<BadgeOutlinedIcon className="text-lg!" />}
+               label="Company ID"
                showBorder
             />
 
             <DetailRow
-               icon={<CalendarMonthOutlinedIcon sx={{ fontSize: 18 }} />}
-               label="Member Since"
                value={formatCreatedAt(company.createdAt)}
+               icon={<CalendarMonthOutlinedIcon className="text-lg!" />}
+               label="Member Since"
             />
 
             <DetailRow
-               icon={<HistoryOutlinedIcon sx={{ fontSize: 18 }} />}
-               label="Last Updated"
                value={formatCreatedAt(company.updatedAt)}
+               icon={<HistoryOutlinedIcon className="text-lg!" />}
+               label="Last Updated"
             />
 
             <DetailRow
-               icon={<SecurityOutlinedIcon sx={{ fontSize: 18 }} />}
-               label="Account Status"
                value={<CompanyStatusChip status={company.status} />}
+               icon={<SecurityOutlinedIcon className="text-lg!" />}
+               label="Account Status"
             />
 
             <DetailRow
-               icon={<WorkOutlineOutlinedIcon sx={{ fontSize: 18 }} />}
-               label="Total Jobs Posted"
                value={totalJobsPosted}
+               icon={<WorkOutlineOutlinedIcon className="text-lg!" />}
+               label="Total Jobs Posted"
             />
 
             <DetailRow
-               icon={<GroupsOutlinedIcon sx={{ fontSize: 18 }} />}
-               label="Total Applications Received"
                value={totalApplicationsReceived}
+               icon={<GroupsOutlinedIcon className="text-lg!" />}
+               label="Total Applications Received"
             />
          </Box>
       </Box>

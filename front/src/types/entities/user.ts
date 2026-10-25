@@ -19,6 +19,11 @@ export type User = {
    email?: string
    phone?: string
    country?: string
+   countryCode?: string | null
+   state?: string | null
+   stateCode?: string | null
+   city?: string | null
+   cityGeonameId?: number | null
    profilePicUrl: string | null
    role?: UserRole
    accountStatus?: AccountStatus | UserStatus
@@ -56,6 +61,11 @@ export type CompleteUserProfile = User & {
    email: string
    phone: string
    country: string
+   countryCode: string | null
+   state: string | null
+   stateCode: string | null
+   city: string | null
+   cityGeonameId: number | null
    birthdate: string
    profilePicId: string | null
    profilePicUrl: string | null

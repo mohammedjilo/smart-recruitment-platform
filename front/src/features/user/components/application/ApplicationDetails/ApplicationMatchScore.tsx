@@ -7,8 +7,8 @@ const ApplicationMatchScore = ({ score }: { score: number }) => (
    <Box className="p-5">
       <Box className="mb-3 flex items-center gap-2">
          <TrendingUpIcon
-            sx={{ color: getMatchScoreColor(score) }}
             fontSize="small"
+            sx={{ color: getMatchScoreColor(score) }}
          />
          <Typography className="text-sm font-semibold text-[#17213B]!">
             Match Score

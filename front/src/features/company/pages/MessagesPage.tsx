@@ -26,7 +26,10 @@ const MessagesPage = () => {
    const { data: conversationsData, isLoading: isLoadingConversations } =
       useGetCompanyConversationsQuery(undefined)
 
-   const conversations = conversationsData?.data ?? []
+   const conversations = useMemo(
+      () => conversationsData?.data ?? [],
+      [conversationsData?.data]
+   )
 
    const selectedConversation = useMemo(
       () => conversations.find(item => item.id === conversationId) ?? null,
@@ -51,9 +54,10 @@ const MessagesPage = () => {
             </Typography>
             {conversationId && (
                <Button
+                  className="normal-case!"
                   startIcon={<ArrowBack />}
-                  onClick={() => navigate("/company/messages")}
-                  className="app-button-secondary normal-case!">
+                  variant="outlined"
+                  onClick={() => navigate("/company/messages")}>
                   Back
                </Button>
             )}
@@ -83,24 +87,26 @@ const MessagesPage = () => {
 
                         return (
                            <ListItem
+                              className="px-2 py-1"
                               key={conversation.id}
-                              disablePadding
-                              className="px-2 py-1">
+                              disablePadding>
                               <ListItemButton
-                                 onClick={() =>
-                                    navigate(`/company/messages/${conversation.id}`)
-                                 }
-                                 aria-current={isSelected ? "page" : undefined}
-                                 className={`focus-visible:outline-primary flex! w-full! flex-col! items-stretch! rounded-xl! border-l-4! px-3! py-3! text-left! transition-colors! focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[-2px] ${
+                                 className={`focus-visible:outline-primary flex! w-full! flex-col! items-stretch! rounded-xl! border-l-4! px-3! py-3! text-left! transition-colors! focus-visible:outline-2 focus-visible:outline-offset-2 ${
                                     isSelected
                                        ? "border-indigo-600! bg-indigo-50!"
-                                       : "border-transparent! bg-surface! hover:bg-slate-50!"
-                                 }`}>
-                                 <Box className="flex min-w-0 w-full items-center gap-3">
+                                       : "bg-surface! border-transparent! hover:bg-slate-50!"
+                                 }`}
+                                 aria-current={isSelected ? "page" : undefined}
+                                 onClick={() =>
+                                    navigate(`/company/messages/${conversation.id}`)
+                                 }>
+                                 <Box className="flex w-full min-w-0 items-center gap-3">
                                     <Avatar
-                                       src={conversation.user?.profilePicUrl ?? undefined}
+                                       className="h-10! w-10! shrink-0! bg-indigo-100! text-sm! font-semibold! text-indigo-700!"
                                        alt={userName}
-                                       className="h-10! w-10! shrink-0! bg-indigo-100! text-sm! font-semibold! text-indigo-700!">
+                                       src={
+                                          conversation.user?.profilePicUrl ?? undefined
+                                       }>
                                        {userName
                                           .split(/\s+/)
                                           .map(part => part[0])
@@ -119,13 +125,13 @@ const MessagesPage = () => {
                                              </Box>
                                           ) : null}
                                        </Box>
-                                       <Typography className="mt-0.5! truncate! text-xs! text-muted!">
+                                       <Typography className="mt-0.5! truncate! text-xs!" color="textSecondary">
                                           {conversation.application?.job?.title ??
                                              "Application discussion"}
                                        </Typography>
                                     </Box>
                                  </Box>
-                                 <Typography className="mt-2! line-clamp-1! w-full! pl-[52px]! text-xs! text-muted!">
+                                 <Typography className="mt-2! line-clamp-1! w-full! pl-13! text-xs!" color="textSecondary">
                                     {lastMessage?.content ?? "Start the conversation"}
                                  </Typography>
                               </ListItemButton>
@@ -145,7 +151,7 @@ const MessagesPage = () => {
                         : "Select a conversation to start messaging."}
                   </Box>
                ) : (
-                  <>
+                  <Box className="contents">
                      <Box className="border-border border-b px-4 py-3">
                         <Typography className="text-content text-base! font-semibold!">
                            {`${selectedConversation.user?.firstName ?? ""} ${selectedConversation.user?.lastName ?? ""}`.trim() ||
@@ -158,9 +164,9 @@ const MessagesPage = () => {
 
                      <ConversationMessageList
                         key={selectedConversation.id}
+                        color="indigo"
                         conversationId={selectedConversation.id}
                         participant="company"
-                        color="indigo"
                      />
 
                      <Divider />
@@ -168,27 +174,27 @@ const MessagesPage = () => {
                      <Box className="p-3">
                         <Stack
                            direction={{ xs: "column", sm: "row" }}
-                           spacing={1.5}>
+                           spacing={1.5}
+                           sx={{ alignItems: { xs: "stretch", sm: "flex-start" } }}>
                            <TextField
-                              fullWidth
-                              multiline
-                              minRows={2}
-                              maxRows={4}
-                              value={draft}
-                              onChange={event => setDraft(event.target.value)}
                               placeholder="Write a message..."
+                              value={draft}
+                              fullWidth
+                              maxRows={4}
+                              multiline
+                              onChange={event => setDraft(event.target.value)}
                            />
                            <Button
-                              variant="contained"
-                              startIcon={<SendOutlined />}
-                              onClick={handleSend}
+                              className="normal-case!"
                               disabled={!draft.trim() || isSending}
-                              className="app-button-primary px-4! py-2! normal-case!">
+                              startIcon={<SendOutlined />}
+                              variant="contained"
+                              onClick={handleSend}>
                               {isSending ? "Sending..." : "Send"}
                            </Button>
                         </Stack>
                      </Box>
-                  </>
+                  </Box>
                )}
             </Paper>
          </Box>

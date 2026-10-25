@@ -1,14 +1,17 @@
 import { useSelector } from "react-redux"
-import { Alert, Box, Button, MenuItem, Select, Typography } from "@mui/material"
+import { Alert, Box, Button, Typography } from "@mui/material"
 import { useState } from "react"
-import DataTable, { type DataTableColumn } from "@/components/common/DataTable"
+import DataTable from "@/components/common/DataTable"
+import {
+   getAdminManagementColumns,
+   type AdminManagementTableAdmin
+} from "@/features/admin/columns/adminManagementColumns"
 import {
    useAssignAdminRoleMutation,
    useGetAdminRolesQuery,
    useGetAdminsQuery,
    useUpdateAdminStatusMutation
 } from "@/features/admin/services/adminApiCalls"
-import type { AdminSummary } from "@/types/api/adminAuthorization"
 import type { RootState } from "@/redux/store"
 import { useNavigate } from "react-router-dom"
 import { usePermissions } from "@/features/admin/authorization/usePermissions"
@@ -17,8 +20,6 @@ import { getQueryState } from "@/utils/queryState"
 import { getQueryPresentation } from "@/utils/presentationPolicy"
 import { getMutationErrorState, getMutationState } from "@/utils/mutationState"
 import { getMutationPresentation } from "@/utils/presentationPolicy"
-
-type TableAdmin = AdminSummary & Record<string, unknown>
 
 export default function AdminManagementPage() {
    const navigate = useNavigate()
@@ -63,7 +64,7 @@ export default function AdminManagementPage() {
       )
    }
 
-   const admins = (adminsResponse?.data ?? []) as TableAdmin[]
+   const admins = (adminsResponse?.data ?? []) as AdminManagementTableAdmin[]
    const roles = rolesResponse?.data ?? []
    const rolesUnavailable =
       !rolesResponse ||
@@ -75,97 +76,33 @@ export default function AdminManagementPage() {
       rolesPresentation.category === "silent" ||
       rolesPresentation.category === "none"
 
-   const columns: DataTableColumn<TableAdmin>[] = [
-      {
-         id: "name",
-         header: "Admin",
-         render: admin => (
-            <Box>
-               <button
-                  type="button"
-                  onClick={() => navigate(`/admin/admins/${admin.id}`)}
-                  className="text-left font-semibold! text-content! hover:text-blue-600">
-                  {admin.firstName} {admin.lastName}
-               </button>
-               <Typography className="text-sm! text-muted!">{admin.email}</Typography>
-            </Box>
-         )
+   const columns = getAdminManagementColumns({
+      currentUserId,
+      roles,
+      rolesUnavailable,
+      isLoadingRoles,
+      isAssigningRole: rolePresentation.category === "loading",
+      isUpdatingStatus: statusPresentation.category === "loading",
+      canAssignRole: hasPermission(ADMIN_PERMISSIONS.ASSIGN_ADMIN_ROLE),
+      canDisableAdmin: hasPermission(ADMIN_PERMISSIONS.DISABLE_ADMIN),
+      onView: adminId => navigate(`/admin/admins/${adminId}`),
+      onAssignRole: async (adminId, roleName) => {
+         setMutationError(null)
+         try {
+            await assignRole({ userId: adminId, roleName }).unwrap()
+         } catch (error) {
+            handleMutationError(error)
+         }
       },
-      {
-         id: "role",
-         header: "Admin Role",
-         render: admin => (
-            <Select
-               size="small"
-               value={admin.adminRoleAssignments[0]?.adminRole.name ?? ""}
-               disabled={
-                  admin.id === currentUserId ||
-                  !hasPermission(ADMIN_PERMISSIONS.ASSIGN_ADMIN_ROLE) ||
-                  isLoadingRoles ||
-                  rolesUnavailable ||
-                  rolePresentation.category === "loading"
-               }
-               onChange={async event => {
-                  setMutationError(null)
-                  try {
-                     await assignRole({
-                        userId: admin.id,
-                        roleName: event.target.value
-                     }).unwrap()
-                  } catch (error) {
-                     handleMutationError(error)
-                  }
-               }}>
-               {roles.map(role => (
-                  <MenuItem
-                     key={role.id}
-                     value={role.name}>
-                     {role.name}
-                  </MenuItem>
-               ))}
-            </Select>
-         )
-      },
-      {
-         id: "permissions",
-         header: "Permissions",
-         render: admin => (
-            <Typography className="text-sm! text-muted!">
-               {admin.adminRoleAssignments[0]?.adminRole.name === "SUPER_ADMIN"
-                  ? "All permissions"
-                  : "Role managed"}
-            </Typography>
-         )
-      },
-      {
-         id: "status",
-         header: "Status",
-         render: admin => (
-            <Select
-               size="small"
-               value={admin.accountStatus}
-               disabled={
-                  admin.id === currentUserId ||
-                  !hasPermission(ADMIN_PERMISSIONS.DISABLE_ADMIN) ||
-                  statusPresentation.category === "loading"
-               }
-               onChange={async event => {
-                  setMutationError(null)
-                  try {
-                     await updateStatus({
-                        userId: admin.id,
-                        status: event.target.value as "ACTIVE" | "DEACTIVATED"
-                     }).unwrap()
-                  } catch (error) {
-                     handleMutationError(error)
-                  }
-               }}>
-               <MenuItem value="ACTIVE">Active</MenuItem>
-               <MenuItem value="DEACTIVATED">Deactivated</MenuItem>
-            </Select>
-         )
+      onUpdateStatus: async (adminId, status) => {
+         setMutationError(null)
+         try {
+            await updateStatus({ userId: adminId, status }).unwrap()
+         } catch (error) {
+            handleMutationError(error)
+         }
       }
-   ]
+   })
 
    return (
       <Box className="space-y-5">
@@ -173,33 +110,33 @@ export default function AdminManagementPage() {
             <Typography className="text-2xl! font-bold! text-content!">
                Admin Management
             </Typography>
-            <Typography className="mt-1! text-sm! text-muted!">
+            <Typography className="mt-1! text-sm!" color="textSecondary">
                Manage admin roles and account status.
             </Typography>
             {hasPermission(ADMIN_PERMISSIONS.CREATE_ADMIN) && (
                <Button
+                  className="mt-4! normal-case!"
                   variant="contained"
-                  onClick={() => navigate("/admin/admins/new")}
-                  className="mt-4! normal-case!">
+                  onClick={() => navigate("/admin/admins/new")}>
                   Create Admin
                </Button>
             )}
          </Box>
          <DataTable
-            rows={admins}
             columns={columns}
-            getRowKey={admin => admin.id}
-            isLoading={isLoadingAdmins}
-            queryState={adminsState}
-            onRetry={adminsQuery.refetch}
-            itemLabel="admins"
             emptyState={
                <Box className="p-10 text-center">
-                  <Typography className="text-sm! text-muted!">
+                  <Typography className="text-sm!" color="textSecondary">
                      No admin accounts found.
                   </Typography>
                </Box>
             }
+            getRowKey={admin => admin.id}
+            isLoading={isLoadingAdmins}
+            itemLabel="admins"
+            queryState={adminsState}
+            rows={admins}
+            onRetry={adminsQuery.refetch}
          />
          {mutationError && <Alert severity="error">{mutationError}</Alert>}
          {(rolesPresentation.category === "section_error" ||
@@ -208,8 +145,6 @@ export default function AdminManagementPage() {
             rolesPresentation.category === "resource_not_found" ||
             rolesPresentation.category === "stale_error") && (
             <Alert
-               severity={rolesPresentation.category === "stale_error" ? "warning" : "error"}
-               role={rolesPresentation.category === "stale_error" ? "status" : "alert"}
                aria-live={rolesPresentation.category === "stale_error" ? "polite" : "assertive"}
                action={
                   <Button
@@ -218,7 +153,9 @@ export default function AdminManagementPage() {
                      onClick={() => void rolesQuery.refetch()}>
                      Retry
                   </Button>
-               }>
+               }
+               role={rolesPresentation.category === "stale_error" ? "status" : "alert"}
+               severity={rolesPresentation.category === "stale_error" ? "warning" : "error"}>
                {rolesPresentation.message}
             </Alert>
          )}

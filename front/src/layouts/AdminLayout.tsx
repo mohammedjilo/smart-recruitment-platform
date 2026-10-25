@@ -22,7 +22,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
             />
 
             {/* Main Content */}
-            <Box className="min-h-screen min-w-0 lg:ml-[250px]">
+            <Box className="min-h-screen min-w-0 lg:ml-62.5">
                <AdminHeader
                   sidebarOpen={sidebarOpen}
                   onMenuClick={() => setSidebarOpen(prev => !prev)}

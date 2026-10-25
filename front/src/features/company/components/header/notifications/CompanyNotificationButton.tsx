@@ -9,13 +9,13 @@ type Props = {
 const CompanyNotificationButton = ({ unreadCount, onClick }: Props) => {
    return (
       <IconButton
-         onClick={onClick}
-         className="h-11! w-11! text-white!">
+         className="h-11! w-11! text-white!"
+         onClick={onClick}>
          <Badge
+            className="[&_.MuiBadge-badge]:h-4! [&_.MuiBadge-badge]:min-w-4! [&_.MuiBadge-badge]:p-0! [&_.MuiBadge-badge]:text-[9px]! [&_.MuiBadge-badge]:font-semibold!"
             badgeContent={unreadCount}
             color="error"
-            max={99}
-            className="[&_.MuiBadge-badge]:h-4! [&_.MuiBadge-badge]:min-w-4! [&_.MuiBadge-badge]:p-0! [&_.MuiBadge-badge]:text-[9px]! [&_.MuiBadge-badge]:font-semibold!">
+            max={99}>
             <NotificationsNoneOutlinedIcon className="text-[25px]!" />
          </Badge>
       </IconButton>

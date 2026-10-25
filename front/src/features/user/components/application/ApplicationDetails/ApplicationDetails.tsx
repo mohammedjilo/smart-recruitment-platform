@@ -94,10 +94,7 @@ export const ApplicationDetails: React.FC<ApplicationDetailsProps> = ({
    const score = Math.round(application.matchScore ?? 0)
 
    const handleWithdraw = async () => {
-      if (
-         withdrawalInProgress.current ||
-         !canWithdrawApplication(application.status)
-      ) {
+      if (withdrawalInProgress.current || !canWithdrawApplication(application.status)) {
          return
       }
 
@@ -137,10 +134,10 @@ export const ApplicationDetails: React.FC<ApplicationDetailsProps> = ({
          }
          onClose()
       } catch (error) {
-         const errorPresentation = getMutationPresentation(
-            getMutationErrorState(error),
-            { surface: "action", importance: "important" }
-         )
+         const errorPresentation = getMutationPresentation(getMutationErrorState(error), {
+            surface: "action",
+            importance: "important"
+         })
          if (errorPresentation.category === "silent") return
          await showAlert({
             type: "error",
@@ -166,10 +163,10 @@ export const ApplicationDetails: React.FC<ApplicationDetailsProps> = ({
          setIsComposerOpen(false)
          navigate("/messages")
       } catch (error) {
-         const errorPresentation = getMutationPresentation(
-            getMutationErrorState(error),
-            { surface: "action", importance: "routine" }
-         )
+         const errorPresentation = getMutationPresentation(getMutationErrorState(error), {
+            surface: "action",
+            importance: "routine"
+         })
          if (errorPresentation.category === "silent") return
          await showAlert({
             type: "error",
@@ -181,8 +178,8 @@ export const ApplicationDetails: React.FC<ApplicationDetailsProps> = ({
 
    return (
       <Paper
-         elevation={0}
-         className="bg-surface! h-fit overflow-hidden rounded-xl! border! border-[#E7EAF0]!">
+         className="bg-surface! h-fit overflow-hidden rounded-xl! border! border-[#E7EAF0]!"
+         elevation={0}>
          {/* =================================================
              Details Header
          ================================================= */}
@@ -287,11 +284,11 @@ export const ApplicationDetails: React.FC<ApplicationDetailsProps> = ({
                <Box className="flex flex-wrap gap-2">
                   {strengths.map((strength, index) => (
                      <Chip
-                        key={`${strength}-${index}`}
-                        size="small"
-                        label={strength}
-                        icon={<CheckCircleIcon fontSize="small" />}
                         className="bg-[#ECFDF5]! text-[#059669]!"
+                        key={`${strength}-${index}`}
+                        icon={<CheckCircleIcon fontSize="small" />}
+                        label={strength}
+                        size="small"
                         sx={{
                            "& .MuiChip-icon": {
                               color: "#10B981"
@@ -323,10 +320,10 @@ export const ApplicationDetails: React.FC<ApplicationDetailsProps> = ({
                <Box className="flex flex-wrap gap-2">
                   {missingSkills.map((skill, index) => (
                      <Chip
-                        key={`${skill}-${index}`}
-                        size="small"
-                        label={skill}
                         className="bg-[#FFF8E7]! text-[#D97706]!"
+                        key={`${skill}-${index}`}
+                        label={skill}
+                        size="small"
                      />
                   ))}
                </Box>
@@ -360,12 +357,13 @@ export const ApplicationDetails: React.FC<ApplicationDetailsProps> = ({
 
                {application.cvUrl && (
                   <Button
-                     component="a"
+                     className="normal-case!"
                      href={application.cvUrl}
-                     target="_blank"
+                     component="a"
                      rel="noopener noreferrer"
                      size="small"
-                     className="app-button-secondary normal-case!">
+                     target="_blank"
+                     variant="outlined">
                      View Resume
                   </Button>
                )}
@@ -386,53 +384,54 @@ export const ApplicationDetails: React.FC<ApplicationDetailsProps> = ({
             {isComposerOpen ? (
                <Box className="mt-4 rounded-lg border border-[#E8E2FF] bg-[#FCFAFF] p-3">
                   <TextField
-                     fullWidth
-                     multiline
-                     minRows={3}
-                     maxRows={6}
-                     value={message}
-                     onChange={event => setMessage(event.target.value)}
                      placeholder="Write a message to the company..."
+                     value={message}
+                     fullWidth
+                     maxRows={6}
+                     minRows={3}
+                     multiline
+                     onChange={event => setMessage(event.target.value)}
                   />
                   <Box className="mt-2 flex justify-end gap-2">
                      <Button
+                        className="normal-case!"
                         size="small"
+                        variant="outlined"
                         onClick={() => {
                            setMessage("")
                            setIsComposerOpen(false)
-                        }}
-                        className="app-button-secondary normal-case!">
+                        }}>
                         Cancel
                      </Button>
                      <Button
-                        size="small"
-                        variant="contained"
-                        startIcon={<SendOutlinedIcon />}
-                        onClick={() => void handleSendMessage()}
+                        className="normal-case!"
                         disabled={!message.trim() || isSendingMessage}
-                        className="app-button-primary normal-case!">
+                        size="small"
+                        startIcon={<SendOutlinedIcon />}
+                        variant="contained"
+                        onClick={() => void handleSendMessage()}>
                         {isSendingMessage ? "Sending..." : "Send"}
                      </Button>
                   </Box>
                </Box>
             ) : (
                <Button
+                  className="mt-4! normal-case!"
                   fullWidth
                   size="small"
-                  variant="outlined"
                   startIcon={<SendOutlinedIcon />}
-                  onClick={() => setIsComposerOpen(true)}
-                  className="app-button-primary mt-4! normal-case!">
+                  variant="contained"
+                  onClick={() => setIsComposerOpen(true)}>
                   Message Company
                </Button>
             )}
 
             {canWithdrawApplication(application.status) && (
                <Button
-                  size="small"
-                  onClick={() => void handleWithdraw()}
+                  className="mt-3! w-full! border! border-[#64748B]! bg-[#F1F5F9]! text-[#64748B]! normal-case!"
                   disabled={isWithdrawing}
-                  className="mt-3! w-full! border! border-[#64748B]! bg-[#F1F5F9]! text-[#64748B]! normal-case!">
+                  size="small"
+                  onClick={() => void handleWithdraw()}>
                   <CancelIcon />
                   {isWithdrawing ? "Withdrawing..." : "Withdraw Application"}
                </Button>

@@ -37,10 +37,10 @@ const CompanySupportArticle = lazy(
    () => import("@/features/company/pages/CompanySupportArticlePage")
 )
 const SupportRequestCreatePage = lazy(
-   () => import("@/features/support/pages/SupportRequestCreatePage")
+   () => import("@/features/shared/support/pages/SupportRequestCreatePage")
 )
 const SupportRequestDetailsPage = lazy(
-   () => import("@/features/support/pages/SupportRequestDetailsPage")
+   () => import("@/features/shared/support/pages/SupportRequestDetailsPage")
 )
 const AboutPage = lazy(() => import("@/features/shared/pages/AboutPage"))
 

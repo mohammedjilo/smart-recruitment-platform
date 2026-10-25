@@ -20,11 +20,11 @@ const UserActionsCell = ({ user }: { user: CompanyUser }) => {
    return (
       <Box className="flex justify-end">
          <Button
-            onClick={handleViewProfile}
-            variant="outlined"
+            className="rounded-lg! px-3! py-1.5! text-xs! font-semibold! normal-case!"
             size="small"
-            startIcon={<VisibilityOutlinedIcon sx={{ fontSize: 16 }} />}
-            className="rounded-lg! px-3! py-1.5! text-xs! font-semibold! normal-case!">
+            startIcon={<VisibilityOutlinedIcon className="text-base!" />}
+            variant="outlined"
+            onClick={handleViewProfile}>
             View
          </Button>
       </Box>
@@ -42,9 +42,9 @@ export const getCompanyUsersColumns = (): DataTableColumn<CompanyUser>[] => [
          return (
             <Box className="flex min-w-0 items-center gap-4">
                <Avatar
-                  src={user.profilePicUrl || undefined}
+                  className="border-border h-12 w-12 shrink-0 border"
                   alt={fullName}
-                  className="border-border h-12 w-12 shrink-0 border">
+                  src={user.profilePicUrl || undefined}>
                   {!user.profilePicUrl && <PersonOutlineOutlinedIcon />}
                </Avatar>
 

@@ -29,13 +29,7 @@ const CompanyRequestsTable = ({
 
    return (
       <DataTable
-         rows={companies}
          columns={columns}
-         getRowKey={company => company.id}
-         isFetching={isFetching}
-         queryState={queryState}
-         onRetry={onRetry}
-         minWidth={1380}
          emptyState={
             <Box className="flex min-h-87.5 flex-col items-center justify-center">
                <Box className="text-content text-lg! font-semibold!">
@@ -46,6 +40,12 @@ const CompanyRequestsTable = ({
                </Box>
             </Box>
          }
+         getRowKey={company => company.id}
+         isFetching={isFetching}
+         minWidth={1380}
+         queryState={queryState}
+         rows={companies}
+         onRetry={onRetry}
       />
    )
 }

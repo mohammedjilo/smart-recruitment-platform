@@ -21,9 +21,9 @@ const JobInformation = ({ job }: JobInformationProps) => {
       <Box className="p-6">
          <Box className="flex items-start gap-4">
             <Avatar
+               className="bg-primary/10 text-primary h-12 w-12 rounded-xl"
                src={job.company.logoUrl ?? undefined}
-               variant="rounded"
-               className="bg-primary/10 text-primary h-12 w-12 rounded-xl">
+               variant="rounded">
                <BusinessCenterOutlinedIcon />
             </Avatar>
 
@@ -44,18 +44,18 @@ const JobInformation = ({ job }: JobInformationProps) => {
 
          <Box className="mt-7 space-y-4">
             <InfoRow
-               label="Job ID"
                value={job.id.slice(0, 12)}
+               label="Job ID"
             />
 
             <InfoRow
-               label="Employment Type"
                value={<EmploymentTypeChip employmentType={job.employmentType} />}
+               label="Employment Type"
             />
 
             <InfoRow
-               label="Salary"
                value={formatSalary(job.salary)}
+               label="Salary"
             />
          </Box>
       </Box>

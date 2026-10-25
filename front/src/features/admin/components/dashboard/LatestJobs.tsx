@@ -21,7 +21,7 @@ interface LatestJobsProps {
 
 export default function LatestJobs({ jobs, onViewAll }: LatestJobsProps) {
    return (
-      <Box className="bg-surface overflow-hidden rounded-xl border shadow-[0_2px_12px_rgba(15,23,42,0.04)]">
+      <Box className="bg-surface border-border overflow-hidden rounded-xl border shadow-[0_2px_12px_rgba(15,23,42,0.04)]">
          {/* Header */}
          <Box className="flex items-center justify-between px-5 py-5">
             <Typography className="text-base! font-semibold! text-[#16213D]">
@@ -29,28 +29,23 @@ export default function LatestJobs({ jobs, onViewAll }: LatestJobsProps) {
             </Typography>
 
             <Typography
+               className="text-link hover:text-link-hover cursor-pointer border-0 bg-transparent text-xs font-medium hover:underline"
                component="button"
-               onClick={onViewAll}
-               className="text-link hover:text-link-hover cursor-pointer border-0 bg-transparent text-xs font-medium hover:underline">
+               onClick={onViewAll}>
                View all
             </Typography>
          </Box>
 
          <Box
             className="responsive-scroll-region overflow-x-auto px-4 pb-4"
-            role="region"
             aria-label="Latest jobs; scroll horizontally to see all columns"
+            role="region"
             tabIndex={0}>
             <Table
-               size="small"
-               sx={{
-                  minWidth: 450
-               }}>
+               className="min-w-112.5!"
+               size="small">
                <TableHead>
-                  <TableRow
-                     sx={{
-                        backgroundColor: "#F8F9FC"
-                     }}>
+                  <TableRow className="bg-[#F8F9FC]!">
                      <TableCell>
                         <Typography className="text-muted text-[11px]! font-semibold!">
                            Job Title
@@ -84,7 +79,7 @@ export default function LatestJobs({ jobs, onViewAll }: LatestJobsProps) {
                         hover
                         sx={{
                            "&:not(:last-child) td": {
-                              borderBottom: "1px solid #1d4ed8"
+                              borderBottom: "1px solid #E2E8F0"
                            },
                            "&:last-child td": {
                               borderBottom: 0
@@ -99,12 +94,9 @@ export default function LatestJobs({ jobs, onViewAll }: LatestJobsProps) {
                         <TableCell>
                            <Box className="flex items-center gap-2">
                               <Avatar
-                                 src={getLogoUrl(job.company.logoUrl)}
+                                 className="h-6.25! w-6.25!"
                                  alt={job.company.companyName}
-                                 sx={{
-                                    width: 25,
-                                    height: 25
-                                 }}
+                                 src={getLogoUrl(job.company.logoUrl)}
                               />
 
                               <Typography className="text-[11px]! whitespace-nowrap!">
@@ -131,12 +123,7 @@ export default function LatestJobs({ jobs, onViewAll }: LatestJobsProps) {
                      <TableRow>
                         <TableCell colSpan={4}>
                            <Box className="flex items-center justify-center py-8">
-                              <WorkOutlinedIcon
-                                 sx={{
-                                    color: "#CBD5E1",
-                                    mr: 1
-                                 }}
-                              />
+                              <WorkOutlinedIcon className="mr-2! text-[#CBD5E1]!" />
 
                               <Typography className="text-muted text-sm">
                                  No jobs found

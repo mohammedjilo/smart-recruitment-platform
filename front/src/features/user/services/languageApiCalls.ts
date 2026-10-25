@@ -1,20 +1,11 @@
 import type {
    AddUserLanguageBody,
-   AddUserLanguageResult,
-   CreateLanguageBody,
-   CreateLanguageResult
+   AddUserLanguageResult
 } from "@/types/language"
 import { smartApi } from "@/services/api/baseApi"
 
 const extendedSmartApi = smartApi.injectEndpoints({
    endpoints: builder => ({
-      createLanguage: builder.mutation<CreateLanguageResult, CreateLanguageBody>({
-         query: body => ({
-            url: "/api/languages",
-            method: "POST",
-            body
-         })
-      }),
       addUserLanguage: builder.mutation<
          AddUserLanguageResult,
          { userId: string; data: AddUserLanguageBody }
@@ -45,7 +36,6 @@ const extendedSmartApi = smartApi.injectEndpoints({
 })
 
 export const {
-   useCreateLanguageMutation,
    useAddUserLanguageMutation,
    useUpdateUserLanguageMutation
 } = extendedSmartApi

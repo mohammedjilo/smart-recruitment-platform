@@ -4,7 +4,6 @@ import { validate } from "../middlewares/validate";
 import {
   createProjectController,
   updateProjectController,
-  deleteProjectController,
 } from "../controllers/projectControllers";
 import {
   projectSchema,
@@ -25,6 +24,4 @@ projectRouter.put(
   validate(updateProjectSchema),
   updateProjectController
 );
-projectRouter.delete("/:projectId", authMiddleware, deleteProjectController);
-
 export default projectRouter;

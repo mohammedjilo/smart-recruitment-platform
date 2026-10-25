@@ -27,13 +27,13 @@ const QuestionItem = ({ question, isLast }: QuestionItemProps) => {
 
             {question.options && question.options.length > 0 && (
                <Box
-                  component="ul"
-                  className="mt-3 list-disc space-y-1 pl-5">
+                  className="mt-3 list-disc space-y-1 pl-5"
+                  component="ul">
                   {question.options.map((option, index) => (
                      <Box
-                        component="li"
+                        className="pl-1 text-sm text-muted"
                         key={`${question.id}-${index}`}
-                        className="pl-1 text-sm text-muted">
+                        component="li">
                         {option}
                      </Box>
                   ))}

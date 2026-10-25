@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom"
 import { Box, Menu, MenuItem, Typography } from "@mui/material"
 
 import DataTable from "@/components/common/DataTable"
-import { getAdminCompanyJobsColumns } from "@/features/admin/columns/adminCompanyJobsColumns"
+import { getAdminCompanyJobsColumns } from "./columns"
 import type { CompanyJob, CompanyJobsPagination } from "@/types/JobsStep.types"
 import { formatDate as formatDateValue } from "@/utils/formatDate"
 import type { SemanticQueryState } from "@/utils/queryState"
@@ -57,15 +57,9 @@ const JobsTable = ({
    })
 
    return (
-      <>
+      <Box className="contents">
          <DataTable
-            rows={jobs}
             columns={columns}
-            getRowKey={job => job.id}
-            isLoading={isLoading}
-            isFetching={isFetching}
-            queryState={queryState}
-            onRetry={onRetry}
             emptyState={
                <Box className="py-14 text-center">
                   <Typography className="text-muted text-sm! font-medium!">
@@ -73,10 +67,16 @@ const JobsTable = ({
                   </Typography>
                </Box>
             }
-            pagination={pagination}
-            onPageChange={onPageChange}
+            getRowKey={job => job.id}
+            isFetching={isFetching}
+            isLoading={isLoading}
             itemLabel="jobs"
             loadingRows={6}
+            pagination={pagination}
+            queryState={queryState}
+            rows={jobs}
+            onPageChange={onPageChange}
+            onRetry={onRetry}
          />
 
          <Menu
@@ -89,7 +89,7 @@ const JobsTable = ({
                View Applications
             </MenuItem>
          </Menu>
-      </>
+      </Box>
    )
 }
 

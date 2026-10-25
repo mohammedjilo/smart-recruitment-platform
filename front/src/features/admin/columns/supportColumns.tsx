@@ -3,8 +3,8 @@ import VisibilityOutlinedIcon from "@mui/icons-material/VisibilityOutlined"
 import type { DataTableColumn } from "@/components/common/DataTable"
 import type { SupportAdminTicket } from "@/types/entities/support"
 import { formatCreatedAt } from "@/utils/formatDate"
-import SupportChip from "@/features/support/components/SupportChip"
-import PriorityChip from "@/features/support/components/PriorityChip"
+import SupportChip from "@/features/shared/support/components/SupportChip"
+import PriorityChip from "@/features/shared/support/components/PriorityChip"
 
 export type SupportTableTicket = SupportAdminTicket & Record<string, unknown>
 
@@ -48,13 +48,13 @@ export const getSupportColumns = (
       render: ticket =>
          ticket.creatorCompanyId || ticket.creatorCompany ? (
             <SupportChip
-               kind="audience"
                value="COMPANY"
+               kind="audience"
             />
          ) : ticket.creatorUserId || ticket.creatorUser ? (
             <SupportChip
-               kind="audience"
                value="USER"
+               kind="audience"
             />
          ) : (
             <Typography
@@ -85,8 +85,8 @@ export const getSupportColumns = (
       header: "Status",
       render: ticket => (
          <SupportChip
-            kind="status"
             value={ticket.status}
+            kind="status"
          />
       )
    },
@@ -131,12 +131,12 @@ export const getSupportColumns = (
       align: "center",
       render: ticket => (
          <Button
-            size="small"
-            variant="text"
+            className="min-w-22! rounded-lg! text-xs! font-medium! normal-case!"
             color="primary"
+            size="small"
             startIcon={<VisibilityOutlinedIcon />}
-            onClick={() => onViewTicket(ticket.id)}
-            className="min-w-22! rounded-lg! text-xs! font-medium! normal-case!">
+            variant="text"
+            onClick={() => onViewTicket(ticket.id)}>
             View
          </Button>
       )

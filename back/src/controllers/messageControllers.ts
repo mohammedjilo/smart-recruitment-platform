@@ -16,6 +16,13 @@ import { sendSuccess } from "../utils/apiResponse";
  * message ownership, pagination, and read-state rules to the service layer.
  */
 
+/**
+ * @desc Send a message in an application conversation
+ * @route /api/message/application/:applicationId
+ * @route /api/message
+ * @method POST
+ * @access private
+ */
 export const sendMessageController = asyncHandler(
   async (req: Request, res: Response) => {
     const userId = req.user?.id;
@@ -45,6 +52,12 @@ export const sendMessageController = asyncHandler(
   }
 );
 
+/**
+ * @desc Get the authenticated user's messages or company conversations
+ * @route /api/message
+ * @method GET
+ * @access private
+ */
 export const getUserMessagesController = asyncHandler(
   async (req: Request, res: Response) => {
     const userId = req.user?.id;
@@ -81,6 +94,12 @@ export const getUserMessagesController = asyncHandler(
   }
 );
 
+/**
+ * @desc Get conversations for the authenticated company
+ * @route /api/message/company
+ * @method GET
+ * @access private
+ */
 export const getCompanyMessagesController = asyncHandler(
   async (req: Request, res: Response) => {
     const companyId = req.company?.id;
@@ -102,6 +121,12 @@ export const getCompanyMessagesController = asyncHandler(
   }
 );
 
+/**
+ * @desc Get messages in a conversation
+ * @route /api/message/conversation/:conversationId
+ * @method GET
+ * @access private
+ */
 export const getConversationMessagesController = asyncHandler(
   async (req: Request, res: Response) => {
     const userId = req.user?.id;
@@ -133,6 +158,12 @@ export const getConversationMessagesController = asyncHandler(
   }
 );
 
+/**
+ * @desc Mark a conversation's messages as read
+ * @route /api/message/conversation/:conversationId/read
+ * @method PATCH
+ * @access private
+ */
 export const markConversationAsReadController = asyncHandler(
   async (req: Request, res: Response) => {
     const userId = req.user?.id;

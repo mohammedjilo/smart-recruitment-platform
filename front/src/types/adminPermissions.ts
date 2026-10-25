@@ -47,5 +47,6 @@ export type AdminPermissionsResponse = {
    status: string
    data: {
       permissions: AdminPermission[]
+      adminRoleNames: string[]
    }
 }

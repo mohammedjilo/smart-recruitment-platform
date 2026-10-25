@@ -40,21 +40,21 @@ const JobsTable = ({
 
    return (
       <DataTable
-         rows={jobs}
          columns={columns}
-         getRowKey={job => job.id}
-         isLoading={isLoading}
-         isFetching={isFetching}
-         queryState={queryState}
-         onRetry={onRetry}
          emptyState={
             <Box className="flex min-h-70 items-center justify-center">
                <Box className="text-sm! font-medium! text-muted">No jobs found</Box>
             </Box>
          }
-         pagination={pagination}
-         onPageChange={onPageChange}
+         getRowKey={job => job.id}
+         isFetching={isFetching}
+         isLoading={isLoading}
          itemLabel="jobs"
+         pagination={pagination}
+         queryState={queryState}
+         rows={jobs}
+         onPageChange={onPageChange}
+         onRetry={onRetry}
       />
    )
 }

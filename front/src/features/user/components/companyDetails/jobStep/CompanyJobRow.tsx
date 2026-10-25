@@ -59,10 +59,10 @@ const CompanyJobRow = ({ job, isLast }: Props) => {
          await toggleSaveJobs({ jobId: job.id }).unwrap()
          setIsSaved(previous => !previous)
       } catch (error) {
-         const errorPresentation = getMutationPresentation(
-            getMutationErrorState(error),
-            { surface: "action", importance: "routine" }
-         )
+         const errorPresentation = getMutationPresentation(getMutationErrorState(error), {
+            surface: "action",
+            importance: "routine"
+         })
          if (errorPresentation.category === "silent") return
          await showAlert({
             type: "error",
@@ -74,8 +74,8 @@ const CompanyJobRow = ({ job, isLast }: Props) => {
 
    return (
       <Box
-         className={`grid grid-cols-1 gap-5 px-6 py-5 transition-colors hover:bg-bg/70 xl:grid-cols-[minmax(260px,2.2fr)_minmax(110px,0.8fr)_minmax(120px,0.9fr)_minmax(100px,0.7fr)_minmax(120px,0.9fr)_auto] xl:items-center ${
-            !isLast ? "border-b border-border" : ""
+         className={`hover:bg-bg/70 grid grid-cols-1 gap-5 px-6 py-5 transition-colors xl:grid-cols-[minmax(260px,2.2fr)_minmax(110px,0.8fr)_minmax(120px,0.9fr)_minmax(100px,0.7fr)_minmax(120px,0.9fr)_auto] xl:items-center ${
+            !isLast ? "border-border border-b" : ""
          } `}>
          {/* Job Title and Experience */}
          <Box className="min-w-0">
@@ -83,7 +83,9 @@ const CompanyJobRow = ({ job, isLast }: Props) => {
                {job.title}
             </Typography>
 
-            <Typography className="mt-2! text-xs!" color="textSecondary">
+            <Typography
+               className="mt-2! text-xs!"
+               color="textSecondary">
                Experience: {job.experienceRequired}{" "}
                {job.experienceRequired === 1 ? "year" : "years"}
             </Typography>
@@ -96,7 +98,9 @@ const CompanyJobRow = ({ job, isLast }: Props) => {
 
          {/* Salary */}
          <Box>
-            <Typography className="text-sm!" color="textSecondary">
+            <Typography
+               className="text-sm!"
+               color="textSecondary">
                {formatSalary(job.salary)}
             </Typography>
          </Box>
@@ -111,7 +115,9 @@ const CompanyJobRow = ({ job, isLast }: Props) => {
 
          {/* Created At */}
          <Box>
-            <Typography className="text-sm!" color="textSecondary">
+            <Typography
+               className="text-sm!"
+               color="textSecondary">
                {formatDate(job.createdAt)}
             </Typography>
          </Box>
@@ -122,10 +128,7 @@ const CompanyJobRow = ({ job, isLast }: Props) => {
                <Tooltip title="This job has already been applied to.">
                   <Box className="flex items-center justify-center">
                      <CheckCircleOutlined
-                        sx={{
-                           fontSize: 18,
-                           color: "#16a34a"
-                        }}
+                        className="text-lg! text-[#16a34a]!"
                         aria-label="Applied"
                      />
                   </Box>
@@ -133,33 +136,25 @@ const CompanyJobRow = ({ job, isLast }: Props) => {
             )}
 
             <Button
-               onClick={handleViewDetails}
-               variant="outlined"
+               className="min-w-29.5! rounded-lg! px-5! py-2! text-xs! font-semibold! normal-case! transition-colors!"
                color="primary"
-               className="min-w-29.5! rounded-lg! px-5! py-2! text-xs! font-semibold! normal-case! transition-colors!">
+               variant="outlined"
+               onClick={handleViewDetails}>
                View Details
             </Button>
 
             <IconButton
-               color="primary"
-               onClick={handleToggleSave}
-               disabled={isSaving}
+               className="hover:bg-primary-tint!"
                aria-label={
                   isSaved ? `Remove ${job.title} from saved jobs` : `Save ${job.title}`
                }
-               className="hover:bg-primary-tint!">
+               disabled={isSaving}
+               color="primary"
+               onClick={handleToggleSave}>
                {isSaved ? (
-                  <BookmarkIcon
-                     sx={{
-                        fontSize: 28
-                     }}
-                  />
+                  <BookmarkIcon className="text-[28px]!" />
                ) : (
-                  <BookmarkBorderOutlined
-                     sx={{
-                        fontSize: 28
-                     }}
-                  />
+                  <BookmarkBorderOutlined className="text-[28px]!" />
                )}
             </IconButton>
          </Box>

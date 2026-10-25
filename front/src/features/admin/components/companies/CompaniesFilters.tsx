@@ -34,8 +34,8 @@ const CompaniesFilters = ({
       <FiltersBar responsiveAt="sm">
          {/* Status */}
          <FormControl
-            size="small"
-            className="bg-surface w-full sm:w-45">
+            className="bg-surface w-full sm:w-45"
+            size="small">
             <Select
                value={status}
                onChange={event =>
@@ -51,8 +51,8 @@ const CompaniesFilters = ({
 
          {/* Approval Status */}
          <FormControl
-            size="small"
-            className="bg-surface w-full sm:w-52.5">
+            className="bg-surface w-full sm:w-52.5"
+            size="small">
             <Select
                value={approvalStatus}
                onChange={event =>
@@ -72,8 +72,8 @@ const CompaniesFilters = ({
 
          {/* Sort */}
          <FormControl
-            size="small"
-            className="bg-surface w-full sm:w-47.5">
+            className="bg-surface w-full sm:w-47.5"
+            size="small">
             <Select
                value={sortByNewest ? "NEWEST" : "OLDEST"}
                onChange={event => onSortChange(event.target.value === "NEWEST")}>

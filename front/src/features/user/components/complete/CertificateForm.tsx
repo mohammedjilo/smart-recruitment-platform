@@ -71,8 +71,8 @@ const CertificateForm: React.FC<Props> = ({ onSave, onCancel }) => {
          {formError && (
             <Box
                className="mb-4"
-               role="alert"
-               aria-live="assertive">
+               aria-live="assertive"
+               role="alert">
                <Typography color="error">{formError}</Typography>
             </Box>
          )}
@@ -84,14 +84,14 @@ const CertificateForm: React.FC<Props> = ({ onSave, onCancel }) => {
                   render={({ field }) => (
                      <TextField
                         {...field}
-                        fullWidth
-                        label="Certificate Name"
                         placeholder="e.g. AWS Certified Developer"
-                        variant="outlined"
-                        size="medium"
                         error={!!errors.certificateName}
+                        fullWidth
                         helperText={errors.certificateName?.message}
+                        label="Certificate Name"
+                        size="medium"
                         slotProps={{ inputLabel: { shrink: true } }}
+                        variant="outlined"
                      />
                   )}
                />
@@ -101,14 +101,14 @@ const CertificateForm: React.FC<Props> = ({ onSave, onCancel }) => {
                   render={({ field }) => (
                      <TextField
                         {...field}
-                        fullWidth
-                        label="Issuing Organization"
                         placeholder="e.g. Amazon Web Services"
-                        variant="outlined"
-                        size="medium"
                         error={!!errors.organization}
+                        fullWidth
                         helperText={errors.organization?.message}
+                        label="Issuing Organization"
+                        size="medium"
                         slotProps={{ inputLabel: { shrink: true } }}
+                        variant="outlined"
                      />
                   )}
                />
@@ -116,16 +116,16 @@ const CertificateForm: React.FC<Props> = ({ onSave, onCancel }) => {
 
             <Box className="mt-5 flex justify-end gap-3">
                <Button
+                  className="normal-case!"
                   variant="outlined"
-                  onClick={onCancel}
-                  className="normal-case!">
+                  onClick={onCancel}>
                   Cancel
                </Button>
                <Button
                   className="normal-case!"
                   type="submit"
-                  variant="contained"
-                  disabled={isLoading}>
+                  disabled={isLoading}
+                  variant="contained">
                   {isLoading ? "Saving..." : "Save Certificate"}
                </Button>
             </Box>

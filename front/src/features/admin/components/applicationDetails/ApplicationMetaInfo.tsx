@@ -16,20 +16,20 @@ const ApplicationMetaInfo = ({ application }: ApplicationMetaInfoProps) => {
    return (
       <Box className="grid grid-cols-1 divide-y sm:grid-cols-2 sm:divide-x sm:divide-y-0 lg:grid-cols-4">
          <MetaItem
+            value={formatDate(application.createdAt, { format: "dateTime" })}
             icon={<CalendarMonthOutlinedIcon />}
             label="Applied On"
-            value={formatDate(application.createdAt, { format: "dateTime" })}
          />
 
          <MetaItem
+            value={application.resumeType}
             icon={<DescriptionOutlinedIcon />}
             label="Resume Type"
-            value={application.resumeType}
          />
 
          <CvMetaItem
-            cvUrl={application.cvUrl}
             cvId={application.cvId}
+            cvUrl={application.cvUrl}
          />
 
          <MatchScoreItem score={application.matchScore} />
@@ -77,10 +77,10 @@ const CvMetaItem = ({ cvUrl, cvId }: CvMetaItemProps) => {
 
          {cvUrl ? (
             <Button
-               size="small"
+               className="mt-1! min-w-0! px-2! normal-case!"
                endIcon={<DownloadOutlinedIcon />}
-               onClick={() => window.open(cvUrl, "_blank", "noopener,noreferrer")}
-               className="mt-1! min-w-0! px-2! normal-case!">
+               size="small"
+               onClick={() => window.open(cvUrl, "_blank", "noopener,noreferrer")}>
                Download CV
             </Button>
          ) : (
@@ -105,14 +105,14 @@ const MatchScoreItem = ({ score }: MatchScoreItemProps) => {
       <Box className="flex min-h-19.5 items-center gap-3 px-4 py-3">
          <Box className="relative">
             <CircularProgress
-               variant="determinate"
                value={normalizedScore}
                size={44}
-               thickness={4}
                sx={{
                   color:
                      score === null ? "text.disabled" : getMatchScoreColor(score)
                }}
+               thickness={4}
+               variant="determinate"
             />
 
             <Box className="absolute inset-0 flex items-center justify-center">

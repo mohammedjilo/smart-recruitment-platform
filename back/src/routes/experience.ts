@@ -4,7 +4,6 @@ import { validate } from "../middlewares/validate";
 import {
   createExperienceController,
   updateExperienceController,
-  deleteExperienceController,
 } from "../controllers/experienceControllers";
 import {
   experienceSchema,
@@ -25,10 +24,4 @@ experienceRouter.put(
   validate(updateExperienceSchema),
   updateExperienceController
 );
-experienceRouter.delete(
-  "/:experienceId",
-  authMiddleware,
-  deleteExperienceController
-);
-
 export default experienceRouter;

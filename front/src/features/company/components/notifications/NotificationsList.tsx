@@ -8,9 +8,15 @@ type Props = {
    notifications: Notification[]
    isLoading: boolean
    isFetching: boolean
+   onMarkAsRead: (notificationId: string) => Promise<void>
 }
 
-const NotificationsList = ({ notifications, isLoading, isFetching }: Props) => {
+const NotificationsList = ({
+   notifications,
+   isLoading,
+   isFetching,
+   onMarkAsRead
+}: Props) => {
    if (isLoading) {
       return <NotificationListSkeleton />
    }
@@ -39,6 +45,7 @@ const NotificationsList = ({ notifications, isLoading, isFetching }: Props) => {
             <NotificationListItem
                key={notification.id}
                notification={notification}
+               onMarkAsRead={onMarkAsRead}
             />
          ))}
       </Box>

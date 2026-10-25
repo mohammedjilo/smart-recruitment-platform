@@ -143,12 +143,17 @@ const DataTable = <T extends object>({
       queryPresentation?.category === "resource_not_found"
    ) {
       return (
-         <Box className="rounded-xl border border-red-200 bg-red-50 p-8 text-center" role="alert" aria-live="assertive">
+         <Box
+            className="rounded-xl border border-red-200 bg-red-50 p-8 text-center"
+            aria-live="assertive"
+            role="alert">
             <Typography className="text-sm! text-red-700!">
                {queryPresentation.message}
             </Typography>
             {onRetry && (
-               <Button onClick={onRetry} className="mt-3! normal-case!">
+               <Button
+                  className="mt-3! normal-case!"
+                  onClick={onRetry}>
                   Try again
                </Button>
             )}
@@ -161,12 +166,17 @@ const DataTable = <T extends object>({
       (queryState?.status !== "aborted" || queryState.data === undefined)
    ) {
       return (
-         <Box className="rounded-xl border border-border bg-surface p-8 text-center" role="alert" aria-live="assertive">
-            <Typography className="text-sm! text-muted!">
+         <Box
+            className="border-border bg-surface rounded-xl border p-8 text-center"
+            aria-live="assertive"
+            role="alert">
+            <Typography className="text-sm!" color="textSecondary">
                {queryPresentation.message}
             </Typography>
             {onRetry && (
-               <Button onClick={onRetry} className="mt-3! normal-case!">
+               <Button
+                  className="mt-3! normal-case!"
+                  onClick={onRetry}>
                   Try again
                </Button>
             )}
@@ -176,19 +186,24 @@ const DataTable = <T extends object>({
    if (queryPresentation?.category === "none") return null
 
    const canShowEmptyState =
-      queryState === undefined ||
-      queryPresentation?.category === "empty"
+      queryState === undefined || queryPresentation?.category === "empty"
    const canShowNoResultsState = queryPresentation?.category === "no_results"
 
    return (
-      <>
+      <Box className="contents">
          {queryPresentation?.category === "stale_error" && (
-            <Box className="mb-3 flex flex-wrap items-center justify-between gap-2 rounded-lg border border-amber-200 bg-amber-50 px-4 py-3" role="status" aria-live="polite">
+            <Box
+               className="mb-3 flex flex-wrap items-center justify-between gap-2 rounded-lg border border-amber-200 bg-amber-50 px-4 py-3"
+               aria-live="polite"
+               role="status">
                <Typography className="text-sm! text-amber-900!">
                   {queryPresentation.message}
                </Typography>
                {onRetry && (
-                  <Button onClick={onRetry} size="small" className="normal-case!">
+                  <Button
+                     className="normal-case!"
+                     size="small"
+                     onClick={onRetry}>
                      Try again
                   </Button>
                )}
@@ -202,21 +217,12 @@ const DataTable = <T extends object>({
             )}
 
             <TableContainer
+               className={`${containerClassName ?? "shadow-none!"} w-full! max-w-full! min-w-0! scrollbar-thin! overflow-x-auto! overscroll-x-contain! [-webkit-overflow-scrolling:touch]!`}
+               aria-label={scrollLabel}
                component={Paper}
                elevation={0}
-               className={containerClassName ?? "shadow-none!"}
                role="region"
-               aria-label={scrollLabel}
-               tabIndex={0}
-               sx={{
-                  width: "100%",
-                  maxWidth: "100%",
-                  minWidth: 0,
-                  overflowX: "auto",
-                  overscrollBehaviorX: "contain",
-                  WebkitOverflowScrolling: "touch",
-                  scrollbarWidth: "thin"
-               }}>
+               tabIndex={0}>
                <Table
                   className={tableClassName}
                   sx={{
@@ -226,18 +232,18 @@ const DataTable = <T extends object>({
                      <TableRow className="bg-bg">
                         {columns.map(column => (
                            <TableCell
-                              key={column.id}
-                              align={column.align ?? "left"}
-                              width={column.width}
                               className={[defaultHeaderClassName, column.headerClassName]
                                  .filter(Boolean)
-                                 .join(" ")}>
+                                 .join(" ")}
+                              key={column.id}
+                              align={column.align ?? "left"}
+                              width={column.width}>
                               {queryLoading ? (
                                  <Skeleton
-                                    variant="text"
-                                    width="68%"
                                     className="h-5! rounded-md"
                                     aria-hidden="true"
+                                    variant="text"
+                                    width="68%"
                                  />
                               ) : (
                                  column.header
@@ -254,8 +260,8 @@ const DataTable = <T extends object>({
                               {columns.map((column, cellIndex) => (
                                  <TableCell key={`${rowIndex}-${column.id || cellIndex}`}>
                                     <Skeleton
-                                       variant="text"
                                        className="h-6! rounded-md"
+                                       variant="text"
                                     />
                                  </TableCell>
                               ))}
@@ -268,7 +274,6 @@ const DataTable = <T extends object>({
                            <TableRow
                               key={getRowKey(row, rowIndex)}
                               hover
-                              onClick={() => onRowClick?.(row, rowIndex)}
                               sx={{
                                  cursor: onRowClick ? "pointer" : "default",
                                  "& td": {
@@ -278,7 +283,8 @@ const DataTable = <T extends object>({
                                  "&:last-child td": {
                                     borderBottom: 0
                                  }
-                              }}>
+                              }}
+                              onClick={() => onRowClick?.(row, rowIndex)}>
                               {columns.map(column => {
                                  let cellValue: ReactNode | undefined
 
@@ -293,15 +299,15 @@ const DataTable = <T extends object>({
 
                                  return (
                                     <TableCell
-                                       key={`${getRowKey(row, rowIndex)}-${column.id}`}
-                                       align={column.align ?? "left"}
-                                       width={column.width}
                                        className={[
                                           defaultCellClassName,
                                           column.cellClassName
                                        ]
                                           .filter(Boolean)
-                                          .join(" ")}>
+                                          .join(" ")}
+                                       key={`${getRowKey(row, rowIndex)}-${column.id}`}
+                                       align={column.align ?? "left"}
+                                       width={column.width}>
                                        {cellValue}
                                     </TableCell>
                                  )
@@ -312,14 +318,14 @@ const DataTable = <T extends object>({
                      {!queryLoading &&
                         rows.length === 0 &&
                         (canShowEmptyState || canShowNoResultsState) && (
-                        <TableRow>
-                           <TableCell
-                              colSpan={columns.length}
-                              className="p-0!">
-                              {canShowNoResultsState ? noResultsState : emptyState}
-                           </TableCell>
-                        </TableRow>
-                     )}
+                           <TableRow>
+                              <TableCell
+                                 className="p-0!"
+                                 colSpan={columns.length}>
+                                 {canShowNoResultsState ? noResultsState : emptyState}
+                              </TableCell>
+                           </TableRow>
+                        )}
                   </TableBody>
                </Table>
             </TableContainer>
@@ -327,16 +333,16 @@ const DataTable = <T extends object>({
 
          {hasPagination && !queryLoading && (
             <PaginationFooter
-               page={pagination!.page}
-               totalCount={pagination!.totalCount}
-               pageSize={pagination!.pageSize}
-               setPage={onPageChange!}
-               itemLabel={itemLabel ?? "records"}
                isFetching={queryFetching}
+               itemLabel={itemLabel ?? "records"}
+               page={pagination!.page}
+               pageSize={pagination!.pageSize}
                queryState={queryState}
+               setPage={onPageChange!}
+               totalCount={pagination!.totalCount}
             />
          )}
-      </>
+      </Box>
    )
 }
 

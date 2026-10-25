@@ -1,10 +1,4 @@
-import {
-   List,
-   ListItemButton,
-   ListItemIcon,
-   ListItemText,
-   Box
-} from "@mui/material"
+import { List, ListItemButton, ListItemIcon, ListItemText, Box } from "@mui/material"
 import ResponsiveSidebarDrawer from "@/components/common/ResponsiveSidebarDrawer"
 
 import {
@@ -152,73 +146,57 @@ export default function SideBar({
    }
    return (
       <ResponsiveSidebarDrawer
-         width={drawerWidth}
-         top={64}
          open={open}
-         onClose={onClose}
-      >
-      <Box className="border-border bg-surface flex h-full flex-col border-r">
-         <nav id="user-navigation" aria-label="User navigation" className="min-h-0 flex-1 overflow-y-auto">
-         <Box className="flex h-full flex-col px-3 py-3">
-            <List className="space-y-1">
-               {visibleItems.map(item => {
-                  const Icon = item.icon
+         top={64}
+         width={drawerWidth}
+         onClose={onClose}>
+         <Box className="border-border bg-surface flex h-full flex-col border-r">
+            <nav
+               className="min-h-0 flex-1 overflow-y-auto"
+               id="user-navigation"
+               aria-label="User navigation">
+               <Box className="flex h-full flex-col px-3 py-3">
+                  <List className="space-y-1">
+                     {visibleItems.map(item => {
+                        const Icon = item.icon
 
-                  const isActive = isPathActive(item.path)
+                        const isActive = isPathActive(item.path)
 
-                  return (
+                        return (
+                           <ListItemButton
+                              className={`${navItemClass(isActive)} mb-0.5! rounded-lg!`}
+                              key={item.path}
+                              onClick={() => {
+                                 onClose()
+                                 navigate(item.path)
+                              }}>
+                              <ListItemIcon className="text-inherit!">
+                                 <Icon className="text-[21px]! text-inherit!" />
+                              </ListItemIcon>
+
+                              <ListItemText primary={item.label} />
+                           </ListItemButton>
+                        )
+                     })}
                      <ListItemButton
-                        key={item.path}
+                        className={`${navItemClass(isPathActive("/login"))} mb-0.5! rounded-lg!`}
+                        key={"/login"}
                         onClick={() => {
                            onClose()
-                           navigate(item.path)
-                        }}
-                        className={navItemClass(isActive)}
-                        sx={{
-                           marginBottom: "2px",
-                           borderRadius: "8px"
+                           handleLogout()
                         }}>
                         <ListItemIcon className="text-inherit!">
-                           <Icon
-                              className="text-inherit!"
-                              sx={{
-                                 fontSize: 21
-                              }}
-                           />
+                           <LogoutOutlined className="text-[21px]! text-inherit!" />
                         </ListItemIcon>
 
-                        <ListItemText primary={item.label} />
+                        <ListItemText primary={"Log Out"} />
                      </ListItemButton>
-                  )
-               })}
-               <ListItemButton
-                  key={"/login"}
-                  onClick={() => {
-                     onClose()
-                     handleLogout()
-                  }}
-                  className={navItemClass(isPathActive("/login"))}
-                  sx={{
-                     marginBottom: "2px",
-                     borderRadius: "8px"
-                  }}>
-                  <ListItemIcon className="text-inherit!">
-                     <LogoutOutlined
-                        className="text-inherit!"
-                        sx={{
-                           fontSize: 21
-                        }}
-                     />
-                  </ListItemIcon>
+                  </List>
 
-                  <ListItemText primary={"Log Out"} />
-               </ListItemButton>
-            </List>
-
-            <div className="mt-auto">{/* Logout */}</div>
+                  <Box className="mt-auto">{/* Logout */}</Box>
+               </Box>
+            </nav>
          </Box>
-         </nav>
-      </Box>
       </ResponsiveSidebarDrawer>
    )
 }

@@ -51,14 +51,16 @@ const JobFilters = ({
       <FiltersBar responsiveAt="xl">
          {/* Search */}
          <TextField
-            value={searchInput.value}
-            onChange={searchInput.onChange}
-            onKeyDown={searchInput.onKeyDown}
+            className="min-w-65! xl:flex-1"
             placeholder="Search jobs by title..."
+            value={searchInput.value}
             size="small"
-            className="xl:flex-1"
+            slotProps={{
+               input: {
+                  startAdornment: <SearchSubmitAdornment onSearch={searchInput.submit} />
+               }
+            }}
             sx={{
-               minWidth: 260,
                "& .MuiOutlinedInput-root": {
                   height: 44,
                   borderRadius: "10px",
@@ -71,20 +73,15 @@ const JobFilters = ({
                   fontWeight: 500
                }
             }}
-            slotProps={{
-               input: {
-                  startAdornment: (
-                     <SearchSubmitAdornment onSearch={searchInput.submit} />
-                  )
-               }
-            }}
+            onChange={searchInput.onChange}
+            onKeyDown={searchInput.onKeyDown}
          />
 
          {/* Status */}
          <FormControl
+            className="min-w-38.75!"
             size="small"
             sx={{
-               minWidth: 155,
                "& .MuiOutlinedInput-root": {
                   height: 44,
                   borderRadius: "10px",
@@ -99,8 +96,8 @@ const JobFilters = ({
             }}>
             <Select
                value={status}
-               onChange={handleStatus}
-               displayEmpty>
+               displayEmpty
+               onChange={handleStatus}>
                <MenuItem value="ALL">All Status</MenuItem>
                <MenuItem value="OPEN">Open</MenuItem>
                <MenuItem value="DRAFT">Draft</MenuItem>
@@ -111,9 +108,9 @@ const JobFilters = ({
 
          {/* Employment Type */}
          <FormControl
+            className="min-w-46.25!"
             size="small"
             sx={{
-               minWidth: 185,
                "& .MuiOutlinedInput-root": {
                   height: 44,
                   borderRadius: "10px",
@@ -124,8 +121,8 @@ const JobFilters = ({
             }}>
             <Select
                value={employmentType}
-               onChange={handleEmploymentType}
-               displayEmpty>
+               displayEmpty
+               onChange={handleEmploymentType}>
                <MenuItem value="ALL">All Employment Types</MenuItem>
 
                <MenuItem value="FULL_TIME">Full Time</MenuItem>
@@ -144,9 +141,9 @@ const JobFilters = ({
 
          {/* Sort */}
          <FormControl
+            className="min-w-46.25!"
             size="small"
             sx={{
-               minWidth: 185,
                "& .MuiOutlinedInput-root": {
                   height: 44,
                   borderRadius: "10px",
@@ -161,18 +158,13 @@ const JobFilters = ({
             }}>
             <Select
                value={sort}
-               onChange={handleSort}
                displayEmpty
                startAdornment={
                   <InputAdornment position="start">
-                     <CalendarMonthOutlinedIcon
-                        sx={{
-                           fontSize: 18,
-                           color: "#64748b"
-                        }}
-                     />
+                     <CalendarMonthOutlinedIcon className="text-lg! text-[#64748b]!" />
                   </InputAdornment>
-               }>
+               }
+               onChange={handleSort}>
                <MenuItem value="newest">Newest First</MenuItem>
 
                <MenuItem value="oldest">Oldest First</MenuItem>

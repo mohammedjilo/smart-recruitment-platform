@@ -23,9 +23,9 @@ const NotificationFooter = ({ onClick }: Props) => {
    return (
       <Box className="border-t border-border px-4 py-2">
          <Button
-            onClick={handleClick}
+            className="w-full! py-2! text-[13px]! font-medium! normal-case!"
             endIcon={<ArrowForwardIcon />}
-            className="w-full! py-2! text-[13px]! font-medium! normal-case!">
+            onClick={handleClick}>
             View all notifications
          </Button>
       </Box>

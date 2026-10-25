@@ -21,51 +21,51 @@ export default function DashboardStats({ stats }: DashboardStatsProps) {
       <Box className="grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-5">
          {hasPermission(ADMIN_PERMISSIONS.VIEW_COMPANIES) && (
             <StatCard
-               title="Total Companies"
                value={stats.totalCompanies}
                icon={BusinessIcon}
-               iconColor="#5635E8"
                iconBackground="#EEEAFE"
+               iconColor="#5635E8"
+               title="Total Companies"
             />
          )}
 
          {hasPermission(ADMIN_PERMISSIONS.VIEW_USERS) && (
             <StatCard
-               title="Total Users"
                value={stats.totalUsers}
                icon={PeopleIcon}
-               iconColor="#10B981"
                iconBackground="#DDF8ED"
+               iconColor="#10B981"
+               title="Total Users"
             />
          )}
 
          {hasPermission(ADMIN_PERMISSIONS.VIEW_JOBS) && (
             <StatCard
-               title="Total Jobs"
                value={stats.totalJobs}
                icon={WorkOutlinedIcon}
-               iconColor="#2563EB"
                iconBackground="#E2ECFF"
+               iconColor="#2563EB"
+               title="Total Jobs"
             />
          )}
 
          {hasPermission(ADMIN_PERMISSIONS.VIEW_APPLICATIONS) && (
             <StatCard
-               title="Total Applications"
                value={stats.totalApplications}
                icon={DescriptionOutlinedIcon}
-               iconColor="#F59E0B"
                iconBackground="#FFF0D8"
+               iconColor="#F59E0B"
+               title="Total Applications"
             />
          )}
 
          {hasPermission(ADMIN_PERMISSIONS.VIEW_SUPPORT) && (
             <StatCard
-               title="Open Support Tickets"
                value={stats.openSupportTickets}
                icon={SupportAgentOutlinedIcon}
-               iconColor="#0F766E"
                iconBackground="#D9F5F1"
+               iconColor="#0F766E"
+               title="Open Support Tickets"
             />
          )}
       </Box>

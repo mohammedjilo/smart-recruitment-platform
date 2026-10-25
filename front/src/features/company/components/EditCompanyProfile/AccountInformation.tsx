@@ -7,7 +7,7 @@ import {
    VerifiedUserOutlined
 } from "@mui/icons-material"
 
-import { Paper } from "@mui/material"
+import { Box, Paper, Typography } from "@mui/material"
 import { formatDate } from "@/utils/formatDate"
 
 interface AccountInformationProps {
@@ -22,35 +22,39 @@ interface AccountInformationProps {
 const AccountInformation: React.FC<AccountInformationProps> = ({ company }) => {
    return (
       <Paper
-         elevation={0}
-         className="rounded-[10px]! border! p-5">
-         <h2 className="text-[15px] font-semibold text-[#172033]">Account Information</h2>
+         className="rounded-[10px]! border! p-5"
+         elevation={0}>
+         <Typography
+            className="text-[15px]! font-semibold!"
+            variant="h2">
+            Account Information
+         </Typography>
 
-         <div className="mt-5 grid grid-cols-1 gap-x-5 gap-y-5 md:grid-cols-2">
+         <Box className="mt-5 grid grid-cols-1 gap-x-5 gap-y-5 md:grid-cols-2">
             <AccountItem
-               label="Member Since"
-               icon={<CalendarMonthOutlined />}
                value={formatDate(company?.createdAt)}
+               icon={<CalendarMonthOutlined />}
+               label="Member Since"
             />
 
             <AccountItem
-               label="Company ID"
-               icon={<FingerprintOutlined />}
                value={company?.id ?? "-"}
+               icon={<FingerprintOutlined />}
+               label="Company ID"
             />
 
             <AccountItem
-               label="Last Updated"
-               icon={<AccessTimeOutlined />}
                value={formatDate(company?.updatedAt, true)}
+               icon={<AccessTimeOutlined />}
+               label="Last Updated"
             />
 
             <AccountItem
-               label="Status"
-               icon={<VerifiedUserOutlined />}
                value={company?.status ?? "-"}
+               icon={<VerifiedUserOutlined />}
+               label="Status"
             />
-         </div>
+         </Box>
       </Paper>
    )
 }
@@ -63,15 +67,17 @@ interface AccountItemProps {
 
 const AccountItem: React.FC<AccountItemProps> = ({ label, icon, value }) => {
    return (
-      <div>
-         <p className="mb-2 text-[11px] font-semibold text-content">{label}</p>
+      <Box>
+         <Typography className="mb-2! text-[11px]! font-semibold! text-content!">
+            {label}
+         </Typography>
 
-         <div className="flex min-h-10 items-center gap-3 rounded-md border border-border bg-bg/50 px-3">
-            <div className="text-violet-600 [&>svg]:text-[16px]">{icon}</div>
+         <Box className="flex min-h-10 items-center gap-3 rounded-md border border-border bg-bg/50 px-3">
+            <Box className="text-violet-600 [&>svg]:text-[16px]">{icon}</Box>
 
             <span className="truncate text-[10px] text-muted">{value}</span>
-         </div>
-      </div>
+         </Box>
+      </Box>
    )
 }
 

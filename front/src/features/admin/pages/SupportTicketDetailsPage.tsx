@@ -27,8 +27,8 @@ import type { SupportPriority, SupportTicketStatus } from "@/types/entities/supp
 import { formatCreatedAt } from "@/utils/formatDate"
 import { usePermissions } from "@/features/admin/authorization/usePermissions"
 import { ADMIN_PERMISSIONS } from "@/types/adminPermissions"
-import SupportChip from "@/features/support/components/SupportChip"
-import PriorityChip from "@/features/support/components/PriorityChip"
+import SupportChip from "@/features/shared/support/components/SupportChip"
+import PriorityChip from "@/features/shared/support/components/PriorityChip"
 import { AdminSupportTicketSkeleton } from "@/features/admin/components/AdminSkeletons"
 import { getQueryState } from "@/utils/queryState"
 import { getQueryPresentation } from "@/utils/presentationPolicy"
@@ -126,18 +126,18 @@ export default function SupportTicketDetailsPage() {
          <Box className="rounded-xl border border-red-200 bg-red-50 p-8 text-center">
             <Typography
                className="text-sm! text-red-700!"
-               role="alert"
-               aria-live="assertive">
+               aria-live="assertive"
+               role="alert">
                {ticketPresentation.message}
             </Typography>
             <Button
-               onClick={ticketQuery.refetch}
-               className="mt-3! normal-case!">
+               className="mt-3! normal-case!"
+               onClick={ticketQuery.refetch}>
                Retry
             </Button>
             <Button
-               onClick={() => navigate("/admin/support")}
-               className="mt-3! ml-2! normal-case!">
+               className="mt-3! ml-2! normal-case!"
+               onClick={() => navigate("/admin/support")}>
                Back to Support
             </Button>
          </Box>
@@ -153,7 +153,7 @@ export default function SupportTicketDetailsPage() {
    if (!ticket || !ticketId) {
       return (
          <Box className="border-border bg-surface rounded-xl border p-8 text-center">
-            <Typography className="text-muted! text-sm!">
+            <Typography className="text-sm!" color="textSecondary">
                Support ticket could not be determined.
             </Typography>
          </Box>
@@ -257,8 +257,6 @@ export default function SupportTicketDetailsPage() {
          {mutationError && <Alert severity="error">{mutationError}</Alert>}
          {ticketPresentation.category === "stale_error" && (
             <Alert
-               severity="warning"
-               role="status"
                aria-live="polite"
                action={
                   <Button
@@ -267,7 +265,9 @@ export default function SupportTicketDetailsPage() {
                      onClick={ticketQuery.refetch}>
                      Retry
                   </Button>
-               }>
+               }
+               role="status"
+               severity="warning">
                {ticketPresentation.message}
             </Alert>
          )}
@@ -286,14 +286,14 @@ export default function SupportTicketDetailsPage() {
                   <Typography className="text-content! mt-2! text-2xl! font-bold!">
                      {ticket.subject}
                   </Typography>
-                  <Typography className="text-muted! mt-1! text-xs!">
+                  <Typography className="mt-1! text-xs!" color="textSecondary">
                      ID: {ticket.id}
                   </Typography>
                </Box>
                <Box className="flex flex-wrap gap-2">
                   <SupportChip
-                     kind="status"
                      value={ticket.status}
+                     kind="status"
                   />
                   <PriorityChip priority={ticket.priority} />
                </Box>
@@ -301,34 +301,34 @@ export default function SupportTicketDetailsPage() {
 
             <Box className="mt-5 grid grid-cols-1 gap-3 md:grid-cols-2 lg:grid-cols-4">
                <Box>
-                  <Typography className="text-muted! text-xs!">Created By</Typography>
+                  <Typography className="text-xs!" color="textSecondary">Created By</Typography>
                   <Typography className="text-content! mt-1! text-sm! font-semibold!">
                      {requester}
                   </Typography>
                   {ticket.creatorCompanyId || ticket.creatorCompany ? (
                      <SupportChip
-                        kind="audience"
                         value="COMPANY"
+                        kind="audience"
                      />
                   ) : ticket.creatorUserId || ticket.creatorUser ? (
                      <SupportChip
-                        kind="audience"
                         value="USER"
+                        kind="audience"
                      />
                   ) : (
-                     <Typography className="text-muted! mt-1! text-xs!">
+                     <Typography className="mt-1! text-xs!" color="textSecondary">
                         Requester type unknown
                      </Typography>
                   )}
                </Box>
                <Box>
-                  <Typography className="text-muted! text-xs!">Category</Typography>
+                  <Typography className="text-xs!" color="textSecondary">Category</Typography>
                   <Typography className="text-content! mt-1! text-sm!">
                      {ticket.category?.name ?? "General"}
                   </Typography>
                </Box>
                <Box>
-                  <Typography className="text-muted! text-xs!">Assigned To</Typography>
+                  <Typography className="text-xs!" color="textSecondary">Assigned To</Typography>
                   <Typography className="text-content! mt-1! text-sm!">
                      {ticket.assignedAdmin
                         ? `${ticket.assignedAdmin.firstName ?? ""} ${ticket.assignedAdmin.lastName ?? ""}`.trim()
@@ -336,13 +336,13 @@ export default function SupportTicketDetailsPage() {
                   </Typography>
                </Box>
                <Box>
-                  <Typography className="text-muted! text-xs!">
+                  <Typography className="text-xs!" color="textSecondary">
                      Created / Updated
                   </Typography>
                   <Typography className="text-content! mt-1! text-sm!">
                      {formatCreatedAt(ticket.createdAt)}
                   </Typography>
-                  <Typography className="text-muted! text-xs!">
+                  <Typography className="text-xs!" color="textSecondary">
                      {formatCreatedAt(ticket.updatedAt)}
                   </Typography>
                </Box>
@@ -350,63 +350,63 @@ export default function SupportTicketDetailsPage() {
 
             <Box className="mt-5 grid grid-cols-1 gap-3 md:grid-cols-3">
                <Box className="border-border bg-bg rounded-xl border p-3">
-                  <Typography className="text-muted! text-xs! font-semibold! tracking-wide! uppercase!">
+                  <Typography className="text-xs! font-semibold! tracking-wide! uppercase!" color="textSecondary">
                      Ticket Actions
                   </Typography>
                   <Box className="mt-3 flex flex-wrap gap-2">
                      {ticket.status === "OPEN" && canManageTicketStatus && (
                         <Button
+                           className="normal-case!"
+                           disabled={isUpdatingStatus}
                            size="small"
                            variant="contained"
-                           disabled={isUpdatingStatus}
-                           onClick={() => void handleStatusAction("IN_PROGRESS")}
-                           className="normal-case!">
+                           onClick={() => void handleStatusAction("IN_PROGRESS")}>
                            Start Working
                         </Button>
                      )}
                      {ticket.status === "IN_PROGRESS" && canManageTicketStatus && (
-                        <>
+                        <Box className="contents">
                            <Button
+                              className="normal-case!"
+                              disabled={isUpdatingStatus}
                               size="small"
                               variant="outlined"
-                              disabled={isUpdatingStatus}
-                              onClick={() => void handleStatusAction("WAITING_FOR_USER")}
-                              className="normal-case!">
+                              onClick={() => void handleStatusAction("WAITING_FOR_USER")}>
                               Waiting for User
                            </Button>
                            <Button
+                              className="normal-case!"
+                              disabled={isUpdatingStatus}
                               size="small"
                               variant="contained"
-                              disabled={isUpdatingStatus}
-                              onClick={() => void handleStatusAction("RESOLVED")}
-                              className="normal-case!">
+                              onClick={() => void handleStatusAction("RESOLVED")}>
                               Resolve
                            </Button>
-                        </>
+                        </Box>
                      )}
                      {ticket.status === "WAITING_FOR_USER" && canManageTicketStatus && (
                         <Button
+                           className="normal-case!"
+                           disabled={isUpdatingStatus}
                            size="small"
                            variant="contained"
-                           disabled={isUpdatingStatus}
-                           onClick={() => void handleStatusAction("IN_PROGRESS")}
-                           className="normal-case!">
+                           onClick={() => void handleStatusAction("IN_PROGRESS")}>
                            Resume Work
                         </Button>
                      )}
                      {ticket.status === "RESOLVED" && canCloseTicket && (
                         <Button
+                           className="normal-case!"
+                           disabled={isUpdatingStatus}
+                           color="secondary"
                            size="small"
                            variant="contained"
-                           color="secondary"
-                           disabled={isUpdatingStatus}
-                           onClick={() => void handleStatusAction("CLOSED")}
-                           className="normal-case!">
+                           onClick={() => void handleStatusAction("CLOSED")}>
                            Close Ticket
                         </Button>
                      )}
                      {ticket.status === "WAITING_FOR_USER" && (
-                        <Typography className="text-muted! text-sm!">
+                        <Typography className="text-sm!" color="textSecondary">
                            Waiting for customer response
                         </Typography>
                      )}
@@ -416,9 +416,9 @@ export default function SupportTicketDetailsPage() {
                   <FormControl size="small">
                      <InputLabel>Priority</InputLabel>
                      <Select
-                        label="Priority"
-                        value={ticket.priority}
                         disabled={isUpdatingPriority}
+                        value={ticket.priority}
+                        label="Priority"
                         onChange={event =>
                            void handlePriorityChange(
                               event.target.value as SupportPriority
@@ -439,22 +439,22 @@ export default function SupportTicketDetailsPage() {
                      <FormControl size="small">
                         <InputLabel>Assigned Admin</InputLabel>
                         <Select
-                           label="Assigned Admin"
-                           value={ticket.assignedAdminId ?? "UNASSIGNED"}
                            disabled={
                               isAssigning ||
                               isUnassigning ||
                               isLoadingAdmins ||
                               adminsPresentation.category === "section_error"
                            }
+                           value={ticket.assignedAdminId ?? "UNASSIGNED"}
+                           label="Assigned Admin"
                            onChange={event =>
                               void handleAssignmentChange(event.target.value)
                            }>
                            {<MenuItem value="UNASSIGNED">Unassigned</MenuItem>}
                            {isLoadingAdmins && (
                               <MenuItem
-                                 value="LOADING"
-                                 disabled>
+                                 disabled
+                                 value="LOADING">
                                  Loading admins...
                               </MenuItem>
                            )}
@@ -473,16 +473,6 @@ export default function SupportTicketDetailsPage() {
                         adminsPresentation.category === "resource_not_found" ||
                         adminsPresentation.category === "stale_error") && (
                         <Alert
-                           severity={
-                              adminsPresentation.category === "stale_error"
-                                 ? "warning"
-                                 : "error"
-                           }
-                           role={
-                              adminsPresentation.category === "stale_error"
-                                 ? "status"
-                                 : "alert"
-                           }
                            aria-live={
                               adminsPresentation.category === "stale_error"
                                  ? "polite"
@@ -495,6 +485,16 @@ export default function SupportTicketDetailsPage() {
                                  onClick={adminsQuery.refetch}>
                                  Retry
                               </Button>
+                           }
+                           role={
+                              adminsPresentation.category === "stale_error"
+                                 ? "status"
+                                 : "alert"
+                           }
+                           severity={
+                              adminsPresentation.category === "stale_error"
+                                 ? "warning"
+                                 : "error"
                            }>
                            {adminsPresentation.message}
                         </Alert>
@@ -504,10 +504,10 @@ export default function SupportTicketDetailsPage() {
             </Box>
 
             <Box className="bg-bg mt-5 rounded-xl p-5">
-               <Typography className="text-muted! text-xs! font-semibold! uppercase!">
+               <Typography className="text-xs! font-semibold! uppercase!" color="textSecondary">
                   Description
                </Typography>
-               <Typography className="text-muted! mt-3! text-sm! leading-6! whitespace-pre-line!">
+               <Typography className="mt-3! text-sm! leading-6! whitespace-pre-line!" color="textSecondary">
                   {ticket.description}
                </Typography>
             </Box>
@@ -518,7 +518,7 @@ export default function SupportTicketDetailsPage() {
                </Typography>
                <Box className="mt-4 space-y-3">
                   {ticket.messages.length === 0 ? (
-                     <Typography className="border-border! text-muted! rounded-xl! border! border-dashed! p-6! text-center! text-sm!">
+                     <Typography className="border-border! rounded-xl! border! border-dashed! p-6! text-center! text-sm!" color="textSecondary">
                         No messages yet.
                      </Typography>
                   ) : (
@@ -526,8 +526,8 @@ export default function SupportTicketDetailsPage() {
                         const isAdmin = item.authorUser?.role === "ADMIN"
                         return (
                            <Box
-                              key={item.id}
-                              className={`rounded-xl border p-4 ${isAdmin ? "border-blue-200 bg-blue-50" : "border-border bg-bg"}`}>
+                              className={`rounded-xl border p-4 ${isAdmin ? "border-blue-200 bg-blue-50" : "border-border bg-bg"}`}
+                              key={item.id}>
                               <Box className="flex items-center justify-between gap-3">
                                  <Typography className="text-content! text-sm! font-semibold!">
                                     {isAdmin
@@ -538,11 +538,11 @@ export default function SupportTicketDetailsPage() {
                                          : (item.authorCompany?.companyName ??
                                            "Requester")}
                                  </Typography>
-                                 <Typography className="text-muted! text-xs!">
+                                 <Typography className="text-xs!" color="textSecondary">
                                     {formatCreatedAt(item.createdAt)}
                                  </Typography>
                               </Box>
-                              <Typography className="text-muted! mt-2! text-sm! leading-6! whitespace-pre-line!">
+                              <Typography className="mt-2! text-sm! leading-6! whitespace-pre-line!" color="textSecondary">
                                  {item.content}
                               </Typography>
                            </Box>
@@ -555,11 +555,11 @@ export default function SupportTicketDetailsPage() {
             {canReplyToTicket && (
                <Box className="border-border mt-6 border-t pt-5">
                   <TextField
-                     fullWidth
-                     multiline
-                     minRows={4}
-                     label="Reply"
                      value={message}
+                     fullWidth
+                     label="Reply"
+                     minRows={4}
+                     multiline
                      onChange={event => setMessage(event.target.value)}
                   />
                   {ticket.status !== "CLOSED" && (
@@ -575,10 +575,10 @@ export default function SupportTicketDetailsPage() {
                      </label>
                   )}
                   <Button
-                     variant="contained"
+                     className="disabled:text-mui-blue-50! disabled:bg-mui-blue-600/80! mt-3! rounded-lg! bg-blue-600! font-semibold! normal-case!"
                      disabled={ticket.status === "CLOSED" || !message.trim() || isSending}
-                     onClick={() => void sendReply()}
-                     className="disabled:text-mui-blue-50! disabled:bg-mui-blue-600/80! mt-3! rounded-lg! bg-blue-600! font-semibold! normal-case!">
+                     variant="contained"
+                     onClick={() => void sendReply()}>
                      {ticket.status === "CLOSED"
                         ? "Ticket Closed"
                         : isSending

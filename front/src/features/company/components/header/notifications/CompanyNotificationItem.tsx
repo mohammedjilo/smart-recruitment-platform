@@ -55,9 +55,9 @@ const CompanyNotificationItem = ({ notification, onClose, onMarkAsRead }: Props)
 
    return (
       <Box
+         className={`relative flex w-full cursor-pointer gap-3 border-0 border-b border-border px-5 py-3 text-left transition-colors duration-200 hover:bg-slate-100 ${notification.isRead ? "bg-surface" : "bg-[rgba(37,99,235,0.025)]"}`}
          component="button"
-         onClick={handleClick}
-         className={`relative flex w-full cursor-pointer gap-3 border-0 border-b border-border px-5 py-3 text-left transition-colors duration-200 hover:bg-slate-100 ${notification.isRead ? "bg-surface" : "bg-[rgba(37,99,235,0.025)]"}`}>
+         onClick={handleClick}>
          {/* Unread indicator */}
          {!notification.isRead && (
             <Box className="absolute top-6 left-2.5 h-1.75 w-1.75 rounded-full bg-blue-600" />
@@ -73,20 +73,22 @@ const CompanyNotificationItem = ({ notification, onClose, onMarkAsRead }: Props)
          {/* Content */}
          <Box className="min-w-0 flex-1">
             <Typography
-               variant="body2"
-               className={`text-[13px]! leading-[1.4]! text-content! ${notification.isRead ? "font-medium!" : "font-semibold!"}`}>
+               className={`text-[13px]! leading-[1.4]! text-content! ${notification.isRead ? "font-medium!" : "font-semibold!"}`}
+               variant="body2">
                {config.title}
             </Typography>
 
             <Typography
-               variant="body2"
-               className="mt-0.5! line-clamp-2! overflow-hidden text-[12px]! leading-normal! text-muted!">
+               className="mt-0.5! line-clamp-2! overflow-hidden text-[12px]! leading-normal!"
+               color="textSecondary"
+               variant="body2">
                {notification.message}
             </Typography>
 
             <Typography
-               variant="caption"
-               className="mt-0.5! block text-[10.5px]! text-muted!">
+               className="mt-0.5! block text-[10.5px]!"
+               color="textSecondary"
+               variant="caption">
                {formatNotificationDate(notification.createdAt)}
             </Typography>
          </Box>

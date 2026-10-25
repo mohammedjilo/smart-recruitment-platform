@@ -71,8 +71,8 @@ const adminRoutes: RouteObject[] = [
             element: (
                <AdminLayout>
                   <PermissionGuard
-                     permission={ADMIN_PERMISSIONS.VIEW_ADMIN_DASHBOARD}
-                     fallback={<AdminWorkspaceRedirect />}>
+                     fallback={<AdminWorkspaceRedirect />}
+                     permission={ADMIN_PERMISSIONS.VIEW_ADMIN_DASHBOARD}>
                      <RoutePage>
                         <AdminDashboard />
                      </RoutePage>

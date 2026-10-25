@@ -19,11 +19,11 @@ const LanguagesCard = ({ languages }: Props) => {
             <Box className="mb-2 flex items-center justify-between">
                <Box className="flex items-center gap-1">
                   <LanguageOutlinedIcon
-                     className="text-mui-purple"
+                     className="text-violet-600"
                      fontSize="small"
                   />
 
-                  <Typography className="text-sm! text-content">Languages</Typography>
+                  <Typography className="text-content text-sm!">Languages</Typography>
                </Box>
 
                <ProfileCardMenu
@@ -33,30 +33,32 @@ const LanguagesCard = ({ languages }: Props) => {
             </Box>
 
             {languages.length === 0 ? (
-               <Typography className="text-sm!" color="textSecondary">
+               <Typography
+                  className="text-sm!"
+                  color="textSecondary">
                   No languages added yet.
                </Typography>
             ) : (
                <Box className="grid grid-cols-2 gap-2">
                   {languages.map(language => (
                      <Box
-                        key={language.id}
-                        className="flex w-full min-w-0 items-center justify-between rounded-lg border border-border px-2 py-1">
+                        className="border-border flex w-full min-w-0 items-center justify-between rounded-lg border px-2 py-1"
+                        key={language.id}>
                         <Box className="flex min-w-0 items-center gap-1.5">
                            <Typography className="truncate! text-xs!">
                               {language.languageName}
                            </Typography>
 
                            <Chip
+                              className="h-5! shrink-0 text-[0.6rem]!"
                               label={formatLevel(language.level)}
                               size="small"
-                              className="h-5! shrink-0 text-[0.6rem]!"
                            />
                         </Box>
 
                         <ProfileCardMenu
-                           formType="language"
                            editData={language}
+                           formType="language"
                         />
                      </Box>
                   ))}

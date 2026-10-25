@@ -59,22 +59,3 @@ export const updateCertificate = async (
     },
   });
 };
-
-export const deleteCertificate = async (
-  userId: string,
-  certificateId: string
-) => {
-  const profile = await getProfileOrThrow(userId);
-
-  const certificate = await prisma.certificate.findFirst({
-    where: { id: certificateId, profileId: profile.id },
-  });
-
-  if (!certificate) {
-    throw new AppError("Certificate not found", 404);
-  }
-
-  await prisma.certificate.delete({ where: { id: certificateId } });
-
-  return { message: "Certificate deleted successfully" };
-};

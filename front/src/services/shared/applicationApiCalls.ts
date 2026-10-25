@@ -19,7 +19,7 @@ const extendedSmartApi = smartApi.injectEndpoints({
             pageSize?: number
             search?: string
             status?: ApplicationStatus
-            matchScore?: "HIGH" | "GOOD" | "FAIR" | "LOW" | "UNSCORED"
+            matchScore?: "HIGH" | "GOOD" | "FAIR" | "LOW"
             sortOrder?: "asc" | "desc"
          }
       >({
@@ -71,6 +71,7 @@ const extendedSmartApi = smartApi.injectEndpoints({
             pageSize = 6,
             search,
             status,
+            matchScore,
             sort = "newest"
          } = {}) => ({
             url: "/api/application/company",
@@ -79,6 +80,7 @@ const extendedSmartApi = smartApi.injectEndpoints({
                pageSize,
                search: search || undefined,
                status,
+               matchScore,
                sortBy: "createdAt",
                sortOrder: sort === "newest" ? "desc" : "asc"
             }
@@ -105,22 +107,6 @@ const extendedSmartApi = smartApi.injectEndpoints({
             { type: "Jobs", id: jobId },
             { type: "UserJobState", id: jobId }
          ]
-      }),
-      deleteApplication: builder.mutation<
-         ApiSuccessResponse<unknown>,
-         {
-            applicationId: string
-            userId: string
-            jobId: string
-            companyId: string
-            conversationId?: string | null
-         }
-      >({
-         query: ({ applicationId }) => ({
-            url: `/api/application/${applicationId}`,
-            method: "DELETE"
-         }),
-         invalidatesTags: [{ type: "Applications", id: "PARTIAL-LIST" }]
       }),
       updateApplicationStatus: builder.mutation<
          UpdateApplicationStatusResult,
@@ -155,7 +141,6 @@ export const {
    useGetMyApplicationDetailsQuery,
    useGetApplicationsCompanyQuery,
    useApplyToJobMutation,
-   useDeleteApplicationMutation,
    useUpdateApplicationStatusMutation,
    useWithdrawApplicationMutation
 } = extendedSmartApi

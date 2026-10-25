@@ -65,10 +65,7 @@ interface AdminHeaderProps {
    onMenuClick: () => void
 }
 
-export default function AdminHeader({
-   sidebarOpen,
-   onMenuClick
-}: AdminHeaderProps) {
+export default function AdminHeader({ sidebarOpen, onMenuClick }: AdminHeaderProps) {
    const location = useLocation()
    const user = useSelector((state: RootState) => state.auth.user)
    const dynamicPage = dynamicPages.find(({ pattern }) => pattern.test(location.pathname))
@@ -99,17 +96,15 @@ export default function AdminHeader({
          <Toolbar className="justify-between">
             <Box className="flex min-w-0 items-center">
                <IconButton
-                  aria-label={sidebarOpen ? "Close navigation menu" : "Open navigation menu"}
+                  className="lg:hidden!"
                   aria-controls="admin-navigation"
                   aria-expanded={sidebarOpen}
-                  onClick={onMenuClick}
+                  aria-label={
+                     sidebarOpen ? "Close navigation menu" : "Open navigation menu"
+                  }
                   color="inherit"
-                  className="lg:hidden!">
-                  <MenuIcon
-                     sx={{
-                        fontSize: 24
-                     }}
-                  />
+                  onClick={onMenuClick}>
+                  <MenuIcon className="text-2xl!" />
                </IconButton>
                <Box className="ml-2 min-w-0">
                   <Typography className="text-lg! font-semibold!">{title}</Typography>
@@ -120,8 +115,8 @@ export default function AdminHeader({
                <UserNotifications />
                <Box className="ml-1 flex min-w-0 items-center">
                   <Avatar
-                     src={avatar}
-                     alt={displayName}>
+                     alt={displayName}
+                     src={avatar}>
                      {getInitials(displayName)}
                   </Avatar>
                   <Box className="ml-2 hidden min-w-0 flex-col sm:flex">

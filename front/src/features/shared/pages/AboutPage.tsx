@@ -21,33 +21,33 @@ const AboutPage = () => {
    return (
       <Box className="w-full">
          <PageHeader
-            title="Application & Employment Guide"
-            description="Learn more about application statuses and employment types used throughout the platform."
             action={
                isSupportGuide ? (
                   <Button
+                     className="text-primary! normal-case!"
                      startIcon={<ArrowBackOutlinedIcon />}
-                     onClick={() => navigate("/user/support")}
-                     className="text-primary! normal-case!">
+                     onClick={() => navigate("/user/support")}>
                      Back to Support & Help
                   </Button>
                ) : undefined
             }
+            description="Learn more about application statuses and employment types used throughout the platform."
+            title="Application & Employment Guide"
          />
 
          {/* Application Statuses */}
          <AboutSection
-            title="Application Statuses"
             description="These statuses show you the current stage of your application for a specific job."
-            icon={<DescriptionOutlinedIcon sx={{ fontSize: 24 }} />}>
+            icon={<DescriptionOutlinedIcon className="text-[24px]!" />}
+            title="Application Statuses">
             <Box className="grid grid-cols-1 gap-4 md:grid-cols-2">
                {applicationStatuses.map(status => (
                   <StatusCard
                      key={status.title}
-                     title={status.title}
                      description={status.description}
                      icon={status.icon}
                      iconClass={status.iconClass}
+                     title={status.title}
                   />
                ))}
             </Box>
@@ -56,16 +56,16 @@ const AboutPage = () => {
          {/* Employment Types */}
          <Box className="mt-6">
             <AboutSection
-               title="Employment Types"
                description="These types describe the nature of the job and how it is structured."
-               icon={<WorkOutlineOutlinedIcon sx={{ fontSize: 24 }} />}>
+               icon={<WorkOutlineOutlinedIcon className="text-[24px]!" />}
+               title="Employment Types">
                <Box className="grid grid-cols-1 gap-4 md:grid-cols-2">
                   {employmentTypes.map(type => (
                      <EmploymentTypeCard
-                        key={type.title}
-                        title={type.title}
-                        description={type.description}
                         className={type.className}
+                        key={type.title}
+                        description={type.description}
+                        title={type.title}
                      />
                   ))}
                </Box>

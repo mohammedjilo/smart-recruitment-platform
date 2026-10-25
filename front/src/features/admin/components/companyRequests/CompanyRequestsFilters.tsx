@@ -30,12 +30,10 @@ const CompanyRequestsFilters = ({
    return (
       <FiltersBar responsiveAt="lg">
          <TextField
-            value={searchInput.value}
-            onChange={searchInput.onChange}
-            onKeyDown={searchInput.onKeyDown}
-            placeholder="Search by company name or email..."
-            size="small"
             className="bg-surface w-full lg:max-w-77.5"
+            placeholder="Search by company name or email..."
+            value={searchInput.value}
+            size="small"
             slotProps={{
                input: {
                   startAdornment: (
@@ -43,11 +41,13 @@ const CompanyRequestsFilters = ({
                   )
                }
             }}
+            onChange={searchInput.onChange}
+            onKeyDown={searchInput.onKeyDown}
          />
 
          <FormControl
-            size="small"
-            className="bg-surface w-full lg:w-47.5">
+            className="bg-surface w-full lg:w-47.5"
+            size="small">
             <Select
                value={approvalStatus}
                onChange={event => onApprovalStatusChange(event.target.value)}>
@@ -62,8 +62,8 @@ const CompanyRequestsFilters = ({
          </FormControl>
 
          <FormControl
-            size="small"
-            className="bg-surface w-full lg:w-37.5">
+            className="bg-surface w-full lg:w-37.5"
+            size="small">
             <Select
                value={status}
                onChange={event => onStatusChange(event.target.value)}>
@@ -76,11 +76,10 @@ const CompanyRequestsFilters = ({
          </FormControl>
 
          <TextField
+            className="bg-surface w-full lg:w-45"
             type="date"
             value={requestDate}
-            onChange={event => onRequestDateChange(event.target.value)}
             size="small"
-            className="bg-surface w-full lg:w-45"
             slotProps={{
                input: {
                   startAdornment: (
@@ -93,6 +92,7 @@ const CompanyRequestsFilters = ({
                   )
                }
             }}
+            onChange={event => onRequestDateChange(event.target.value)}
          />
       </FiltersBar>
    )

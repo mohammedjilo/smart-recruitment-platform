@@ -21,11 +21,11 @@ type StatCardProps = {
 const StatCard = ({ label, value, icon, iconClassName }: StatCardProps) => {
    return (
       <CommonStatCard
-         label={label}
+         className="mt-2 shadow-sm"
          value={value}
          icon={icon}
          iconClassName={iconClassName}
-         className="mt-2 shadow-sm"
+         label={label}
       />
    )
 }
@@ -34,7 +34,6 @@ const JobsStats = ({ stats }: JobsStatsProps) => {
    return (
       <Box className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
          <StatCard
-            label="Total Jobs"
             value={stats.totalJobs}
             icon={
                <WorkOutlinedIcon
@@ -43,10 +42,10 @@ const JobsStats = ({ stats }: JobsStatsProps) => {
                />
             }
             iconClassName="bg-primary/10"
+            label="Total Jobs"
          />
 
          <StatCard
-            label="Open Jobs"
             value={stats.openJobs}
             icon={
                <PersonOutlineRoundedIcon
@@ -55,10 +54,10 @@ const JobsStats = ({ stats }: JobsStatsProps) => {
                />
             }
             iconClassName="bg-emerald-50"
+            label="Open Jobs"
          />
 
          <StatCard
-            label="Closed Jobs"
             value={stats.closedJobs}
             icon={
                <AccessTimeRoundedIcon
@@ -67,10 +66,10 @@ const JobsStats = ({ stats }: JobsStatsProps) => {
                />
             }
             iconClassName="bg-orange-50"
+            label="Closed Jobs"
          />
 
          <StatCard
-            label="Expired Jobs"
             value={stats.expiredJobs}
             icon={
                <EventBusyOutlinedIcon
@@ -79,6 +78,7 @@ const JobsStats = ({ stats }: JobsStatsProps) => {
                />
             }
             iconClassName="bg-red-50"
+            label="Expired Jobs"
          />
       </Box>
    )

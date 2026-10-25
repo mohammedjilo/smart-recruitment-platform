@@ -1,19 +1,12 @@
 import React from "react"
 
-import {
-   Alert,
-   Button,
-   Checkbox,
-   TextField,
-   Box,
-   Skeleton,
-   Typography
-} from "@mui/material"
+import { Alert, Button, Checkbox, TextField, Box, Typography } from "@mui/material"
 
 import { RadioButtonUnchecked, CheckCircle } from "@mui/icons-material"
 import { useGetQuestionsQuery } from "@/services/shared/jobApiCalls"
 import type { QuestionType } from "@/types/job"
 import type { AnswerItem } from "./applicationTypes"
+import QuestionsStepSkeleton from "./QuestionsStepSkeleton"
 
 interface QuestionsStepProps {
    jobId: string
@@ -55,43 +48,22 @@ const QuestionsStep: React.FC<QuestionsStepProps> = ({
    }
 
    if (isLoading) {
-      return (
-         <Box className="space-y-4">
-            <Box>
-               <Skeleton
-                  variant="text"
-                  width={130}
-                  height={26}
-               />
-               <Skeleton
-                  variant="text"
-                  width="72%"
-               />
-            </Box>
-            {[0, 1, 2].map(item => (
-               <Skeleton
-                  key={item}
-                  variant="rounded"
-                  height={112}
-               />
-            ))}
-         </Box>
-      )
+      return <QuestionsStepSkeleton />
    }
 
    if (isError) {
       return (
          <Alert
-            severity="error"
             action={
                <Button
+                  className="normal-case!"
                   color="inherit"
                   size="small"
-                  onClick={() => void refetch()}
-                  className="normal-case!">
+                  onClick={() => void refetch()}>
                   Retry
                </Button>
-            }>
+            }
+            severity="error">
             Could not load the application questions.
          </Alert>
       )
@@ -114,10 +86,10 @@ const QuestionsStep: React.FC<QuestionsStepProps> = ({
             {questions.map((question, index) => (
                <QuestionCard
                   key={question.id}
-                  number={index + 1}
-                  question={question.question}
                   required={question.required}
-                  invalid={invalidQuestionIds.includes(question.id)}>
+                  invalid={invalidQuestionIds.includes(question.id)}
+                  number={index + 1}
+                  question={question.question}>
                   {renderQuestionInput(
                      question,
                      answers.find(item => item.questionId === question.id)?.answer,
@@ -158,21 +130,21 @@ const renderQuestionInput = (
          return (
             <Box className="flex gap-8">
                <RadioOption
-                  label="Yes"
-
                   checked={value === "YES"}
 
-                  onClick={() => onChange("YES")}
                   invalid={invalid}
+
+                  label="Yes"
+                  onClick={() => onChange("YES")}
                />
 
                <RadioOption
-                  label="No"
-
                   checked={value === "NO"}
 
-                  onClick={() => onChange("NO")}
                   invalid={invalid}
+
+                  label="No"
+                  onClick={() => onChange("NO")}
                />
             </Box>
          )
@@ -188,12 +160,12 @@ const renderQuestionInput = (
                   <RadioOption
                      key={option}
 
-                     label={option}
-
                      checked={value === option}
 
-                     onClick={() => onChange(option)}
                      invalid={invalid}
+
+                     label={option}
+                     onClick={() => onChange(option)}
                   />
                ))}
             </Box>
@@ -208,11 +180,19 @@ const renderQuestionInput = (
             <Box className="flex flex-wrap gap-x-6 gap-y-3">
                {(question.options ?? []).map((option: string) => (
                   <label
-                     key={option}
+                     className="text-mui-blue-300 flex cursor-pointer items-center gap-2 text-sm"
 
-                     className="text-mui-blue-300 flex cursor-pointer items-center gap-2 text-sm">
+                     key={option}>
                      <Checkbox
                         checked={Array.isArray(value) && value.includes(option)}
+
+                        sx={{
+                           color: invalid ? "#ef4444" : "#d2d5df",
+
+                           "&.Mui-checked": {
+                              color: invalid ? "#ef4444" : "#5421e8"
+                           }
+                        }}
 
                         onChange={e => {
                            let current = Array.isArray(value) ? value : []
@@ -221,14 +201,6 @@ const renderQuestionInput = (
                               onChange([...current, option])
                            } else {
                               onChange(current.filter(x => x !== option))
-                           }
-                        }}
-
-                        sx={{
-                           color: invalid ? "#ef4444" : "#d2d5df",
-
-                           "&.Mui-checked": {
-                              color: invalid ? "#ef4444" : "#5421e8"
                            }
                         }}
                      />
@@ -248,7 +220,7 @@ const renderQuestionInput = (
          return (
             <Box>
                <textarea
-                  className={`text-mui-blue-300 min-h-[95px] w-full resize-none rounded-lg border p-3 text-sm outline-none focus:border-[#5421e8] ${invalid ? "border-red-500" : "border-[#dfe3eb]"}`}
+                  className={`text-mui-blue-300 min-h-23.75 w-full resize-none rounded-lg border p-3 text-sm outline-none focus:border-[#5421e8] ${invalid ? "border-red-500" : "border-[#dfe3eb]"}`}
 
                   value={typeof value === "string" ? value : ""}
 
@@ -264,15 +236,13 @@ const renderQuestionInput = (
       case "NUMBER":
          return (
             <TextField
-               fullWidth
-
                type="number"
-
-               size="small"
 
                value={value ?? ""}
 
-               onChange={e => onChange(e.target.value)}
+               fullWidth
+
+               size="small"
 
                sx={{
                   "& .MuiOutlinedInput-root": {
@@ -283,6 +253,8 @@ const renderQuestionInput = (
                      })
                   }
                }}
+
+               onChange={e => onChange(e.target.value)}
             />
          )
 
@@ -350,23 +322,21 @@ const RadioOption = ({
 }) => {
    return (
       <label
-         onClick={onClick}
+         className="text-mui-blue-300 flex cursor-pointer items-center gap-2 text-sm"
 
-         className="text-mui-blue-300 flex cursor-pointer items-center gap-2 text-sm">
+         onClick={onClick}>
          <Box className="relative h-4 w-4">
             {checked ? (
                <CheckCircle
+                  className="text-[17px]!"
                   sx={{
-                     fontSize: 17,
-
                      color: invalid ? "#ef4444" : "#5421e8"
                   }}
                />
             ) : (
                <RadioButtonUnchecked
+                  className="text-[17px]!"
                   sx={{
-                     fontSize: 17,
-
                      color: invalid ? "#ef4444" : "#cfd4df"
                   }}
                />

@@ -60,10 +60,10 @@ const renderForm = (formType: ProfileFormType, data: Record<string, unknown>) =>
    render(
       <Provider store={createStore()}>
          <ProfileEditForm
-            formType={formType}
             data={data}
-            onSave={onSave}
+            formType={formType}
             onCancel={onCancel}
+            onSave={onSave}
          />
       </Provider>
    )

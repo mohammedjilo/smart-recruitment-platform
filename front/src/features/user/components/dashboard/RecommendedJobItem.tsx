@@ -52,15 +52,14 @@ const RecommendedJobItem: React.FC<JobCardProps> = ({ job }) => {
                   {job.company.logoUrl ? (
                      <Avatar
                         className="h-full! w-full! object-cover!"
-                        variant="square"
-                        src={job.company.logoUrl}
                         alt={job.company.companyName}
+                        src={job.company.logoUrl}
+                        variant="square"
                      />
                   ) : (
                      <Typography
+                        className="text-[28px]! font-bold!"
                         sx={{
-                           fontSize: "28px",
-                           fontWeight: 700,
                            color: "primary.main"
                         }}>
                         {job.company.companyName?.charAt(0)?.toUpperCase()}
@@ -82,26 +81,30 @@ const RecommendedJobItem: React.FC<JobCardProps> = ({ job }) => {
                   <Box className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-2">
                      <Box className="flex items-center gap-1.5">
                         <LocationOnOutlined
+                           className="text-[21px]!"
                            sx={{
-                              fontSize: 21,
                               color: "text.secondary"
                            }}
                         />
 
-                        <Typography className="text-xs!" color="textSecondary">
+                        <Typography
+                           className="text-xs!"
+                           color="textSecondary">
                            {job.company.location}
                         </Typography>
                      </Box>
 
                      <Box className="flex items-center gap-1.5">
                         <AttachMoneyOutlined
+                           className="text-[21px]!"
                            sx={{
-                              fontSize: 21,
                               color: "text.secondary"
                            }}
                         />
 
-                        <Typography className="text-[12px]!" color="textSecondary">
+                        <Typography
+                           className="text-[12px]!"
+                           color="textSecondary">
                            {formattedSalary}
                         </Typography>
                      </Box>
@@ -123,9 +126,11 @@ const RecommendedJobItem: React.FC<JobCardProps> = ({ job }) => {
          <Box className="mt-7 flex flex-wrap gap-3">
             {job.skills.slice(0, 5).map(skill => (
                <Box
-                  key={skill}
-                  className="bg-primary-tint rounded-xl px-4 py-2">
-                  <Typography className="text-[12px]! font-medium!" color="textSecondary">
+                  className="bg-primary-tint rounded-xl px-4 py-2"
+                  key={skill}>
+                  <Typography
+                     className="text-[12px]! font-medium!"
+                     color="textSecondary">
                      {skill}
                   </Typography>
                </Box>
@@ -143,9 +148,8 @@ const RecommendedJobItem: React.FC<JobCardProps> = ({ job }) => {
                </Typography>
 
                <Typography
+                  className="text-[32px]! font-bold!"
                   sx={{
-                     fontSize: "32px",
-                     fontWeight: 700,
                      color: matchColor
                   }}>
                   {job.matchScore}%
@@ -155,17 +159,16 @@ const RecommendedJobItem: React.FC<JobCardProps> = ({ job }) => {
             {/* Progress */}
             <Box className="mt-3">
                <LinearProgress
-                  variant="determinate"
+                  className="h-2.5! rounded-full!"
                   value={Math.min(Math.max(job.matchScore, 0), 100)}
                   sx={{
-                     height: 10,
-                     borderRadius: 999,
                      backgroundColor: "divider",
                      "& .MuiLinearProgress-bar": {
                         borderRadius: 999,
                         backgroundColor: matchColor
                      }
                   }}
+                  variant="determinate"
                />
             </Box>
 
@@ -176,17 +179,12 @@ const RecommendedJobItem: React.FC<JobCardProps> = ({ job }) => {
                   sx={{
                      color: matchColor
                   }}>
-                  <StarBorder
-                     sx={{
-                        fontSize: 24
-                     }}
-                  />
+                  <StarBorder className="text-2xl!" />
 
                   <Typography
+                     className="text-xs! font-medium!"
                      sx={{
-                        color: matchColor,
-                        fontSize: "12px",
-                        fontWeight: 500
+                        color: matchColor
                      }}>
                      {matchMessage}
                   </Typography>
@@ -194,7 +192,9 @@ const RecommendedJobItem: React.FC<JobCardProps> = ({ job }) => {
 
                <Box className="bg-border h-5 w-px" />
 
-               <Typography className="line-clamp-1 text-xs!" color="textSecondary">
+               <Typography
+                  className="line-clamp-1 text-xs!"
+                  color="textSecondary">
                   {job.recommendation}
                </Typography>
             </Box>
@@ -205,15 +205,17 @@ const RecommendedJobItem: React.FC<JobCardProps> = ({ job }) => {
 
          {/* ================= FOOTER ================= */}
          <Box className="flex items-center justify-between">
-            <Typography className="text-xs!" color="textSecondary">
+            <Typography
+               className="text-xs!"
+               color="textSecondary">
                {formatCreatedAt(job.createdAt)}
             </Typography>
 
             <Box className="flex gap-3">
                <Button
+                  className="bg-primary-tint! text-primary! hover:bg-primary-dark! rounded-xl! px-4! py-2! text-[14px]! font-semibold! normal-case! shadow-none! hover:text-white!"
                   variant="contained"
-                  onClick={() => navigate(`/jobs/${job.id}/${job.slug}`)}
-                  className="bg-primary-tint! text-primary! hover:bg-primary-dark! rounded-xl! px-4! py-2! text-[14px]! font-semibold! normal-case! shadow-none! hover:text-white!">
+                  onClick={() => navigate(`/jobs/${job.id}/${job.slug}`)}>
                   View Job
                </Button>
             </Box>

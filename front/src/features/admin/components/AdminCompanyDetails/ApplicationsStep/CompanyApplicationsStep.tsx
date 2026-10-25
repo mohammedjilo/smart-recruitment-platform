@@ -5,13 +5,13 @@ import { Box, Button, Typography } from "@mui/material"
 import DataTable from "@/components/common/DataTable"
 import ApplicationsStats from "@/features/admin/components/applications/ApplicationsStats"
 import ApplicationsFilters from "@/features/admin/components/applications/ApplicationsFilters"
-import { getCompanyApplicationsColumns } from "@/features/admin/columns/companyApplicationsColumns"
+import { getCompanyApplicationsColumns } from "./columns"
 import { useGetCompanyApplicationsByAdminQuery } from "@/features/admin/services/adminApiCalls"
 import type {
    ApplicationStatus,
-   CompanyApplicationsMatchScore,
    StatusCounts
 } from "@/types/admin"
+import type { ApplicationMatchScore } from "@/types/application"
 import { formatDate as formatDateValue } from "@/utils/formatDate"
 import { AdminStatsSkeleton } from "@/features/admin/components/AdminSkeletons"
 import FiltersBarSkeleton from "@/components/common/FiltersBarSkeleton"
@@ -28,7 +28,7 @@ const CompanyApplicationsStep = ({ companyId }: CompanyApplicationsStepProps) =>
    const [search, setSearch] = useState("")
    const [debouncedSearch, setDebouncedSearch] = useState("")
    const [status, setStatus] = useState<ApplicationStatus | "ALL">("ALL")
-   const [matchScore, setMatchScore] = useState<CompanyApplicationsMatchScore>("ALL")
+   const [matchScore, setMatchScore] = useState<ApplicationMatchScore>("ALL")
 
    useEffect(() => {
       const timeout = setTimeout(() => {
@@ -76,7 +76,7 @@ const CompanyApplicationsStep = ({ companyId }: CompanyApplicationsStepProps) =>
       setPage(1)
    }
 
-   const handleMatchScoreChange = (value: CompanyApplicationsMatchScore) => {
+   const handleMatchScoreChange = (value: ApplicationMatchScore) => {
       setMatchScore(value)
       setPage(1)
    }
@@ -85,28 +85,28 @@ const CompanyApplicationsStep = ({ companyId }: CompanyApplicationsStepProps) =>
       <Box className="w-full space-y-5">
          {isLoading ? (
             <AdminStatsSkeleton
-               count={7}
                className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4 2xl:grid-cols-7"
+               count={7}
             />
          ) : queryPresentation.category === "section_error" ||
            queryPresentation.category === "access_denied" ||
            queryPresentation.category === "authentication_notice" ||
            queryPresentation.category === "resource_not_found" ? (
-            <Typography className="text-sm! text-red-500" role="alert" aria-live="assertive">
+            <Typography className="text-sm! text-red-500" aria-live="assertive" role="alert">
                {queryPresentation.message}
             </Typography>
          ) : response?.stats ? (
             <ApplicationsStats
-               totalCount={response.stats.totalApplications}
                statusCounts={statusCounts}
+               totalCount={response.stats.totalApplications}
             />
          ) : null}
          {queryPresentation.category === "stale_error" && (
-            <Box className="flex items-center justify-between gap-3 rounded-lg border border-amber-200 bg-amber-50 px-4 py-3" role="status" aria-live="polite">
+            <Box className="flex items-center justify-between gap-3 rounded-lg border border-amber-200 bg-amber-50 px-4 py-3" aria-live="polite" role="status">
                <Typography className="text-sm! text-amber-900!">
                   {queryPresentation.message}
                </Typography>
-               <Button onClick={query.refetch} className="normal-case!">
+               <Button className="normal-case!" onClick={query.refetch}>
                   Retry
                </Button>
             </Box>
@@ -116,26 +116,17 @@ const CompanyApplicationsStep = ({ companyId }: CompanyApplicationsStepProps) =>
             <FiltersBarSkeleton fields={["search", "control", "control"]} />
          ) : (
             <ApplicationsFilters
+               matchScore={matchScore}
                search={search}
                status={status}
-               matchScore={matchScore}
+               onMatchScoreChange={handleMatchScoreChange}
                onSearchChange={setSearch}
                onStatusChange={handleStatusChange}
-               onMatchScoreChange={handleMatchScoreChange}
             />
          )}
 
          <DataTable
-            rows={response?.data ?? []}
             columns={columns}
-            getRowKey={application => application.id}
-            isLoading={isLoading}
-            isFetching={queryPresentation.category === "refreshing"}
-            pagination={response?.meta}
-            queryState={queryState}
-            onRetry={query.refetch}
-            onPageChange={setPage}
-            itemLabel="applications"
             emptyState={
                <Box className="flex min-h-50 items-center justify-center py-20">
                   <Typography className="text-sm! text-muted">
@@ -143,6 +134,15 @@ const CompanyApplicationsStep = ({ companyId }: CompanyApplicationsStepProps) =>
                   </Typography>
                </Box>
             }
+            getRowKey={application => application.id}
+            isFetching={queryPresentation.category === "refreshing"}
+            isLoading={isLoading}
+            itemLabel="applications"
+            pagination={response?.meta}
+            queryState={queryState}
+            rows={response?.data ?? []}
+            onPageChange={setPage}
+            onRetry={query.refetch}
          />
       </Box>
    )

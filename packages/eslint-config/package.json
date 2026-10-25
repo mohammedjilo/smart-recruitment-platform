@@ -1,0 +1,24 @@
+{
+  "name": "@smart-recruitment/eslint-config",
+  "version": "0.1.0",
+  "description": "Reusable ESLint flat config for logically sorting JSX props.",
+  "type": "module",
+  "exports": {
+    ".": "./index.js",
+    "./jsx-props": "./jsx-props.js"
+  },
+  "files": [
+    "index.js",
+    "jsx-props.js",
+    "README.md"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
+  "peerDependencies": {
+    "eslint": "^8.45.0 || ^9.0.0 || ^10.0.0"
+  },
+  "dependencies": {
+    "eslint-plugin-perfectionist": "^5.13.0"
+  }
+}

@@ -44,10 +44,10 @@ const SavedJobItem = ({ job }: { job: job }) => {
       try {
          await toggleSaveJobs({ jobId: job.id }).unwrap()
       } catch (error) {
-         const errorPresentation = getMutationPresentation(
-            getMutationErrorState(error),
-            { surface: "action", importance: "routine" }
-         )
+         const errorPresentation = getMutationPresentation(getMutationErrorState(error), {
+            surface: "action",
+            importance: "routine"
+         })
          if (errorPresentation.category === "silent") return
          await showAlert({
             type: "error",
@@ -67,9 +67,9 @@ const SavedJobItem = ({ job }: { job: job }) => {
             <Box className="bg-surface flex h-13.5 w-13.5 shrink-0 items-center justify-center overflow-hidden rounded-lg border border-[#e7e9ef]">
                {job.company.logoUrl ? (
                   <img
-                     src={job.company.logoUrl}
-                     alt={job.company.companyName}
                      className="h-full w-full object-contain p-1.5"
+                     alt={job.company.companyName}
+                     src={job.company.logoUrl}
                   />
                ) : (
                   <span className="text-lg font-bold text-[#5521ed]">
@@ -96,22 +96,14 @@ const SavedJobItem = ({ job }: { job: job }) => {
 
                <Box className="mt-2 flex flex-wrap items-center gap-2 text-[11px] text-[#717a91]">
                   <span className="flex items-center gap-1">
-                     <LocationOn
-                        sx={{
-                           fontSize: 13
-                        }}
-                     />
+                     <LocationOn className="text-[13px]!" />
                      Location not specified
                   </span>
 
                   <span className="text-[#c7cad3]">•</span>
 
                   <span className="flex items-center gap-1">
-                     <WorkOutlined
-                        sx={{
-                           fontSize: 12
-                        }}
-                     />
+                     <WorkOutlined className="text-xs!" />
 
                      <EmploymentTypeChip employmentType={job.employmentType} />
                   </span>
@@ -155,11 +147,7 @@ const SavedJobItem = ({ job }: { job: job }) => {
             </Typography>
 
             <Typography className="mt-1! flex items-center gap-1 text-[11px]! text-[#7c8498]!">
-               <CalendarMonth
-                  sx={{
-                     fontSize: 12
-                  }}
-               />
+               <CalendarMonth className="text-xs!" />
                Deadline
             </Typography>
          </Box>
@@ -173,10 +161,7 @@ const SavedJobItem = ({ job }: { job: job }) => {
                <Tooltip title="This job has already been applied to.">
                   <Box className="flex items-center justify-center">
                      <CheckCircleOutlined
-                        sx={{
-                           fontSize: 18,
-                           color: "#16a34a"
-                        }}
+                        className="text-lg! text-[#16a34a]!"
                         aria-label="Applied"
                      />
                   </Box>
@@ -184,15 +169,11 @@ const SavedJobItem = ({ job }: { job: job }) => {
             )}
 
             <IconButton
-               size="small"
-               color="primary"
                disabled={isSaving}
+               color="primary"
+               size="small"
                onClick={() => void handleToggleSave()}>
-               <Bookmark
-                  sx={{
-                     fontSize: 22
-                  }}
-               />
+               <Bookmark className="text-[22px]!" />
             </IconButton>
          </Box>
       </Box>

@@ -83,25 +83,25 @@ const JobsFilters = ({
    return (
       <FiltersBar responsiveAt="lg">
          <OutlinedInput
-            fullWidth
-            value={searchInput.value}
-            onChange={searchInput.onChange}
-            onKeyDown={searchInput.onKeyDown}
+            className="bg-surface lg:max-w-70"
             placeholder="Search jobs by title..."
+            value={searchInput.value}
+            fullWidth
             size="small"
             startAdornment={
                <SearchSubmitAdornment onSearch={searchInput.submit} />
             }
-            className="bg-surface lg:max-w-70"
+            onChange={searchInput.onChange}
+            onKeyDown={searchInput.onKeyDown}
          />
 
          <FormControl
-            size="small"
-            className="w-full lg:w-47.5">
+            className="w-full lg:w-47.5"
+            size="small">
             <Select
+               className="bg-surface"
                value={status}
-               onChange={event => onStatusChange(event.target.value as "ALL" | JobStatus)}
-               className="bg-surface">
+               onChange={event => onStatusChange(event.target.value as "ALL" | JobStatus)}>
                {statusOptions.map(option => (
                   <MenuItem
                      key={option.value}
@@ -113,14 +113,14 @@ const JobsFilters = ({
          </FormControl>
 
          <FormControl
-            size="small"
-            className="w-full lg:w-57.5">
+            className="w-full lg:w-57.5"
+            size="small">
             <Select
+               className="bg-surface"
                value={employmentType}
                onChange={event =>
                   onEmploymentTypeChange(event.target.value as "ALL" | EmploymentType)
-               }
-               className="bg-surface">
+               }>
                {employmentTypeOptions.map(option => (
                   <MenuItem
                      key={option.value}

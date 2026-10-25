@@ -10,20 +10,20 @@ const Register: React.FC = () => {
       <Box className="flex min-h-screen items-center justify-center">
          <CustomCard>
             <Typography
-               align="center"
-               className="text-3xl! font-bold!">
+               className="text-3xl! font-bold!"
+               align="center">
                Join us today!
             </Typography>
             <Typography
-               color="textSecondary"
+               className="mt-2! text-base!"
                align="center"
-               className="mt-2! text-base!">
+               color="textSecondary">
                Create an account to get started
             </Typography>
 
             <Box className="mt-6 grid grid-cols-1 gap-4">
                <Card
-                  className="bg-mui-blue-50! cursor-pointer p-4 transition-all duration-200 hover:shadow-md!"
+                  className="cursor-pointer p-4 transition-all duration-200 hover:shadow-md!"
                   variant="outlined"
                   onClick={() => navigate("/register/user")}>
                   <CardContent className="flex items-center">
@@ -33,8 +33,8 @@ const Register: React.FC = () => {
                            I'm a User
                         </Typography>
                         <Typography
-                           color="textSecondary"
-                           className="mt-1! text-sm!">
+                           className="mt-1! text-sm!"
+                           color="textSecondary">
                            Find jobs, apply, and grow your career
                         </Typography>
                      </Box>
@@ -42,7 +42,7 @@ const Register: React.FC = () => {
                </Card>
 
                <Card
-                  className="bg-mui-blue-50! cursor-pointer p-4 transition-all duration-200 hover:shadow-md!"
+                  className="cursor-pointer p-4 transition-all duration-200 hover:shadow-md!"
                   variant="outlined"
                   onClick={() => navigate("/register/company")}>
                   <CardContent className="flex items-center">
@@ -52,8 +52,8 @@ const Register: React.FC = () => {
                            I'm a Company
                         </Typography>
                         <Typography
-                           color="textSecondary"
-                           className="mt-1! text-sm!">
+                           className="mt-1! text-sm!"
+                           color="textSecondary">
                            Post jobs, find talent, and grow your team
                         </Typography>
                      </Box>
@@ -70,8 +70,8 @@ const Register: React.FC = () => {
                      
                   </a> */}
                   <Link
-                     to="/login"
-                     className="hover:text-mui-blue-800 text-mui-blue-600 underline">
+                     className="hover:text-mui-blue-800 text-mui-blue-600 underline"
+                     to="/login">
                      Login
                   </Link>
                </Typography>

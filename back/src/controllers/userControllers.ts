@@ -1,17 +1,17 @@
 import { Request, Response } from "express";
 import { asyncHandler } from "../utils/asyncHandler";
 import { AppError } from "../utils/appError.js";
-import { cloudinaryUploadImage } from "../utils/cloudinary";
 import {
-  updateUserPhoto,
   getCompleteUserProfile,
   getCompaniesForUser,
   getCompanyDetailsForUser,
   getCompanyJobsForUser,
-  upsertProfessionalProfile,
+  updateProfessionalProfile,
+  updateUserPersonalInformation,
   getDashboardData,
 } from "../services/user.service";
 import { getCompaniesQuerySchema } from "../validation/user.validation";
+import { personalInformationUpdateSchema } from "@smart-recruitment/validation";
 import { sendSuccess } from "../utils/apiResponse";
 import { normalizeLocationFilter } from "../utils/locationData";
 
@@ -21,49 +21,12 @@ import { normalizeLocationFilter } from "../utils/locationData";
  */
 
 /**
- * @desc Update the profile photo of the authenticated user
- * @route /api/user/photo
- * @method POST
+ * @desc Get the authenticated user's profile or a profile by user ID
+ * @route /api/user/profile
+ * @route /api/user/profile/:userId
+ * @method GET
  * @access private
  */
-export const updateUserPhotoController = asyncHandler(
-  async (req: Request, res: Response) => {
-    const userId = req.user?.id;
-    const file = req.file;
-
-    if (!userId) {
-      throw new AppError("User authentication required", 401);
-    }
-
-    if (!file?.buffer) {
-      throw new AppError("No image file provided", 400);
-    }
-
-    const uploadResult = await cloudinaryUploadImage(
-      file.buffer,
-      file.mimetype,
-    );
-
-    const user = await updateUserPhoto(
-      userId,
-      uploadResult.public_id,
-      uploadResult.secure_url,
-    );
-
-    sendSuccess(
-      res,
-      200,
-      {
-        profilePicId: user.profilePicId,
-        profilePicUrl: user.profilePicUrl,
-      },
-      {
-        message: "Profile photo updated successfully",
-      },
-    );
-  },
-);
-
 export const getCompleteUserProfileController = asyncHandler(
   async (req: Request, res: Response) => {
     const requester = req.user
@@ -88,9 +51,15 @@ export const getCompleteUserProfileController = asyncHandler(
     const profile = await getCompleteUserProfile(userId, requester);
 
     sendSuccess(res, 200, profile);
-  },
+  }
 );
 
+/**
+ * @desc Browse companies with optional filters
+ * @route /api/user/companies
+ * @method GET
+ * @access private
+ */
 export const getCompaniesController = asyncHandler(
   async (req: Request, res: Response) => {
     const query = getCompaniesQuerySchema.parse(req.query);
@@ -100,7 +69,7 @@ export const getCompaniesController = asyncHandler(
     sendSuccess(res, 200, result.companies, {
       meta: result.pagination,
     });
-  },
+  }
 );
 
 /**
@@ -121,7 +90,7 @@ export const getCompanyDetailsController = asyncHandler(
     const details = await getCompanyDetailsForUser(companyId);
 
     sendSuccess(res, 200, details);
-  },
+  }
 );
 
 /**
@@ -144,12 +113,8 @@ export const getCompanyJobsController = asyncHandler(
       typeof req.query.search === "string" ? req.query.search : undefined;
     const status =
       typeof req.query.status === "string" ? req.query.status : undefined;
-    const validStatuses = ["OPEN", "CLOSED", "EXPIRED"] as const;
 
-    if (
-      status &&
-      !validStatuses.includes(status as (typeof validStatuses)[number])
-    ) {
+    if (status && status !== "OPEN") {
       throw new AppError("Invalid job status", 400);
     }
 
@@ -157,23 +122,45 @@ export const getCompanyJobsController = asyncHandler(
       userId,
       companyId,
       pageNumber,
-      search,
-      status as (typeof validStatuses)[number] | undefined,
+      search
     );
 
     sendSuccess(res, 200, result.jobs, {
       meta: result.pagination,
     });
-  },
+  }
 );
 
 /**
- * @desc Upsert the professional profile of the authenticated user
- * @route /api/user/professional-profile
- * @method POST
+ * @desc Update the authenticated user's personal information
+ * @route /api/user/profile
+ * @method PUT
  * @access private
  */
-export const upsertProfessionalProfileController = asyncHandler(
+export const updateUserPersonalInformationController = asyncHandler(
+  async (req: Request, res: Response) => {
+    const userId = req.user?.id;
+    if (!userId) {
+      throw new AppError("User authentication required", 401);
+    }
+
+    const user = await updateUserPersonalInformation(
+      userId,
+      personalInformationUpdateSchema.parse(req.body)
+    );
+    sendSuccess(res, 200, user, {
+      message: "Personal information updated successfully",
+    });
+  }
+);
+
+/**
+ * @desc Update the existing professional profile of the authenticated user
+ * @route /api/user/professional-profile
+ * @method PUT
+ * @access private
+ */
+export const updateProfessionalProfileController = asyncHandler(
   async (req: Request, res: Response) => {
     const userId = req.user?.id;
 
@@ -181,32 +168,32 @@ export const upsertProfessionalProfileController = asyncHandler(
       throw new AppError("User authentication required", 401);
     }
 
-    const profile = await upsertProfessionalProfile(userId, req.body as any);
+    const profile = await updateProfessionalProfile(userId, req.body);
 
     sendSuccess(res, 200, profile, {
-      message: "Professional profile saved successfully",
+      message: "Professional profile updated successfully",
     });
-  },
+  }
 );
 
 /**
- * @desc    get dashboard data for the authenticated user
- * @route   GET /api/user/dashboard
- * @method  GET
- * @access  Private (requires authentication)
+ * @desc Get dashboard data for the authenticated user
+ * @route /api/user/dashboard
+ * @method GET
+ * @access private
  */
 export const getDashboardUserController = asyncHandler(
   async (req: Request, res: Response) => {
-    // استخراج userId من التوكن (بعد تمريره عبر authMiddleware)
+    // Extract userId from the token after authMiddleware processes it.
     const userId = req.user?.id;
 
     if (!userId) {
       throw new AppError("User authentication required", 401);
     }
 
-    // استدعاء الخدمة
+    // Call the service.
     const dashboardData = await getDashboardData(userId, req.requestId);
 
     sendSuccess(res, 200, dashboardData);
-  },
+  }
 );

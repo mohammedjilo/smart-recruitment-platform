@@ -95,16 +95,17 @@ const MyJobsPage = () => {
    return (
       <Box className="min-h-screen">
          <PageHeader
-            title="My Jobs"
-            description="Manage and track all jobs posted by your company."
             actions={
                <Button
-                  className="app-button-primary flex! items-center! gap-2! rounded-lg! px-5! py-3! text-sm! font-semibold! capitalize! shadow-sm! transition! active:scale-[0.98]!"
+                  className="flex! items-center! gap-2! rounded-lg! px-5! py-3! text-sm! font-semibold! capitalize! shadow-sm! transition! active:scale-[0.98]!"
+                  variant="contained"
                   onClick={() => navigate("/create-job")}>
                   <AddIcon fontSize="small" />
                   Create New Job
                </Button>
             }
+            description="Manage and track all jobs posted by your company."
+            title="My Jobs"
          />
 
          {/* Stats */}
@@ -113,8 +114,8 @@ const MyJobsPage = () => {
                {Array.from({ length: 5 }).map((_, index) => (
                   <Skeleton
                      key={index}
-                     variant="rounded"
                      height={124}
+                     variant="rounded"
                   />
                ))}
             </Box>
@@ -125,8 +126,6 @@ const MyJobsPage = () => {
            queryPresentation.category === "access_denied" ||
            queryPresentation.category === "resource_not_found" ? (
             <Alert
-               severity="error"
-               role="alert"
                aria-live="assertive"
                action={
                   <Button
@@ -135,14 +134,14 @@ const MyJobsPage = () => {
                      onClick={() => void query.refetch()}>
                      Retry
                   </Button>
-               }>
+               }
+               role="alert"
+               severity="error">
                {queryPresentation.message}
             </Alert>
          ) : null}
          {queryPresentation.category === "stale_error" && (
             <Alert
-               severity="warning"
-               role="status"
                aria-live="polite"
                action={
                   <Button
@@ -151,7 +150,9 @@ const MyJobsPage = () => {
                      onClick={() => void query.refetch()}>
                      Retry
                   </Button>
-               }>
+               }
+               role="status"
+               severity="warning">
                {queryPresentation.message}
             </Alert>
          )}
@@ -160,19 +161,19 @@ const MyJobsPage = () => {
          <Box className="mt-6">
             {isLoading ? (
                <FiltersBarSkeleton
-                  responsiveAt="xl"
                   fields={["search", "control", "control", "control"]}
+                  responsiveAt="xl"
                />
             ) : (
                <JobFilters
-                  search={search}
-                  status={status}
                   employmentType={employmentType}
+                  search={search}
                   sort={sort}
-                  onSearchChange={handleSearchChange}
-                  onStatusChange={handleStatusChange}
+                  status={status}
                   onEmploymentTypeChange={handleEmploymentTypeChange}
+                  onSearchChange={handleSearchChange}
                   onSortChange={handleSortChange}
+                  onStatusChange={handleStatusChange}
                />
             )}
          </Box>
@@ -180,9 +181,9 @@ const MyJobsPage = () => {
          {/* Table */}
          <Box className="mt-6">
             <JobsTable
-               jobs={jobs}
-               isLoading={isLoading}
                isFetching={queryPresentation.category === "refreshing"}
+               isLoading={isLoading}
+               jobs={jobs}
                queryState={queryState}
                onRetry={query.refetch}
             />
@@ -191,13 +192,13 @@ const MyJobsPage = () => {
          {/* Pagination */}
          {totalCount && (
             <PaginationFooter
-               page={page}
-               totalCount={totalCount}
-               pageSize={PAGE_SIZE}
-               setPage={setPage}
-               itemLabel="jobs"
                isFetching={queryPresentation.category === "refreshing"}
+               itemLabel="jobs"
+               page={page}
+               pageSize={PAGE_SIZE}
                queryState={queryState}
+               setPage={setPage}
+               totalCount={totalCount}
             />
          )}
       </Box>

@@ -42,21 +42,21 @@ const ApplicationsTable = ({
 
    return (
       <DataTable
-         rows={applications}
          columns={columns}
-         getRowKey={application => application.id}
-         isLoading={isLoading}
-         isFetching={isFetching}
-         queryState={queryState}
-         onRetry={onRetry}
          emptyState={
             <Box className="flex min-h-50 items-center justify-center py-20">
                <Box className="text-muted text-sm!">No applications found.</Box>
             </Box>
          }
-         pagination={pagination}
-         onPageChange={onPageChange}
+         getRowKey={application => application.id}
+         isFetching={isFetching}
+         isLoading={isLoading}
          itemLabel="applications"
+         pagination={pagination}
+         queryState={queryState}
+         rows={applications}
+         onPageChange={onPageChange}
+         onRetry={onRetry}
       />
    )
 }

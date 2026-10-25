@@ -26,10 +26,7 @@ const CompaniesList = ({ companies, isSearching, isLoading }: Props) => {
                <UserCompanyListSkeleton />
             ) : companies.length === 0 ? (
                <Box className="flex min-h-75 flex-col items-center justify-center px-6 text-center">
-                  <BusinessOutlinedIcon
-                     className="text-muted mb-3"
-                     sx={{ fontSize: 42 }}
-                  />
+                  <BusinessOutlinedIcon className="text-muted mb-3 text-[42px]!" />
 
                   <Typography className="text-content text-base! font-semibold!">
                      {isSearching ? "No companies found" : "No companies available"}

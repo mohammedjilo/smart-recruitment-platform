@@ -1,8 +1,8 @@
 import { useNavigate, useParams } from "react-router-dom"
-import { Box, Typography } from "@mui/material"
+import { Box, Button, Typography } from "@mui/material"
 
-import SupportTopicDetails from "@/features/support/components/SupportTopicDetails"
-import { getCategoryNameForTopic } from "@/features/support/supportCategoryMap"
+import SupportTopicDetails from "@/features/shared/support/components/SupportTopicDetails"
+import { getCategoryNameForTopic } from "@/features/shared/support/supportCategoryMap"
 import { userTopicDetails } from "../config/support.config"
 
 export default function UserSupportTopicPage() {
@@ -23,12 +23,13 @@ export default function UserSupportTopicPage() {
                   The requested support topic could not be found.
                </Typography>
 
-               <button
+               <Button
+                  className="mt-6! rounded-lg! px-4! py-2! text-sm! font-medium! transition-colors! normal-case!"
                   type="button"
-                  onClick={() => navigate("/user/support")}
-                  className="app-button-secondary mt-6 rounded-lg px-4 py-2 text-sm font-medium transition-colors">
+                  variant="outlined"
+                  onClick={() => navigate("/user/support")}>
                   Back to Support & Help
-               </button>
+               </Button>
             </Box>
          </Box>
       )
@@ -37,6 +38,9 @@ export default function UserSupportTopicPage() {
    return (
       <SupportTopicDetails
          data={topic}
+         onArticleClick={(article: { id: string }) => {
+            navigate(`/user/support/${topicId}/${article.id}`)
+         }}
          onBack={() => navigate("/user/support")}
          onCreateRequest={() =>
             navigate("/user/support/requests/create", {
@@ -45,9 +49,6 @@ export default function UserSupportTopicPage() {
                }
             })
          }
-         onArticleClick={(article: { id: string }) => {
-            navigate(`/user/support/${topicId}/${article.id}`)
-         }}
       />
    )
 }

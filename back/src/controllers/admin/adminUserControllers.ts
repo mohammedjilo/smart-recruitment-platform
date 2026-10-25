@@ -5,11 +5,16 @@ import {
   getUsersByAdmin,
   getUserByAdmin,
   updateUserStatusByAdmin,
-  deleteUserByAdmin,
 } from "../../services/admin/adminUser.service";
 import { getAdminUsersQuerySchema } from "../../validation/admin.validation";
 import { normalizeLocationFilter } from "../../utils/locationData";
 
+/**
+ * @desc List and filter registered users
+ * @route /api/admin/users
+ * @method GET
+ * @access private
+ */
 export const getAllUsersController = asyncHandler(
   async (req: Request, res: Response) => {
     const query = getAdminUsersQuerySchema.parse(req.query);
@@ -19,29 +24,34 @@ export const getAllUsersController = asyncHandler(
       meta: result.pagination,
       stats: result.stats,
     });
-  },
+  }
 );
 
+/**
+ * @desc Get user details by ID
+ * @route /api/admin/users/:userId
+ * @method GET
+ * @access private
+ */
 export const getUserByAdminController = asyncHandler(
   async (req: Request, res: Response) => {
     const user = await getUserByAdmin(req.params.userId as string);
     sendSuccess(res, 200, user);
-  },
+  }
 );
 
+/**
+ * @desc Update a user's status
+ * @route /api/admin/users/:userId/status
+ * @method PATCH
+ * @access private
+ */
 export const updateUserStatusController = asyncHandler(
   async (req: Request, res: Response) => {
     const user = await updateUserStatusByAdmin(
       req.params.userId as string,
-      req.body,
+      req.body
     );
     sendSuccess(res, 200, user, { message: "User status updated" });
-  },
-);
-
-export const deleteUserController = asyncHandler(
-  async (req: Request, res: Response) => {
-    const result = await deleteUserByAdmin(req.params.userId as string);
-    sendSuccess(res, 200, undefined, { message: result.message });
-  },
+  }
 );

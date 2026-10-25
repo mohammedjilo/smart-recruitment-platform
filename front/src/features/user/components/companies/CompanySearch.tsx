@@ -19,12 +19,10 @@ const CompanySearch = ({ search, location, onSearchChange, onLocationChange }: P
    return (
       <FiltersBar className="items-center">
          <TextField
-            fullWidth
-            value={searchInput.value}
-            onChange={searchInput.onChange}
-            onKeyDown={searchInput.onKeyDown}
-            placeholder="Search company name or keyword..."
             className="max-w-105"
+            placeholder="Search company name or keyword..."
+            value={searchInput.value}
+            fullWidth
             slotProps={{
                input: {
                   startAdornment: (
@@ -42,6 +40,8 @@ const CompanySearch = ({ search, location, onSearchChange, onLocationChange }: P
                   fontSize: "14px"
                }
             }}
+            onChange={searchInput.onChange}
+            onKeyDown={searchInput.onKeyDown}
          />
          <CountryCitySelector value={location} onChange={onLocationChange} />
       </FiltersBar>

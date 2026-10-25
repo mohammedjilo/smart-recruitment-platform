@@ -12,6 +12,12 @@ import {
 } from "../../validation/admin.validation";
 import { getCompanyApplications } from "../../services/application.service";
 
+/**
+ * @desc Get applications submitted to a company's jobs
+ * @route /api/admin/companies/:companyId/applications
+ * @method GET
+ * @access private
+ */
 export const getCompanyApplicationsByAdminController = asyncHandler(
   async (req: Request, res: Response) => {
     const companyId = req.params.companyId as string;
@@ -35,6 +41,12 @@ export const getCompanyApplicationsByAdminController = asyncHandler(
   }
 );
 
+/**
+ * @desc Get an application by ID
+ * @route /api/admin/applications/:applicationId
+ * @method GET
+ * @access private
+ */
 export const getApplicationByAdminController = asyncHandler(
   async (req: Request, res: Response) => {
     const application = await getApplicationByAdmin(
@@ -45,6 +57,12 @@ export const getApplicationByAdminController = asyncHandler(
   }
 );
 
+/**
+ * @desc Get the profile snapshot attached to an application
+ * @route /api/admin/applications/:applicationId/profile-snapshot
+ * @method GET
+ * @access private
+ */
 export const getProfileSnapshotByAdminController = asyncHandler(
   async (req: Request, res: Response) => {
     const profileSnapshot = await getProfileSnapshotByAdmin(
@@ -55,6 +73,12 @@ export const getProfileSnapshotByAdminController = asyncHandler(
   }
 );
 
+/**
+ * @desc List and filter all job applications
+ * @route /api/admin/applications
+ * @method GET
+ * @access private
+ */
 export const getApplicationsByAdminController = asyncHandler(
   async (req: Request, res: Response) => {
     const query = getAdminApplicationsQuerySchema.parse(req.query);

@@ -65,30 +65,30 @@ const JobSummarySidebar: React.FC<JobSummarySidebarProps> = ({ data }) => {
          </Box>
 
          <SummaryItem
+            value={data.location || "none"}
             icon={<LocationOnOutlined />}
             title="Location"
-            value={data.location || "none"}
          />
          <SummaryItem
+            value={<EmploymentTypeChip employmentType={data.employmentType} />}
             icon={<CalendarTodayOutlined />}
             title="Employment Type"
-            value={<EmploymentTypeChip employmentType={data.employmentType} />}
          />
          <SummaryItem
+            value={data.salary?.toString() || "0"}
             icon={<AttachMoneyOutlined />}
             title="Salary"
-            value={data.salary?.toString() || "0"}
          />
          <SummaryItem
+            value={formatCreatedAt(data.createdAt)}
             icon={<CalendarTodayOutlined />}
             title="Posted On"
-            value={formatCreatedAt(data.createdAt)}
          />
          <SummaryItem
-            icon={<CalendarTodayOutlined />}
-            title="Deadline"
             value={formatJobDeadline(data.deadline)}
             danger
+            icon={<CalendarTodayOutlined />}
+            title="Deadline"
          />
 
          <Box className="mt-6 border-t pt-5">
@@ -96,8 +96,8 @@ const JobSummarySidebar: React.FC<JobSummarySidebarProps> = ({ data }) => {
             <Box className="flex flex-wrap gap-2">
                {data.skills.map((skill, id) => (
                   <Typography
-                     key={id}
-                     className="rounded-md! bg-gray-100! px-3! py-1! text-xs!">
+                     className="rounded-md! bg-gray-100! px-3! py-1! text-xs!"
+                     key={id}>
                      {skill.skill.skillName}
                   </Typography>
                ))}

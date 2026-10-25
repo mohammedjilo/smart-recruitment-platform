@@ -13,6 +13,7 @@ import { getQueryState } from "@/utils/queryState"
 import { getQueryPresentation } from "@/utils/presentationPolicy"
 import {
    emptyLocationSelection,
+   isLocationSelectionComplete,
    type LocationSelection
 } from "@/components/common/CountryCitySelector"
 
@@ -23,25 +24,25 @@ const UsersPage = () => {
 
    const [experience, setExperience] = useState<ExperienceFilter>("ALL")
    const [location, setLocation] = useState<LocationSelection>(emptyLocationSelection)
+   const hasCompleteLocation = isLocationSelectionComplete(location)
 
    const query = useGetCompanyUsersQuery({
       page,
       search: search.trim() || undefined,
       experience,
-      country: location.countryName || undefined,
-      countryCode: location.countryCode || undefined,
-      city: location.cityName || undefined,
-      cityGeonameId: location.cityGeonameId ?? undefined
+      country: hasCompleteLocation ? location.countryName : undefined,
+      countryCode: hasCompleteLocation ? location.countryCode : undefined,
+      city: hasCompleteLocation ? location.cityName : undefined,
+      cityGeonameId: hasCompleteLocation
+         ? (location.cityGeonameId ?? undefined)
+         : undefined
    })
-   const hasLocationFilter = Boolean(
-      location.countryName || location.cityGeonameId
-   )
    const queryState = getQueryState(query, {
       isEmpty: response => response.data.length === 0,
       noResults:
          Boolean(search.trim()) ||
          experience !== "ALL" ||
-         hasLocationFilter ||
+         hasCompleteLocation ||
          (query.currentData?.data.length === 0 &&
             (query.currentData?.meta?.totalCount ?? 0) > 0)
    })
@@ -66,8 +67,8 @@ const UsersPage = () => {
    return (
       <Box className="w-full">
          <PageHeader
-            title="Users"
             description="Explore and discover talented professionals."
+            title="Users"
          />
 
          {/* Filters */}
@@ -75,15 +76,15 @@ const UsersPage = () => {
             <FiltersBarSkeleton fields={["search", "control"]} />
          ) : (
             <UsersFilters
-               search={search}
                experience={experience}
                location={location}
-               onSearchChange={handleSearchChange}
+               search={search}
                onExperienceChange={handleExperienceChange}
                onLocationChange={value => {
                   setLocation(value)
                   setPage(1)
                }}
+               onSearchChange={handleSearchChange}
             />
          )}
 
@@ -92,25 +93,27 @@ const UsersPage = () => {
          {/* UsersPage Table */}
          <Box className="mt-6">
             <UsersTable
-               users={users}
                hasFilters={
-                  Boolean(search.trim()) || experience !== "ALL" || hasLocationFilter
+                  Boolean(search.trim()) ||
+                  experience !== "ALL" ||
+                  hasCompleteLocation
                }
-               isLoading={isLoading}
                isFetching={queryPresentation.category === "refreshing"}
+               isLoading={isLoading}
                queryState={queryState}
+               users={users}
                onRetry={query.refetch}
             />
 
             {pagination && pagination.totalCount > 0 && (
                <PaginationFooter
-                  totalCount={pagination.totalCount}
+                  isFetching={queryPresentation.category === "refreshing"}
+                  itemLabel="users"
                   page={pagination.page}
                   pageSize={pagination.pageSize}
-                  setPage={setPage}
-                  itemLabel="users"
-                  isFetching={queryPresentation.category === "refreshing"}
                   queryState={queryState}
+                  setPage={setPage}
+                  totalCount={pagination.totalCount}
                />
             )}
          </Box>

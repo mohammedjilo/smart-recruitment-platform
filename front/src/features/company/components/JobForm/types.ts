@@ -1,8 +1,41 @@
 import type { CompanyJob } from "@/types/company"
+import { createJobSchema, jobStatusValues } from "@smart-recruitment/validation"
+import { z } from "zod"
 import type { JobFormData } from "@/types/createJob.types"
 import type { Question } from "@/types/question.types"
 
 export type JobFormMode = "create" | "edit"
+
+export const jobFormSchema = createJobSchema
+   .omit({ experienceRequired: true })
+   .extend({
+      employmentType: z
+         .union([z.literal(""), createJobSchema.shape.employmentType])
+         .pipe(
+            z.enum(createJobSchema.shape.employmentType.options, {
+               error: "Invalid option"
+            })
+         ),
+      experience: z
+         .string()
+         .min(1, "Experience is required")
+         .transform(value => Number.parseInt(value, 10))
+         .pipe(createJobSchema.shape.experienceRequired),
+      salary: z
+         .number()
+         .min(0, "Salary cannot be negative")
+         .transform(value => (value === 0 ? undefined : value))
+         .pipe(createJobSchema.shape.salary.unwrap().unwrap().optional()),
+      status: z.enum(jobStatusValues)
+   })
+   .transform(({ experience, ...values }) => ({
+      ...values,
+      experienceRequired: experience
+   }))
+
+export type JobFormInput = z.input<typeof jobFormSchema>
+export type JobFormOutput = z.output<typeof jobFormSchema>
+export type JobQuestionInput = NonNullable<JobFormInput["questions"]>[number]
 
 export type JobFormInitialData = {
    form: JobFormData
@@ -26,6 +59,27 @@ export const emptyJobForm: JobFormData = {
    skills: [],
    status: "OPEN"
 }
+
+export const mapQuestionToFormInput = (question: Question): JobQuestionInput => ({
+   id: question.id,
+   type: question.type,
+   question: question.question,
+   required: question.required,
+   order: question.order,
+   options: question.options ?? [],
+   minSelection: question.minSelections ?? undefined,
+   maxSelection: question.maxSelections ?? undefined,
+   minNumber: question.minValue ?? undefined,
+   maxNumber: question.maxValue ?? undefined
+})
+
+export const getJobFormDefaults = (
+   form: JobFormData = emptyJobForm,
+   questions: Question[] = []
+): JobFormInput => ({
+   ...form,
+   questions: questions.map(mapQuestionToFormInput)
+})
 
 export const mapCompanyJobToFormData = (job: CompanyJob): JobFormInitialData => ({
    form: {

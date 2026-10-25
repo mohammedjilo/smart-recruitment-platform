@@ -85,24 +85,24 @@ const JobsFilters = ({
    return (
       <FiltersBar>
          <OutlinedInput
+            className="bg-surface md:max-w-75"
+            placeholder="Search by job title..."
+            value={searchInput.value}
             fullWidth
             size="small"
-            value={searchInput.value}
-            placeholder="Search by job title..."
-            onChange={searchInput.onChange}
-            onKeyDown={searchInput.onKeyDown}
             startAdornment={
                <SearchSubmitAdornment onSearch={searchInput.submit} />
             }
-            className="bg-surface md:max-w-75"
+            onChange={searchInput.onChange}
+            onKeyDown={searchInput.onKeyDown}
          />
 
          <FormControl
-            size="small"
-            className="w-full md:w-57.5">
+            className="w-full md:w-57.5"
+            size="small">
             <Select
-               value={employmentType}
                className="bg-surface"
+               value={employmentType}
                onChange={event =>
                   onEmploymentTypeChange(event.target.value as "ALL" | EmploymentType)
                }>
@@ -117,11 +117,11 @@ const JobsFilters = ({
          </FormControl>
 
          <FormControl
-            size="small"
-            className="w-full md:w-45">
+            className="w-full md:w-45"
+            size="small">
             <Select
-               value={status}
                className="bg-surface"
+               value={status}
                onChange={event =>
                   onStatusChange(event.target.value as "ALL" | JobStatus)
                }>

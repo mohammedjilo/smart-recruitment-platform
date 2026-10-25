@@ -82,7 +82,7 @@ export const getAdminApplicationsColumns = ({
       render: application => {
          if (application.matchScore === null) {
             return (
-               <Typography className="text-muted! text-center! text-sm!">—</Typography>
+               <Typography className="text-center! text-sm!" color="textSecondary">—</Typography>
             )
          }
 
@@ -93,14 +93,14 @@ export const getAdminApplicationsColumns = ({
                </Typography>
 
                <LinearProgress
-                  variant="determinate"
+                  className="h-1.5! rounded-full!"
                   value={application.matchScore}
                   sx={{
                      "& .MuiLinearProgress-bar": {
                         backgroundColor: getMatchScoreColor(application.matchScore)
                      }
                   }}
-                  className="h-1.5! rounded-full!"
+                  variant="determinate"
                />
             </Box>
          )
@@ -129,12 +129,12 @@ export const getAdminApplicationsColumns = ({
       align: "center",
       render: application => (
          <Button
-            size="small"
-            variant="text"
+            className="min-w-22! rounded-lg! text-xs! font-medium! normal-case!"
             color="primary"
+            size="small"
             startIcon={<VisibilityOutlinedIcon />}
-            onClick={() => onView(application.id)}
-            className="min-w-22! rounded-lg! text-xs! font-medium! normal-case!">
+            variant="text"
+            onClick={() => onView(application.id)}>
             View
          </Button>
       )

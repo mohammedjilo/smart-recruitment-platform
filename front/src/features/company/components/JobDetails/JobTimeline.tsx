@@ -31,7 +31,9 @@ const JobTimeline = ({ job }: JobTimelineProps) => {
 
    return (
       <section className="bg-surface rounded-xl border p-5">
-         <h3 className="text-content text-base font-semibold">Timeline</h3>
+         <Typography className="text-content! text-base! font-semibold!" variant="h3">
+            Timeline
+         </Typography>
 
          <Box className="mt-6">
             {items.map((item, index) => {
@@ -39,8 +41,8 @@ const JobTimeline = ({ job }: JobTimelineProps) => {
 
                return (
                   <Box
-                     key={item.title}
-                     className="relative flex gap-4 pb-7 last:pb-0">
+                     className="relative flex gap-4 pb-7 last:pb-0"
+                     key={item.title}>
                      {!isLast && (
                         <Box className="absolute top-5 left-2 h-[calc(100%-14px)] w-px bg-slate-200" />
                      )}

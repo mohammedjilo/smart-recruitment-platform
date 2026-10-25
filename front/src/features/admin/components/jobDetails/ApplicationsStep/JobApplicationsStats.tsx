@@ -22,11 +22,11 @@ const statuses: ApplicationStatus[] = [
 const JobApplicationsStats = ({ stats }: JobApplicationsStatsProps) => (
    <Box className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4 2xl:grid-cols-8">
       <StatCard
-         label="Total Applications"
+         className="min-h-23 shadow-sm"
          value={stats.totalCount}
          icon={<DescriptionOutlinedIcon />}
          iconClassName="bg-violet-50 text-violet-600"
-         className="min-h-23 shadow-sm"
+         label="Total Applications"
       />
 
       {statuses.map(status => {
@@ -35,12 +35,12 @@ const JobApplicationsStats = ({ stats }: JobApplicationsStatsProps) => (
 
          return (
             <StatCard
+               className="min-h-23 shadow-sm"
                key={status}
-               label={config.label}
                value={stats.statusCounts[status]}
                icon={<StatusIcon />}
                iconClassName={config.className}
-               className="min-h-23 shadow-sm"
+               label={config.label}
             />
          )
       })}

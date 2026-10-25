@@ -74,8 +74,8 @@ const ProjectForm: React.FC<Props> = ({ onSave, onCancel }) => {
          {formError && (
             <Box
                className="mb-4"
-               role="alert"
-               aria-live="assertive">
+               aria-live="assertive"
+               role="alert">
                <Typography color="error">{formError}</Typography>
             </Box>
          )}
@@ -87,14 +87,14 @@ const ProjectForm: React.FC<Props> = ({ onSave, onCancel }) => {
                   render={({ field }) => (
                      <TextField
                         {...field}
-                        fullWidth
-                        label="Project Title"
                         placeholder="e.g. E-commerce Website"
-                        variant="outlined"
-                        size="medium"
                         error={!!errors.title}
+                        fullWidth
                         helperText={errors.title?.message}
+                        label="Project Title"
+                        size="medium"
                         slotProps={{ inputLabel: { shrink: true } }}
+                        variant="outlined"
                      />
                   )}
                />
@@ -104,16 +104,16 @@ const ProjectForm: React.FC<Props> = ({ onSave, onCancel }) => {
                   render={({ field }) => (
                      <TextField
                         {...field}
-                        fullWidth
-                        label="Description (Optional)"
                         placeholder="Describe the project, technologies used, your role..."
+                        error={!!errors.description}
+                        fullWidth
+                        helperText={errors.description?.message}
+                        label="Description (Optional)"
                         multiline
                         rows={4}
-                        variant="outlined"
                         size="medium"
-                        error={!!errors.description}
-                        helperText={errors.description?.message}
                         slotProps={{ inputLabel: { shrink: true } }}
+                        variant="outlined"
                      />
                   )}
                />
@@ -121,16 +121,16 @@ const ProjectForm: React.FC<Props> = ({ onSave, onCancel }) => {
 
             <Box className="mt-5 flex justify-end gap-3">
                <Button
+                  className="normal-case!"
                   variant="outlined"
-                  onClick={onCancel}
-                  className="normal-case!">
+                  onClick={onCancel}>
                   Cancel
                </Button>
                <Button
                   className="normal-case!"
                   type="submit"
-                  variant="contained"
-                  disabled={isLoading}>
+                  disabled={isLoading}
+                  variant="contained">
                   {isLoading ? "Saving..." : "Save Project"}
                </Button>
             </Box>

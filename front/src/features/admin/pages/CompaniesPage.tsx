@@ -12,6 +12,7 @@ import { getQueryPresentation } from "@/utils/presentationPolicy"
 import { Button } from "@mui/material"
 import {
    emptyLocationSelection,
+   isLocationSelectionComplete,
    type LocationSelection
 } from "@/components/common/CountryCitySelector"
 
@@ -26,24 +27,25 @@ const CompaniesPage = () => {
 
    const [sortByNewest, setSortByNewest] = useState(true)
    const [location, setLocation] = useState<LocationSelection>(emptyLocationSelection)
+   const hasCompleteLocation = isLocationSelectionComplete(location)
 
    const query = useGetAllCompaniesQuery({
       page,
       sortByNewest,
       status,
       approvalStatus,
-      country: location.countryName || undefined,
-      countryCode: location.countryCode || undefined,
-      city: location.cityName || undefined,
-      cityGeonameId: location.cityGeonameId ?? undefined
+      country: hasCompleteLocation ? location.countryName : undefined,
+      countryCode: hasCompleteLocation ? location.countryCode : undefined,
+      city: hasCompleteLocation ? location.cityName : undefined,
+      cityGeonameId: hasCompleteLocation
+         ? (location.cityGeonameId ?? undefined)
+         : undefined
    })
-   const hasLocationFilter = Boolean(
-      location.countryName || location.cityGeonameId
-   )
    const queryState = getQueryState(query, {
       isEmpty: response => response.data.length === 0,
       noResults:
-         (hasLocationFilter && (query.currentData?.meta?.totalCount ?? 0) === 0) ||
+         (hasCompleteLocation &&
+            (query.currentData?.meta?.totalCount ?? 0) === 0) ||
          (page > 1 && (query.currentData?.meta?.totalCount ?? 0) > 0)
    })
    const queryPresentation = getQueryPresentation(queryState, "page")
@@ -69,8 +71,8 @@ const CompaniesPage = () => {
    if (queryPresentation.category === "loading") {
       return (
          <AdminListSkeleton
-            statCount={4}
             filterFields={["control", "control", "control"]}
+            statCount={4}
          />
       )
    }
@@ -85,17 +87,17 @@ const CompaniesPage = () => {
             {stats && <CompaniesStats stats={stats} />}
 
             <CompaniesFilters
-               status={status}
                approvalStatus={approvalStatus}
-               sortByNewest={sortByNewest}
                location={location}
-               onStatusChange={handleStatusChange}
+               sortByNewest={sortByNewest}
+               status={status}
                onApprovalStatusChange={handleApprovalStatusChange}
-               onSortChange={handleSortChange}
                onLocationChange={value => {
                   setLocation(value)
                   setPage(1)
                }}
+               onSortChange={handleSortChange}
+               onStatusChange={handleStatusChange}
             />
 
             <Box className="relative">
@@ -109,36 +111,36 @@ const CompaniesPage = () => {
                queryPresentation.category === "resource_not_found" ? (
                   <Box
                      className="flex min-h-100 flex-col items-center justify-center gap-3 rounded-xl border border-red-200 bg-red-50 px-6 text-center"
-                     role="alert"
-                     aria-live="assertive">
+                     aria-live="assertive"
+                     role="alert">
                      <Typography className="text-sm! text-red-700!">
                         {queryPresentation.message}
                      </Typography>
                      <Button
-                        onClick={query.refetch}
-                        className="normal-case!">
+                        className="normal-case!"
+                        onClick={query.refetch}>
                         Try again
                      </Button>
                   </Box>
                ) : queryPresentation.category === "stale_error" ? (
-                  <>
+                  <Box className="contents">
                      <Box
                         className="mb-4 flex items-center justify-between gap-3 rounded-lg border border-amber-200 bg-amber-50 px-4 py-3"
-                        role="status"
-                        aria-live="polite">
+                        aria-live="polite"
+                        role="status">
                         <Typography className="text-sm! text-amber-900!">
                            {queryPresentation.message}
                         </Typography>
                         <Button
-                           onClick={query.refetch}
-                           className="normal-case!">
+                           className="normal-case!"
+                           onClick={query.refetch}>
                            Try again
                         </Button>
                      </Box>
                      {companies.length > 0 ? (
                         <CompaniesGrid companies={companies} />
                      ) : null}
-                  </>
+                  </Box>
                ) : queryPresentation.category === "empty" ||
                  queryPresentation.category === "no_results" ? (
                   <Box className="border-border bg-surface flex min-h-100 flex-col items-center justify-center rounded-xl border">
@@ -149,8 +151,8 @@ const CompaniesPage = () => {
                      </Typography>
 
                      <Typography
-                        variant="body2"
-                        className="text-muted mt-2">
+                        className="text-muted mt-2"
+                        variant="body2">
                         {queryPresentation.category === "no_results"
                            ? "Try adjusting the filters or selecting another page."
                            : "The current company list is empty."}
@@ -167,13 +169,13 @@ const CompaniesPage = () => {
 
             {pagination && companies.length > 0 && (
                <PaginationFooter
+                  isFetching={queryPresentation.category === "refreshing"}
+                  itemLabel="companies"
                   page={pagination.page}
                   pageSize={pagination.pageSize}
-                  totalCount={pagination.totalCount}
-                  setPage={setPage}
-                  itemLabel="companies"
-                  isFetching={queryPresentation.category === "refreshing"}
                   queryState={queryState}
+                  setPage={setPage}
+                  totalCount={pagination.totalCount}
                />
             )}
          </Box>

@@ -31,8 +31,8 @@ export default function AdminWorkspaceRedirect() {
    if (permissions.includes(ADMIN_PERMISSIONS.VIEW_ADMIN_DASHBOARD)) {
       return (
          <Navigate
-            to="/admin/dashboard"
             replace
+            to="/admin/dashboard"
          />
       )
    }
@@ -40,8 +40,8 @@ export default function AdminWorkspaceRedirect() {
    if (permissions.includes(ADMIN_PERMISSIONS.VIEW_SUPPORT_DASHBOARD)) {
       return (
          <Navigate
-            to="/admin/support"
             replace
+            to="/admin/support"
          />
       )
    }
@@ -49,11 +49,11 @@ export default function AdminWorkspaceRedirect() {
    if (permissions.includes(ADMIN_PERMISSIONS.VIEW_OPERATIONS_DASHBOARD)) {
       return (
          <Navigate
-            to="/admin/operations"
             replace
+            to="/admin/operations"
          />
       )
    }
 
-   return <Navigate to="/admin/forbidden" replace />
+   return <Navigate replace to="/admin/forbidden" />
 }

@@ -39,10 +39,8 @@ describe("ApplyModal accessibility", () => {
       render(
          <MemoryRouter>
             <ApplyModal
-               open
-               handleClose={vi.fn()}
-               userId="user-1"
                companyId="company-1"
+               handleClose={vi.fn()}
                jobSummaryData={{
                   companyName: "Analytical Engines",
                   logoUrl: null,
@@ -54,6 +52,8 @@ describe("ApplyModal accessibility", () => {
                   deadline: "2026-12-31",
                   skills: []
                }}
+               open
+               userId="user-1"
             />
          </MemoryRouter>
       )

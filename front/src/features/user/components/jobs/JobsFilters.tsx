@@ -42,7 +42,15 @@ export default function JobsFilters({
    return (
       <FiltersBar>
          <TextField
+            className="w-full sm:max-w-120"
+            placeholder="Search company, job, or skill..."
             value={search}
+            size="small"
+            slotProps={{
+               input: {
+                  startAdornment: <SearchSubmitAdornment onSearch={onSearchSubmit} />
+               }
+            }}
             onChange={event => onSearchChange(event.target.value)}
             onKeyDown={event => {
                if (event.key === "Enter" && !event.nativeEvent.isComposing) {
@@ -50,28 +58,20 @@ export default function JobsFilters({
                   onSearchSubmit()
                }
             }}
-            placeholder="Search company, job, or skill..."
-            size="small"
-            className="w-full sm:max-w-120"
-            slotProps={{
-               input: {
-                  startAdornment: <SearchSubmitAdornment onSearch={onSearchSubmit} />
-               }
-            }}
          />
          <TextField
-            select
+            className="w-full sm:max-w-60"
             value={employmentType || "ALL"}
+            label="Employment type"
+            select
+            size="small"
             onChange={event =>
                onEmploymentTypeChange(
                   event.target.value === "ALL"
                      ? ""
                      : (event.target.value as EmploymentType)
                )
-            }
-            size="small"
-            label="Employment type"
-            className="w-full sm:max-w-60">
+            }>
             <MenuItem value="ALL">All employment types</MenuItem>
             {employmentTypes.map(type => (
                <MenuItem

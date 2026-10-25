@@ -19,15 +19,10 @@ interface TopJobsProps {
 
 export default function TopJobs({ jobs }: TopJobsProps) {
    return (
-      <Box className="bg-surface overflow-hidden rounded-xl border shadow-[0_2px_12px_rgba(15,23,42,0.04)]">
+      <Box className="bg-surface border-border overflow-hidden rounded-xl border shadow-[0_2px_12px_rgba(15,23,42,0.04)]">
          {/* Header */}
          <Box className="flex items-center gap-3 px-5 py-5">
-            <BarChartIcon
-               sx={{
-                  fontSize: 20,
-                  color: "#F59E0B"
-               }}
-            />
+            <BarChartIcon className="text-xl! text-[#F59E0B]!" />
 
             <Typography className="text-base font-semibold text-[#16213D]">
                Top Jobs by Applications
@@ -36,20 +31,15 @@ export default function TopJobs({ jobs }: TopJobsProps) {
 
          <Box
             className="responsive-scroll-region overflow-x-auto px-4 pb-4"
-            role="region"
             aria-label="Top jobs by applications; scroll horizontally to see all columns"
+            role="region"
             tabIndex={0}>
             <Table
-               size="small"
-               sx={{
-                  minWidth: 420
-               }}>
+               className="min-w-105!"
+               size="small">
                <TableHead>
-                  <TableRow
-                     sx={{
-                        backgroundColor: "#F8F9FC"
-                     }}>
-                     <TableCell sx={{ width: 40 }}>
+                  <TableRow className="bg-[#F8F9FC]!">
+                     <TableCell className="w-10!">
                         <Typography className="text-muted text-[11px]! font-semibold!">
                            #
                         </Typography>
@@ -82,7 +72,7 @@ export default function TopJobs({ jobs }: TopJobsProps) {
                         hover
                         sx={{
                            "&:not(:last-child) td": {
-                              borderBottom: "1px solid #1d4ed8"
+                              borderBottom: "1px solid #E2E8F0"
                            },
                            "&:last-child td": {
                               borderBottom: 0
@@ -103,12 +93,9 @@ export default function TopJobs({ jobs }: TopJobsProps) {
                         <TableCell>
                            <Box className="flex items-center gap-2">
                               <Avatar
-                                 src={getLogoUrl(job.company.logoUrl)}
+                                 className="h-6.75! w-6.75!"
                                  alt={job.company.companyName}
-                                 sx={{
-                                    width: 27,
-                                    height: 27
-                                 }}
+                                 src={getLogoUrl(job.company.logoUrl)}
                               />
 
                               <Typography className="text-[11px]! whitespace-nowrap!">

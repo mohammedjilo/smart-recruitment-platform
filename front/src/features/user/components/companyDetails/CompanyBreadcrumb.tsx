@@ -6,19 +6,17 @@ const CompanyBreadcrumb = () => {
    return (
       <Box className="mb-7 flex items-center gap-2">
          <Typography
-            component="span"
-            className="text-sm font-semibold text-link hover:text-link-hover">
+            className="text-link hover:text-link-hover text-sm font-semibold"
+            component="span">
             Companies
          </Typography>
 
-         <ChevronRightIcon
-            className="text-muted"
-            sx={{ fontSize: 18 }}
-         />
+         <ChevronRightIcon className="text-muted text-lg!" />
 
          <Typography
-            component="span"
-            className="text-sm font-medium" color="textSecondary">
+            className="text-sm font-medium"
+            color="textSecondary"
+            component="span">
             Company Details
          </Typography>
       </Box>

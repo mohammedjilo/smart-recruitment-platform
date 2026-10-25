@@ -16,8 +16,8 @@ const ApplicationAvatar = ({
 
    return (
       <Avatar
-         src={profilePicUrl || undefined}
-         className="h-10! w-10! text-xs! font-semibold!">
+         className="h-10! w-10! text-xs! font-semibold!"
+         src={profilePicUrl || undefined}>
          {!profilePicUrl && initials}
       </Avatar>
    )

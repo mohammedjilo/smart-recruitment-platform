@@ -3,7 +3,7 @@ import { prisma } from "../config/db.js";
 import { AppError } from "../utils/appError.js";
 import { z } from "zod";
 import { updateCompanyProfileSchema } from "../validation/company.validation";
-import { cityLocationPredicate } from "../utils/locationData";
+import { cityLocationPredicate, resolveLocation } from "../utils/locationData";
 
 type UpdateCompanyProfileInput = z.infer<typeof updateCompanyProfileSchema> & {
   logoId?: string;
@@ -142,7 +142,7 @@ export const getCompanyUsers = async (options: GetCompanyUsersOptions = {}) => {
 };
 
 export const getDashboardCompany = async (companyId: string) => {
-  // التأكد من وجود الشركة
+  // Ensure the company exists.
   const company = await prisma.company.findUnique({
     where: { id: companyId },
     select: { id: true, companyName: true },
@@ -152,7 +152,7 @@ export const getDashboardCompany = async (companyId: string) => {
     throw new AppError("Company not found", 404);
   }
 
-  // تنفيذ جميع الاستعلامات بالتوازي
+  // Run all queries in parallel.
   const [
     activeJobsCount,
     totalApplications,
@@ -161,7 +161,7 @@ export const getDashboardCompany = async (companyId: string) => {
     recentJobs,
     topJobsByApplications,
   ] = await Promise.all([
-    // 1. عدد الوظائف النشطة (OPEN)
+    // 1. Count open jobs.
     prisma.job.count({
       where: {
         companyId,
@@ -169,7 +169,7 @@ export const getDashboardCompany = async (companyId: string) => {
       },
     }),
 
-    // 2. إجمالي الطلبات على جميع وظائف الشركة
+    // 2. Count applications across all company jobs.
     prisma.application.count({
       where: {
         job: {
@@ -178,7 +178,7 @@ export const getDashboardCompany = async (companyId: string) => {
       },
     }),
 
-    // 3. عدد المقابلات (الطلبات التي حالتها INTERVIEW)
+    // 3. Count applications in the INTERVIEW status.
     prisma.application.count({
       where: {
         job: {
@@ -188,7 +188,7 @@ export const getDashboardCompany = async (companyId: string) => {
       },
     }),
 
-    // 4. أحدث 5 طلبات (مع بيانات المستخدم والوظيفة)
+    // 4. Get the five most recent applications with user and job details.
     prisma.application.findMany({
       where: {
         job: {
@@ -222,7 +222,7 @@ export const getDashboardCompany = async (companyId: string) => {
       },
     }),
 
-    // 5. أحدث 5 وظائف (مع بيانات الشركة والمهارات)
+    // 5. Get the five most recent jobs with company and skill details.
     prisma.job.findMany({
       where: {
         companyId,
@@ -243,7 +243,7 @@ export const getDashboardCompany = async (companyId: string) => {
       },
     }),
 
-    // 6. أفضل 3 وظائف من حيث عدد الطلبات
+    // 6. Get the three jobs with the most applications.
     prisma.job.findMany({
       where: {
         companyId,
@@ -266,7 +266,7 @@ export const getDashboardCompany = async (companyId: string) => {
     }),
   ]);
 
-  // إرجاع البيانات المجمعة (بدون تهيئة)
+  // Return the aggregated data without initialization.
   return {
     stats: {
       activeJobs: activeJobsCount,
@@ -277,29 +277,6 @@ export const getDashboardCompany = async (companyId: string) => {
     recentJobs,
     topJobs: topJobsByApplications,
   };
-};
-
-export const updateCompanyLogo = async (
-  companyId: string,
-  logoId: string,
-  logoUrl: string,
-) => {
-  const existingCompany = await prisma.company.findUnique({
-    where: { id: companyId },
-    select: { id: true },
-  });
-
-  if (!existingCompany) {
-    throw new AppError("Company not found", 404);
-  }
-
-  return prisma.company.update({
-    where: { id: companyId },
-    data: {
-      logoId,
-      logoUrl,
-    },
-  });
 };
 
 export const updateCompanyProfile = async (
@@ -317,7 +294,7 @@ export const updateCompanyProfile = async (
   if (existingCompany.id !== companyId) {
     throw new AppError("You are not authorized to update this company", 403);
   }
-  const data: Record<string, string | null> = {};
+  const data: Prisma.CompanyUpdateInput = {};
 
   if (input.companyName !== undefined) {
     data.companyName = input.companyName;
@@ -339,8 +316,50 @@ export const updateCompanyProfile = async (
     data.website = input.website ?? null;
   }
 
-  if (input.location !== undefined) {
-    data.location = input.location ?? null;
+  const hasLocationSelection =
+    input.country !== undefined ||
+    input.countryCode !== undefined ||
+    input.state !== undefined ||
+    input.stateCode !== undefined ||
+    input.city !== undefined ||
+    input.cityGeonameId !== undefined;
+
+  if (hasLocationSelection) {
+    if (
+      !input.country ||
+      !input.countryCode ||
+      !input.city ||
+      !input.cityGeonameId
+    ) {
+      throw new AppError(
+        "Select a valid country and city.",
+        400,
+        "VALIDATION_ERROR",
+        {
+          country: "Select a valid country.",
+          city: "Select a city from the suggestions.",
+        },
+      );
+    }
+    const location = await resolveLocation({
+      country: input.country,
+      countryCode: input.countryCode,
+      city: input.city,
+      cityGeonameId: input.cityGeonameId,
+    });
+    data.location = [
+      location.city,
+      location.state,
+      location.country,
+    ].filter(Boolean).join(", ");
+    data.country = location.country;
+    data.countryCode = location.countryCode;
+    data.state = location.state || null;
+    data.stateCode = location.stateCode || null;
+    data.city = location.city;
+    data.cityGeonameId = location.cityGeonameId;
+  } else if (input.location !== undefined) {
+    data.location = input.location || null;
     data.country = null;
     data.countryCode = null;
     data.state = null;
@@ -383,6 +402,12 @@ export const getCompanyProfile = async (companyId: string) => {
           email: true,
           website: true,
           location: true,
+          country: true,
+          countryCode: true,
+          state: true,
+          stateCode: true,
+          city: true,
+          cityGeonameId: true,
           status: true,
           createdAt: true,
           updatedAt: true,

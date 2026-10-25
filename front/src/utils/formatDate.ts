@@ -81,30 +81,30 @@ export default formatCreatedAt
 export function calculateAge(birthDate: string | Date | null | undefined): number {
    if (!birthDate) return 0
 
-   // تحويل إلى كائن Date
+   // Convert the birth date to a Date object.
    const birth = typeof birthDate === "string" ? new Date(birthDate) : birthDate
 
-   // التحقق من صحة التاريخ
+   // Validate the birth date.
    if (isNaN(birth.getTime())) {
-      console.warn("تاريخ غير صحيح")
+      console.warn("Invalid birth date")
       return 0
    }
 
-   // استخراج اليوم والشهر والسنة من تاريخ الميلاد (للتخلص من الوقت)
+   // Extract the birth date parts, ignoring the time.
    const birthYear = birth.getFullYear()
    const birthMonth = birth.getMonth() // 0-11
    const birthDay = birth.getDate()
 
-   // التاريخ الحالي (نأخذ التاريخ الحالي مع تجاهل الوقت أيضاً)
+   // Get today's date, also ignoring the time.
    const today = new Date()
    const todayYear = today.getFullYear()
    const todayMonth = today.getMonth()
    const todayDay = today.getDate()
 
-   // حساب العمر المبدئي
+   // Calculate the initial age.
    let age = todayYear - birthYear
 
-   // التحقق مما إذا كان عيد الميلاد قد مرَّ هذا العام أم لا
+   // Check whether the birthday has passed this year.
    const hasBirthdayPassed =
       todayMonth > birthMonth || (todayMonth === birthMonth && todayDay >= birthDay)
 

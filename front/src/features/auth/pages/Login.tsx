@@ -51,16 +51,26 @@ const Login: React.FC = () => {
    })
    const [authLogin, mutationResult] = useAuthLoginMutation()
    const mutationState = getMutationState(mutationResult)
-   const mutationPresentation = getMutationPresentation(mutationState, { surface: "form" })
+   const mutationPresentation = getMutationPresentation(mutationState, {
+      surface: "form"
+   })
+
    const isLoading = mutationPresentation.category === "loading"
-   const errorMessage =
-      mutationPresentation.category === "field_error" ||
-      mutationPresentation.category === "form_error" ||
-      mutationPresentation.category === "authentication_notice" ||
-      mutationPresentation.category === "access_denied" ||
-      mutationPresentation.category === "resource_not_found"
-         ? mutationPresentation.message
-         : null
+   const isInvalidCredentials =
+      mutationState.status === "error" &&
+      mutationState.error.kind === "authentication" &&
+      mutationState.error.status === 401 &&
+      mutationState.error.code === "UNAUTHORIZED"
+   const errorMessage = isInvalidCredentials
+      ? "Invalid email or password."
+      : mutationPresentation.category === "field_error" ||
+          mutationPresentation.category === "form_error" ||
+          mutationPresentation.category === "authentication_notice" ||
+          mutationPresentation.category === "access_denied" ||
+          mutationPresentation.category === "resource_not_found"
+        ? mutationPresentation.message
+        : null
+
    const location = useLocation()
    const from = location.state?.from?.pathname
 
@@ -114,20 +124,18 @@ const Login: React.FC = () => {
          <CustomCard>
             <form onSubmit={handleSubmit(onSubmit)}>
                <Box className="mb-6 flex flex-col items-center">
-                  <Avatar sx={{ width: 64, height: 64 }} />
+                  <Avatar className="h-16! w-16!" />
                   <Typography
-                     variant="h5"
-                     className="mt-3">
+                     className="mt-3"
+                     variant="h5">
                      Login{" "}
                   </Typography>
                </Box>
-               <FormErrorAlert
-                  message={errorMessage}
-               />
+               <FormErrorAlert message={errorMessage} />
                <Controller
                   name="role"
-                  control={control}
                   defaultValue="user"
+                  control={control}
                   render={({ field }) => (
                      <FormControl fullWidth>
                         <FormLabel>Login as</FormLabel>
@@ -191,9 +199,9 @@ const Login: React.FC = () => {
                         </RadioGroup>
                         {errors.role && (
                            <Typography
+                              className="mt-2!"
                               color="error"
-                              variant="caption"
-                              sx={{ mt: 1 }}>
+                              variant="caption">
                               {errors.role?.message as string}
                            </Typography>
                         )}
@@ -202,29 +210,29 @@ const Login: React.FC = () => {
                />
                <TextField
                   {...register("email")}
-                  label="Email"
                   type="email"
-                  fullWidth
-                  margin="normal"
                   error={Boolean(errors.email)}
+                  fullWidth
                   helperText={errors.email?.message}
+                  label="Email"
+                  margin="normal"
                />
 
                <TextField
                   {...register("password")}
-                  label="Password"
                   type="password"
-                  fullWidth
-                  margin="normal"
                   error={Boolean(errors.password)}
+                  fullWidth
                   helperText={errors.password?.message}
+                  label="Password"
+                  margin="normal"
                />
                <Button
-                  type="submit"
-                  variant="contained"
-                  fullWidth
                   className="mt-4 capitalize!"
-                  disabled={isLoading}>
+                  type="submit"
+                  disabled={isLoading}
+                  fullWidth
+                  variant="contained">
                   {isLoading ? "Loading..." : "Login"}
                </Button>
 
@@ -233,8 +241,8 @@ const Login: React.FC = () => {
                   variant="body2">
                   Don't have an account?{" "}
                   <Link
-                     to="/register"
-                     className="hover:text-mui-blue-800 text-mui-blue-600 underline">
+                     className="hover:text-mui-blue-800 text-mui-blue-600 underline"
+                     to="/register">
                      Register
                   </Link>
                </Typography>

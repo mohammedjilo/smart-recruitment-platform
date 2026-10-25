@@ -20,15 +20,10 @@ interface TopCompaniesProps {
 
 export default function TopCompanies({ companies }: TopCompaniesProps) {
    return (
-      <Box className="bg-surface overflow-hidden rounded-xl border shadow-[0_2px_12px_rgba(15,23,42,0.04)]">
+      <Box className="bg-surface border-border overflow-hidden rounded-xl border shadow-[0_2px_12px_rgba(15,23,42,0.04)]">
          {/* Header */}
          <Box className="flex items-center gap-3 px-5 py-5">
-            <BarChartIcon
-               sx={{
-                  fontSize: 20,
-                  color: "#5936E8"
-               }}
-            />
+            <BarChartIcon className="text-xl! text-[#5936E8]!" />
 
             <Typography className="text-base font-semibold text-[#16213D]">
                Top Companies by Jobs Posted
@@ -37,20 +32,15 @@ export default function TopCompanies({ companies }: TopCompaniesProps) {
 
          <Box
             className="responsive-scroll-region overflow-x-auto px-4 pb-4"
-            role="region"
             aria-label="Top companies by jobs posted; scroll horizontally to see all columns"
+            role="region"
             tabIndex={0}>
             <Table
-               size="small"
-               sx={{
-                  minWidth: 480
-               }}>
+               className="min-w-120!"
+               size="small">
                <TableHead>
-                  <TableRow
-                     sx={{
-                        backgroundColor: "#F8F9FC"
-                     }}>
-                     <TableCell sx={{ width: 40 }}>
+                  <TableRow className="bg-[#F8F9FC]!">
+                     <TableCell className="w-10!">
                         <Typography className="text-muted text-[11px]! font-semibold!">
                            #
                         </Typography>
@@ -77,7 +67,7 @@ export default function TopCompanies({ companies }: TopCompaniesProps) {
                         hover
                         sx={{
                            "&:not(:last-child) td": {
-                              borderBottom: "1px solid #1d4ed8"
+                              borderBottom: "1px solid #E2E8F0"
                            },
                            "&:last-child td": {
                               borderBottom: 0
@@ -92,12 +82,9 @@ export default function TopCompanies({ companies }: TopCompaniesProps) {
                         <TableCell>
                            <Box className="flex items-center gap-3">
                               <Avatar
-                                 src={getLogoUrl(company.logoUrl)}
+                                 className="h-7! w-7!"
                                  alt={company.companyName}
-                                 sx={{
-                                    width: 28,
-                                    height: 28
-                                 }}
+                                 src={getLogoUrl(company.logoUrl)}
                               />
 
                               <Box>
@@ -106,8 +93,8 @@ export default function TopCompanies({ companies }: TopCompaniesProps) {
                                  </Typography>
 
                                  <Typography
-                                    component="div"
-                                    className="text-muted text-[10px]!">
+                                    className="text-muted text-[10px]!"
+                                    component="div">
                                     <CompanyStatusChip status={company.status} />
                                  </Typography>
                               </Box>

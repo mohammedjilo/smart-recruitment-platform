@@ -33,12 +33,12 @@ export default function ProfileCompletionGuard() {
    ) {
       return (
          <Box className="flex min-h-screen flex-col items-center justify-center gap-3 p-6">
-            <Typography className="text-sm! text-red-600!" role="alert" aria-live="assertive">
+            <Typography className="text-sm! text-red-600!" aria-live="assertive" role="alert">
                {queryPresentation.message}
             </Typography>
             <Button
-               onClick={() => void query.refetch()}
-               className="normal-case!">
+               className="normal-case!"
+               onClick={() => void query.refetch()}>
                Retry
             </Button>
          </Box>
@@ -50,8 +50,8 @@ export default function ProfileCompletionGuard() {
    if (!response?.data.completion?.isCompleted) {
       return (
          <Navigate
-            to="/profile/complete"
             replace
+            to="/profile/complete"
          />
       )
    }

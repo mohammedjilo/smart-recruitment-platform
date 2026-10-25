@@ -73,7 +73,7 @@ const JobApplicationPanel = ({
    const applyLabel = job.isApplied
       ? "Applied"
       : !canApply
-        ? "Applications Closed"
+        ? "Application Closed"
         : job.hasWithdrawnApplication
           ? "Apply Again"
           : "Apply Now"
@@ -81,61 +81,63 @@ const JobApplicationPanel = ({
    return (
       <aside className="bg-surface self-start rounded-xl border border-[#e8eaf0] px-6 py-5 shadow-[0_2px_8px_rgba(20,30,60,0.035)]">
          <JobInfoRow
-            icon={<GroupsOutlined sx={{ fontSize: 19 }} />}
-            label="Experience Level"
             value={job.experienceRequired.toString()}
+            icon={<GroupsOutlined className="text-[19px]!" />}
+            label="Experience Level"
          />
          <JobInfoRow
-            icon={<BusinessCenterOutlined sx={{ fontSize: 19 }} />}
-            label="Employment Type"
             value={<EmploymentTypeChip employmentType={job.employmentType} />}
+            icon={<BusinessCenterOutlined className="text-[19px]!" />}
+            label="Employment Type"
          />
          <JobInfoRow
-            icon={<AttachMoneyOutlined sx={{ fontSize: 19 }} />}
-            label="Salary"
             value={`${salary}`}
+            icon={<AttachMoneyOutlined className="text-[19px]!" />}
+            label="Salary"
          />
          <JobInfoRow
-            icon={<LocationOnOutlined sx={{ fontSize: 19 }} />}
-            label="Location"
             value={job.company.location}
+            icon={<LocationOnOutlined className="text-[19px]!" />}
+            label="Location"
          />
          <JobInfoRow
-            icon={<CalendarTodayOutlined sx={{ fontSize: 19 }} />}
-            label="Deadline"
             value={deadline}
             danger
+            icon={<CalendarTodayOutlined className="text-[19px]!" />}
+            label="Deadline"
             last
          />
 
          <Button
-            disabled={job.isApplied || !canApply}
             className={
                job.isApplied || !canApply
                   ? "mt-5! flex! h-14! w-full! items-center! justify-center! gap-3! rounded-lg! border border-[#b9edcf]! bg-[#ecfdf5]! text-[16px]! font-semibold! text-[#0f8f62]! capitalize! shadow-none! transition!"
-                  : "app-button-primary mt-5! flex! h-14! w-full! items-center! justify-center! gap-3! rounded-lg! text-[16px]! font-semibold! capitalize! shadow-sm! transition! active:scale-[0.99]!"
+                  : "mt-5! flex! h-14! w-full! items-center! justify-center! gap-3! rounded-lg! text-[16px]! font-semibold! capitalize! shadow-sm! transition! active:scale-[0.99]!"
             }
+            variant="contained"
+            disabled={job.isApplied || !canApply}
             onClick={() => canApply && !job.isApplied && onApply()}>
             {applyLabel}
             {job.isApplied ? (
-               <CheckCircleOutlined sx={{ fontSize: 19 }} />
+               <CheckCircleOutlined className="text-[19px]!" />
             ) : (
-               <SendOutlined sx={{ fontSize: 19, transform: "rotate(-15deg)" }} />
+               <SendOutlined className="text-[19px]!" />
             )}
          </Button>
 
          <Button
             className={
                job.isSaved
-                  ? "app-button-secondary mt-3! flex! h-11! w-full! items-center! justify-center! gap-2! rounded-lg! text-sm! font-semibold! capitalize! shadow-none! transition!"
-                  : "app-button-secondary mt-3! flex! h-11! w-full! items-center! justify-center! gap-2! rounded-lg! text-sm! font-medium! capitalize! transition!"
+                  ? "mt-3! flex! h-11! w-full! items-center! justify-center! gap-2! rounded-lg! text-sm! font-semibold! capitalize! shadow-none! transition!"
+                  : "mt-3! flex! h-11! w-full! items-center! justify-center! gap-2! rounded-lg! text-sm! font-medium! capitalize! transition!"
             }
             disabled={isSaving}
+            variant="outlined"
             onClick={onToggleSave}>
             {job.isSaved ? (
-               <Bookmark sx={{ fontSize: 20 }} />
+               <Bookmark className="text-xl!" />
             ) : (
-               <BookmarkBorder sx={{ fontSize: 20 }} />
+               <BookmarkBorder className="text-xl!" />
             )}
             {job.isSaved ? "Saved Job" : "Save Job"}
          </Button>

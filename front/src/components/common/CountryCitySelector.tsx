@@ -1,7 +1,7 @@
-import { useEffect, useState } from "react"
+import { useEffect, useMemo, useState } from "react"
 import { Autocomplete, Box, MenuItem, TextField } from "@mui/material"
 import { getCountries, type ICountry } from "@countrystatecity/countries-browser"
-import { useGetLocationCitiesQuery } from "@/features/location/locationApiCalls"
+import { useGetLocationCitiesQuery } from "@/services/shared/locationApiCalls"
 import type { GeoNamesCity } from "@/types/location"
 
 export type LocationSelection = {
@@ -18,6 +18,7 @@ type CountryCitySelectorProps = {
    onChange: (value: LocationSelection) => void
    errors?: Partial<Record<"country" | "state" | "city" | "cityGeonameId", string>>
    required?: boolean
+   size?: "small" | "medium"
 }
 
 export const emptyLocationSelection: LocationSelection = {
@@ -29,11 +30,15 @@ export const emptyLocationSelection: LocationSelection = {
    cityGeonameId: null
 }
 
+export const isLocationSelectionComplete = (location: LocationSelection) =>
+   Boolean(location.countryCode && location.cityGeonameId !== null)
+
 export default function CountryCitySelector({
    value,
    onChange,
    errors,
-   required = false
+   required = false,
+   size = "small"
 }: CountryCitySelectorProps) {
    const [countries, setCountries] = useState<ICountry[]>([])
    const [cityInputValue, setCityInputValue] = useState(value.cityName)
@@ -49,7 +54,10 @@ export default function CountryCitySelector({
       },
       { skip: !value.countryCode }
    )
-   const cities = cityQuery.currentData?.data ?? []
+   const cities = useMemo(
+      () => cityQuery.currentData?.data ?? [],
+      [cityQuery.currentData?.data]
+   )
 
    useEffect(() => {
       let isCurrent = true
@@ -111,14 +119,11 @@ export default function CountryCitySelector({
       <Box className="grid grid-cols-1 items-center gap-5 sm:grid-cols-2">
          <TextField
             className="min-w-50"
-            select
-            fullWidth
-            required={required}
-            label="Country"
-            value={value.countryCode}
             disabled={loadingCountries}
-            onChange={event => handleCountryChange(event.target.value)}
+            required={required}
+            value={value.countryCode}
             error={Boolean(errors?.country || countryLoadError)}
+            fullWidth
             helperText={
                errors?.country ??
                (countryLoadError
@@ -126,12 +131,16 @@ export default function CountryCitySelector({
                   : loadingCountries
                     ? "Loading countries..."
                     : undefined)
-            }>
+            }
+            label="Country"
+            select
+            size={size}
+            onChange={event => handleCountryChange(event.target.value)}>
             <MenuItem value="">Select a country</MenuItem>
             {!loadingCountries && countries.length === 0 && (
                <MenuItem
-                  value=""
-                  disabled>
+                  disabled
+                  value="">
                   No countries available
                </MenuItem>
             )}
@@ -146,17 +155,53 @@ export default function CountryCitySelector({
          <Autocomplete
             className="min-w-50"
 
-            fullWidth
-            options={cities}
-            value={selectedCity}
-            inputValue={cityInputValue}
-            filterOptions={options => options}
-            loading={cityQuery.isFetching}
             disabled={!value.countryCode}
+            value={selectedCity}
+            filterOptions={options => options}
+            fullWidth
             getOptionLabel={city => city.name}
+            inputValue={cityInputValue}
             isOptionEqualToValue={(option, selected) =>
                option.geonameId === selected.geonameId
             }
+            loading={cityQuery.isFetching}
+            loadingText="Searching populated places..."
+            noOptionsText={
+               cityQuery.isError
+                  ? "City suggestions could not be loaded."
+                  : "No matching populated places found in GeoNames."
+            }
+            options={cities}
+            renderInput={params => (
+               <TextField
+                  {...params}
+                  placeholder={
+                     value.countryCode
+                        ? "Search city or populated place"
+                        : "Select a country first"
+                  }
+                  required={required}
+                  error={Boolean(
+                     errors?.city || errors?.cityGeonameId || cityQuery.isError
+                  )}
+                  helperText={
+                     errors?.cityGeonameId ??
+                     errors?.city ??
+                     (cityQuery.isError
+                        ? "City suggestions could not be loaded."
+                        : undefined)
+                  }
+                  label="City"
+                  size={size}
+               />
+            )}
+            renderOption={(props, city) => (
+               <li
+                  {...props}
+                  key={city.geonameId}>
+                  {city.name}
+               </li>
+            )}
             onChange={(_event, city) => handleCityChange(city)}
             onInputChange={(_event, text, reason) => {
                setCityInputValue(text)
@@ -174,41 +219,6 @@ export default function CountryCitySelector({
                   }
                }
             }}
-            loadingText="Searching populated places..."
-            noOptionsText={
-               cityQuery.isError
-                  ? "City suggestions could not be loaded."
-                  : "No matching populated places found in GeoNames."
-            }
-            renderOption={(props, city) => (
-               <li
-                  {...props}
-                  key={city.geonameId}>
-                  {city.name}
-               </li>
-            )}
-            renderInput={params => (
-               <TextField
-                  {...params}
-                  required={required}
-                  label="City"
-                  placeholder={
-                     value.countryCode
-                        ? "Search city or populated place"
-                        : "Select a country first"
-                  }
-                  error={Boolean(
-                     errors?.city || errors?.cityGeonameId || cityQuery.isError
-                  )}
-                  helperText={
-                     errors?.cityGeonameId ??
-                     errors?.city ??
-                     (cityQuery.isError
-                        ? "City suggestions could not be loaded."
-                        : undefined)
-                  }
-               />
-            )}
          />
       </Box>
    )

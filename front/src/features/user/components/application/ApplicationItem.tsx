@@ -32,10 +32,10 @@ export const CompanyLogo: React.FC<CompanyLogoProps> = ({ application }) => {
    if (logo) {
       return (
          <Box
-            component="img"
-            src={logo}
-            alt={getCompanyName(application)}
             className="h-11 w-11 rounded-lg border border-[#E7EAF0] object-contain"
+            alt={getCompanyName(application)}
+            src={logo}
+            component="img"
          />
       )
    }
@@ -68,15 +68,15 @@ export const MatchScore: React.FC<MatchScoreProps> = ({ score = 0, size = 52 }) 
             height: size
          }}>
          <svg
-            width={size}
+            className="-rotate-90"
             height={size}
             viewBox="0 0 44 44"
-            className="-rotate-90">
+            width={size}>
             <circle
                cx="22"
                cy="22"
-               r={radius}
                fill="none"
+               r={radius}
                stroke="#E5E7EB"
                strokeWidth="3.5"
             />
@@ -84,13 +84,13 @@ export const MatchScore: React.FC<MatchScoreProps> = ({ score = 0, size = 52 }) 
             <circle
                cx="22"
                cy="22"
-               r={radius}
                fill="none"
+               r={radius}
                stroke={getMatchScoreColor(safeScore)}
-               strokeWidth="3.5"
-               strokeLinecap="round"
                strokeDasharray={circumference}
                strokeDashoffset={progress}
+               strokeLinecap="round"
+               strokeWidth="3.5"
             />
          </svg>
 
@@ -111,19 +111,6 @@ export const StatusBadge = ({ status }: { status: ApplicationStatus }) => {
       </Box>
    )
 }
-{
-   /* <Chip
-         size="small"
-         icon={config.icon}
-         label={config.label}
-         className={`${config.className} font-medium!`}
-         sx={{
-            "& .MuiChip-icon": {
-               fontSize: 15
-            }
-         }}
-      /> */
-}
 const ApplicationItem = ({
    application,
    selected,
@@ -135,13 +122,13 @@ const ApplicationItem = ({
 }) => {
    return (
       <Box
-         key={application.id}
-         onClick={() => handleSelectApplication(application)}
          className={`mx-3 my-2 cursor-pointer rounded-lg border px-3 py-3 transition-all md:mx-3 ${
             selected
-               ? "border-[#A78BFA]! bg-[#FCFAFF]!"
-               : "border-[#EDF0F5]! hover:border-[#D8CCFF]! hover:bg-[#FCFAFF]!"
-         } `}>
+               ? "border-mui-blue-300! bg-mui-blue-50!"
+               : "border-[#EDF0F5]! hover:border-mui-blue-200! hover:bg-mui-blue-50!"
+         } `}
+         key={application.id}
+         onClick={() => handleSelectApplication(application)}>
          {/* Desktop */}
 
          <Box className="hidden grid-cols-[minmax(220px,1.5fr)_120px_130px_130px_30px] items-center gap-4 md:grid">

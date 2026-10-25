@@ -35,11 +35,16 @@ const UsersFilters = ({
          {/* Search */}
          <Box className="w-full lg:max-w-90">
             <TextField
-               fullWidth
-               value={searchInput.value}
-               onChange={searchInput.onChange}
-               onKeyDown={searchInput.onKeyDown}
                placeholder="Search by name, email"
+               value={searchInput.value}
+               fullWidth
+               slotProps={{
+                  input: {
+                     startAdornment: (
+                        <SearchSubmitAdornment onSearch={searchInput.submit} />
+                     )
+                  }
+               }}
                sx={{
                   "& .MuiOutlinedInput-root": {
                      height: 44,
@@ -48,28 +53,18 @@ const UsersFilters = ({
                      fontSize: "14px"
                   }
                }}
-               slotProps={{
-                  input: {
-                     startAdornment: (
-                        <SearchSubmitAdornment onSearch={searchInput.submit} />
-                     )
-                  }
-               }}
+               onChange={searchInput.onChange}
+               onKeyDown={searchInput.onKeyDown}
             />
          </Box>
 
          {/* Experience */}
          <Box className="w-full lg:max-w-90">
             <Select
-               fullWidth
+               className="h-11! rounded-[10px]! bg-[#ffffff]! text-sm!"
                value={experience}
-               onChange={handleExperienceChange}
-               sx={{
-                  height: 44,
-                  borderRadius: "10px",
-                  backgroundColor: "#ffffff",
-                  fontSize: "14px"
-               }}>
+               fullWidth
+               onChange={handleExperienceChange}>
                <MenuItem value="ALL">All Experience</MenuItem>
 
                <MenuItem value="0-2">0 - 2 Years</MenuItem>
@@ -80,7 +75,10 @@ const UsersFilters = ({
             </Select>
          </Box>
          <Box className="w-full">
-            <CountryCitySelector value={location} onChange={onLocationChange} />
+            <CountryCitySelector
+               value={location}
+               onChange={onLocationChange}
+            />
          </Box>
       </FiltersBar>
    )

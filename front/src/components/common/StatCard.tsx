@@ -36,8 +36,8 @@ export default function StatCard({
 
    return (
       <Paper
-         elevation={0}
-         className={`border-border! bg-surface! rounded-xl! border! ${layoutClassName} p-4 ${className}`}>
+         className={`border-border! bg-surface! rounded-xl! border! ${layoutClassName} p-4 ${className}`}
+         elevation={0}>
          {icon && (
             <Box
                className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-lg ${iconClassName}`}
@@ -51,23 +51,23 @@ export default function StatCard({
 
          <Box className={contentClassName}>
             {valueFirst ? (
-               <>
+               <Box className="contents">
                   <Typography className="text-2xl! font-bold!">{value}</Typography>
                   <Typography
                      className="mt-1! text-sm! font-medium!"
                      color="textSecondary">
                      {label}
                   </Typography>
-               </>
+               </Box>
             ) : (
-               <>
+               <Box className="contents">
                   <Typography
                      className="text-sm! font-medium!"
                      color="textSecondary">
                      {label}
                   </Typography>
                   <Typography className="mt-1! text-2xl! font-bold!">{value}</Typography>
-               </>
+               </Box>
             )}
 
             {description && (

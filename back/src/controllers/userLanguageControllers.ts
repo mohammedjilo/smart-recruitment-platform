@@ -3,26 +3,16 @@ import { asyncHandler } from "../utils/asyncHandler";
 import { AppError } from "../utils/appError";
 import {
   addUserLanguage,
-  deleteUserLanguage,
-  getUserLanguages,
   updateUserLanguage,
 } from "../services/userLanguage.service";
 import { sendSuccess } from "../utils/apiResponse";
 
-export const getUserLanguagesController = asyncHandler(
-  async (req: Request, res: Response) => {
-    const userId = req.user?.id;
-
-    if (!userId) {
-      throw new AppError("User authentication required", 401);
-    }
-
-    const languages = await getUserLanguages(userId);
-
-    sendSuccess(res, 200, languages);
-  }
-);
-
+/**
+ * @desc Add a language to the authenticated user's profile
+ * @route /api/user-languages
+ * @method POST
+ * @access private
+ */
 export const addUserLanguageController = asyncHandler(
   async (req: Request, res: Response) => {
     const userId = req.user?.id;
@@ -47,6 +37,12 @@ export const addUserLanguageController = asyncHandler(
   }
 );
 
+/**
+ * @desc Update a language in the authenticated user's profile
+ * @route /api/user-languages/:userLanguageId
+ * @method PUT
+ * @access private
+ */
 export const updateUserLanguageController = asyncHandler(
   async (req: Request, res: Response) => {
     const userId = req.user?.id;
@@ -72,24 +68,5 @@ export const updateUserLanguageController = asyncHandler(
     sendSuccess(res, 200, language, {
       message: "User language updated successfully",
     });
-  }
-);
-
-export const deleteUserLanguageController = asyncHandler(
-  async (req: Request, res: Response) => {
-    const userId = req.user?.id;
-    const { userLanguageId } = req.params as { userLanguageId?: string };
-
-    if (!userId) {
-      throw new AppError("User authentication required", 401);
-    }
-
-    if (!userLanguageId) {
-      throw new AppError("User language id is required", 400);
-    }
-
-    const result = await deleteUserLanguage(userId, userLanguageId);
-
-    sendSuccess(res, 200, undefined, { message: result.message });
   }
 );

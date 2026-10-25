@@ -1,6 +1,6 @@
 import React, { useEffect } from "react"
 import { Bookmark } from "@mui/icons-material"
-import { Box } from "@mui/material"
+import { Box, Typography } from "@mui/material"
 
 import { useGetSaveJobsQuery } from "@/services/shared/jobApiCalls"
 import PaginationFooter from "@/components/common/PaginationFooter"
@@ -65,9 +65,9 @@ const SavedJobsPage: React.FC = () => {
       <Box className="min-h-screen">
          <Box className="mx-auto max-w-350">
             <PageHeader
-               title="Saved Jobs"
                description="Jobs you've saved for later."
-               titleAdornment={<Bookmark sx={{ fontSize: 26 }} />}
+               title="Saved Jobs"
+               titleAdornment={<Bookmark className="text-[26px]!" />}
             />
 
             {/* ================================================= */}
@@ -86,15 +86,15 @@ const SavedJobsPage: React.FC = () => {
                   <Box className="flex min-h-75 items-center justify-center">
                      <Box
                         className="text-center"
-                        role="alert"
-                        aria-live="assertive">
-                        <p className="text-[15px] font-semibold text-[#20263d]">
+                        aria-live="assertive"
+                        role="alert">
+                        <Typography className="text-[15px]! font-semibold! text-[#20263d]!">
                            {queryPresentation.message}
-                        </p>
+                        </Typography>
 
                         <Button
-                           onClick={query.refetch}
-                           className="mt-2! normal-case!">
+                           className="mt-2! normal-case!"
+                           onClick={query.refetch}>
                            Try again
                         </Button>
                      </Box>
@@ -104,12 +104,14 @@ const SavedJobsPage: React.FC = () => {
                {queryPresentation.category === "stale_error" && (
                   <Box
                      className="flex items-center justify-between gap-3 border-b border-amber-200 bg-amber-50 px-4 py-3"
-                     role="status"
-                     aria-live="polite">
-                     <p className="text-sm text-amber-900">{queryPresentation.message}</p>
+                     aria-live="polite"
+                     role="status">
+                     <Typography className="text-sm! text-amber-900!">
+                        {queryPresentation.message}
+                     </Typography>
                      <Button
-                        onClick={query.refetch}
-                        className="normal-case!">
+                        className="normal-case!"
+                        onClick={query.refetch}>
                         Try again
                      </Button>
                   </Box>
@@ -120,25 +122,22 @@ const SavedJobsPage: React.FC = () => {
                   queryPresentation.category === "no_results") && (
                   <Box className="flex min-h-87.5 flex-col items-center justify-center px-6 text-center">
                      <Box className="flex h-16 w-16 items-center justify-center rounded-full bg-[#f1edff]">
-                        <Bookmark
-                           sx={{
-                              fontSize: 28,
-                              color: "#5521ed"
-                           }}
-                        />
+                        <Bookmark className="text-[28px]! text-[#5521ed]!" />
                      </Box>
 
-                     <h3 className="mt-4 text-[17px] font-semibold text-[#171d35]">
+                     <Typography
+                        className="mt-4! text-[17px]! font-semibold!"
+                        variant="h3">
                         {queryPresentation.category === "no_results"
                            ? "No saved jobs on this page"
                            : "No saved jobs"}
-                     </h3>
+                     </Typography>
 
-                     <p className="mt-1 max-w-87.5 text-[13px] text-[#7c8499]">
+                     <Typography className="mt-1! max-w-87.5! text-[13px]! text-[#7c8499]!">
                         {queryPresentation.category === "no_results"
                            ? "Try selecting a different page."
                            : "Jobs you save will appear here so you can easily find them later."}
-                     </p>
+                     </Typography>
                   </Box>
                )}
 
@@ -162,13 +161,13 @@ const SavedJobsPage: React.FC = () => {
 
             {response && pagination.totalCount > 0 && (
                <PaginationFooter
-                  page={page}
-                  totalCount={totalCount}
-                  pageSize={pageSize}
-                  setPage={setPage}
-                  itemLabel="jobs"
                   isFetching={queryPresentation.category === "refreshing"}
+                  itemLabel="jobs"
+                  page={page}
+                  pageSize={pageSize}
                   queryState={queryState}
+                  setPage={setPage}
+                  totalCount={totalCount}
                />
             )}
          </Box>

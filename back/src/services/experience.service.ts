@@ -69,22 +69,3 @@ export const updateExperience = async (
     },
   });
 };
-
-export const deleteExperience = async (
-  userId: string,
-  experienceId: string
-) => {
-  const profile = await getProfileOrThrow(userId);
-
-  const experience = await prisma.experience.findFirst({
-    where: { id: experienceId, profileId: profile.id },
-  });
-
-  if (!experience) {
-    throw new AppError("Experience not found", 404);
-  }
-
-  await prisma.experience.delete({ where: { id: experienceId } });
-
-  return { message: "Experience deleted successfully" };
-};

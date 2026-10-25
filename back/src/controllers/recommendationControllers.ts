@@ -10,7 +10,7 @@ import { sendSuccess } from "../utils/apiResponse";
 
 /**
  * @desc Get recommended jobs for the authenticated user
- * @route /api/jobs/recommended
+ * @route /api/recommendation
  * @method GET
  * @access private
  */

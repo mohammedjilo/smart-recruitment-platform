@@ -8,7 +8,10 @@ import {
    basicInformationSchema,
    type BasicInformationFormValues
 } from "@/schema/basicInformation"
-import { useUpdateBasicInformationMutation } from "@/features/user/services/professionalProfileApiCalls"
+import {
+   useGetProfessionalProfileQuery,
+   useUpdateProfessionalProfileMutation
+} from "@/features/user/services/professionalProfileApiCalls"
 import { showAlert } from "@/utils/swal"
 import { getMutationState } from "@/utils/mutationState"
 import { applyApiFieldErrors, getApiErrorDetails } from "@/utils/formErrors"
@@ -24,6 +27,7 @@ const BasicInformationForm: React.FC<Props> = ({ onSave, onCancel }) => {
    const {
       control,
       handleSubmit,
+      reset,
       setError,
       formState: { errors }
    } = useForm<BasicInformationFormValues>({
@@ -36,7 +40,24 @@ const BasicInformationForm: React.FC<Props> = ({ onSave, onCancel }) => {
       }
    })
 
-   const [updateBasicInformation, mutationResult] = useUpdateBasicInformationMutation()
+   const { data: professionalProfileData } = useGetProfessionalProfileQuery(
+      userId ?? "",
+      { skip: !userId }
+   )
+   const profile = professionalProfileData?.data.profile
+
+   useEffect(() => {
+      if (!profile) return
+
+      reset({
+         jobTitle: profile.jobTitle ?? "",
+         summary: profile.summary ?? undefined,
+         yearsOfExperience: profile.yearsOfExperience ?? 0,
+         cvPath: profile.cvPath ?? undefined
+      })
+   }, [profile, reset])
+
+   const [updateProfessionalProfile, mutationResult] = useUpdateProfessionalProfileMutation()
    const mutationState = getMutationState(mutationResult)
    const mutationPresentation = getMutationPresentation(mutationState, {
       surface: "form"
@@ -54,7 +75,7 @@ const BasicInformationForm: React.FC<Props> = ({ onSave, onCancel }) => {
    const onSubmit = async (values: BasicInformationFormValues) => {
       try {
          if (!userId) return
-         await updateBasicInformation({ userId, data: values }).unwrap()
+         await updateProfessionalProfile({ userId, data: values }).unwrap()
          onSave(values)
       } catch (error) {
          const normalizedError = getApiErrorDetails(error)
@@ -74,14 +95,14 @@ const BasicInformationForm: React.FC<Props> = ({ onSave, onCancel }) => {
          <Typography
             className="mb-4"
             variant="h6">
-            Add Basic Information
+            Edit Professional Information
          </Typography>
 
          {formError && (
             <Box
                className="mb-4"
-               role="alert"
-               aria-live="assertive">
+               aria-live="assertive"
+               role="alert">
                <Typography color="error">{formError}</Typography>
             </Box>
          )}
@@ -93,14 +114,14 @@ const BasicInformationForm: React.FC<Props> = ({ onSave, onCancel }) => {
                   render={({ field }) => (
                      <TextField
                         {...field}
-                        fullWidth
-                        label="Job Title"
                         placeholder="e.g. Frontend Developer"
-                        variant="outlined"
-                        size="medium"
                         error={!!errors.jobTitle}
+                        fullWidth
                         helperText={errors.jobTitle?.message}
+                        label="Job Title"
+                        size="medium"
                         slotProps={{ inputLabel: { shrink: true } }}
+                        variant="outlined"
                      />
                   )}
                />
@@ -111,17 +132,17 @@ const BasicInformationForm: React.FC<Props> = ({ onSave, onCancel }) => {
                   render={({ field }) => (
                      <TextField
                         {...field}
-                        fullWidth
-                        label="Years of Experience"
                         type="number"
-                        variant="outlined"
-                        size="medium"
                         error={!!errors.yearsOfExperience}
+                        fullWidth
                         helperText={errors.yearsOfExperience?.message}
+                        label="Years of Experience"
+                        size="medium"
                         slotProps={{
                            inputLabel: { shrink: true },
                            htmlInput: { min: 0 }
                         }}
+                        variant="outlined"
                         onChange={e =>
                            field.onChange(
                               e.target.value === "" ? 0 : Number(e.target.value)
@@ -138,16 +159,16 @@ const BasicInformationForm: React.FC<Props> = ({ onSave, onCancel }) => {
                      render={({ field }) => (
                         <TextField
                            {...field}
-                           fullWidth
-                           label="Summary (Optional)"
                            placeholder="Short bio about yourself..."
+                           error={!!errors.summary}
+                           fullWidth
+                           helperText={errors.summary?.message}
+                           label="Summary (Optional)"
                            multiline
                            rows={4}
-                           variant="outlined"
                            size="medium"
-                           error={!!errors.summary}
-                           helperText={errors.summary?.message}
                            slotProps={{ inputLabel: { shrink: true } }}
+                           variant="outlined"
                         />
                      )}
                   />
@@ -160,14 +181,14 @@ const BasicInformationForm: React.FC<Props> = ({ onSave, onCancel }) => {
                      render={({ field }) => (
                         <TextField
                            {...field}
-                           fullWidth
-                           label="CV URL (Optional)"
                            placeholder="https://example.com/resume.pdf"
-                           variant="outlined"
-                           size="medium"
                            error={!!errors.cvPath}
+                           fullWidth
                            helperText={errors.cvPath?.message}
+                           label="CV URL (Optional)"
+                           size="medium"
                            slotProps={{ inputLabel: { shrink: true } }}
+                           variant="outlined"
                         />
                      )}
                   />
@@ -176,17 +197,17 @@ const BasicInformationForm: React.FC<Props> = ({ onSave, onCancel }) => {
 
             <Box className="mt-5 flex justify-end gap-3">
                <Button
+                  className="normal-case!"
                   variant="outlined"
-                  onClick={onCancel}
-                  className="normal-case!">
+                  onClick={onCancel}>
                   Cancel
                </Button>
                <Button
                   className="normal-case!"
                   type="submit"
-                  variant="contained"
-                  disabled={isLoading}>
-                  {isLoading ? "Saving..." : "Save Basic Information"}
+                  disabled={isLoading}
+                  variant="contained">
+                  {isLoading ? "Saving..." : "Save Professional Information"}
                </Button>
             </Box>
          </form>

@@ -6,7 +6,7 @@ import CompanyDetailsSkeleton from "@/features/admin/components/AdminCompanyDeta
 import { useGetCompanyDetailsByAdminQuery } from "@/features/admin/services/adminApiCalls"
 import CompanyDetailsHeader from "@/features/admin/components/AdminCompanyDetails/CompanyDetailsHeader"
 import CompanyTabs from "@/features/admin/components/AdminCompanyDetails/CompanyTabs"
-import CompanyOverview from "@/features/admin/components/AdminCompanyDetails/CompanyOverview"
+import OverviewStep from "@/features/admin/components/AdminCompanyDetails/OverviewStep/OverviewStep"
 import JobsStep from "@/features/admin/components/AdminCompanyDetails/JobsStep/JobsStep"
 import CompanyApplicationsStep from "@/features/admin/components/AdminCompanyDetails/ApplicationsStep/CompanyApplicationsStep"
 import { usePermissions } from "@/features/admin/authorization/usePermissions"
@@ -53,7 +53,7 @@ const CompanyDetailsPage = () => {
                <Typography className="text-lg font-semibold text-red-600">
                   {queryPresentation.message}
                </Typography>
-               <Button onClick={query.refetch} className="mt-3! normal-case!">
+               <Button className="mt-3! normal-case!" onClick={query.refetch}>
                   Retry
                </Button>
             </Box>
@@ -64,7 +64,7 @@ const CompanyDetailsPage = () => {
    if (!response?.data) {
       return (
          <Box className="flex min-h-125 items-center justify-center text-center">
-            <Typography className="text-sm! text-muted!">
+            <Typography className="text-sm!" color="textSecondary">
                Company details could not be determined.
             </Typography>
          </Box>
@@ -77,11 +77,11 @@ const CompanyDetailsPage = () => {
       <Box className="min-h-screen bg-[#fafbff]">
          <Box>
             {queryPresentation.category === "stale_error" && (
-               <Box className="mb-4 flex items-center justify-between gap-3 rounded-lg border border-amber-200 bg-amber-50 px-4 py-3" role="status" aria-live="polite">
+               <Box className="mb-4 flex items-center justify-between gap-3 rounded-lg border border-amber-200 bg-amber-50 px-4 py-3" aria-live="polite" role="status">
                   <Typography className="text-sm! text-amber-900!">
                      {queryPresentation.message}
                   </Typography>
-                  <Button onClick={query.refetch} className="normal-case!">
+                  <Button className="normal-case!" onClick={query.refetch}>
                      Retry
                   </Button>
                </Box>
@@ -90,17 +90,17 @@ const CompanyDetailsPage = () => {
 
             <CompanyTabs
                activeTab={activeTab}
-               totalJobs={stats.totalJobs}
-               totalApplications={stats.totalApplications}
                showApplications={canViewApplications}
+               totalApplications={stats.totalApplications}
+               totalJobs={stats.totalJobs}
                onChange={setActiveTab}
             />
 
             {activeTab === "overview" && (
-               <CompanyOverview
+               <OverviewStep
                   company={company}
-                  stats={stats}
                   recentJobs={recentJobs}
+                  stats={stats}
                />
             )}
 

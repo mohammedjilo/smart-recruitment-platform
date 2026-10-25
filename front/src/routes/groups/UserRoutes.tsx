@@ -27,10 +27,10 @@ const UserSupportArticle = lazy(
    () => import("@/features/user/pages/UserSupportArticlePage")
 )
 const SupportRequestCreatePage = lazy(
-   () => import("@/features/support/pages/SupportRequestCreatePage")
+   () => import("@/features/shared/support/pages/SupportRequestCreatePage")
 )
 const SupportRequestDetailsPage = lazy(
-   () => import("@/features/support/pages/SupportRequestDetailsPage")
+   () => import("@/features/shared/support/pages/SupportRequestDetailsPage")
 )
 
 const userRoutes: RouteObject[] = [

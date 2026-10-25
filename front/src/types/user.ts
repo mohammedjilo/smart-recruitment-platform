@@ -102,6 +102,24 @@ export type GetCompleteUserProfileResult = {
    status: string
    data: CompleteUserProfile
 }
+
+export type UpdateUserPersonalInformationResult = {
+   success: true
+   message?: string
+   data: Pick<
+      CompleteUserProfile,
+      | "id"
+      | "phone"
+      | "birthdate"
+      | "country"
+      | "countryCode"
+      | "state"
+      | "stateCode"
+      | "city"
+      | "cityGeonameId"
+      | "updatedAt"
+   >
+}
 /////////
 export type Company = CompanySummary
 
@@ -195,7 +213,6 @@ export type GetCompanyJobsParams = {
    companyId: string
    pageNumber?: number
    search?: string
-   status?: JobStatus
 }
 export type CompanyJobsResult = {
    jobs: CompanyJob[]

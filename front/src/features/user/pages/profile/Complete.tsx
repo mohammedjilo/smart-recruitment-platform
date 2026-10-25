@@ -166,8 +166,8 @@ function ProfileCard({
 
                   {item.hasForm && (
                      <IconButton
-                        size="small"
-                        className="ml-1">
+                        className="ml-1"
+                        size="small">
                         {isExpanded ? <ExpandLess /> : <ExpandMore />}
                      </IconButton>
                   )}
@@ -182,8 +182,8 @@ function ProfileCard({
                unmountOnExit>
                <Box className="mt-2 w-full">
                   <FormComponent
-                     onSave={onSave}
                      onCancel={() => onClick()}
+                     onSave={onSave}
                   />
                </Box>
             </Collapse>
@@ -215,8 +215,14 @@ export default function Complete() {
          dir="ltr">
          <Box className="mx-auto max-w-300">
             <PageHeader
-               title={<>Welcome back, Ahmed!</>}
                description="Complete your profile to get better job recommendations and increase your chances of finding the right opportunity."
+               title={
+                  <Box
+                     className="contents"
+                     component="span">
+                     Welcome back, Ahmed!
+                  </Box>
+               }
             />
 
             {/* Profile Completion */}
@@ -233,13 +239,13 @@ export default function Complete() {
 
                <LinearProgress
                   className="h-3! rounded-[20px]!"
-                  variant="determinate"
                   value={progress}
                   sx={{
                      "& .MuiLinearProgress-bar": {
                         background: "linear-gradient(90deg, #673DE6 0%, #7654F4 100%)"
                      }
                   }}
+                  variant="determinate"
                />
             </Box>
 
@@ -248,9 +254,9 @@ export default function Complete() {
                {profileSections.map(item => (
                   <ProfileCard
                      key={item.id}
-                     item={item}
                      completion={completion}
                      isExpanded={expandedId === item.id}
+                     item={item}
                      onClick={() => handleCardClick(item.id)}
                      onSave={() => setExpandedId(null)}
                   />

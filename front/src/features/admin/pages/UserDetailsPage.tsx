@@ -36,10 +36,10 @@ const UserDetailsPage = () => {
    ) {
       return (
          <Box className="flex min-h-125 flex-col items-center justify-center gap-3 text-sm text-red-500">
-            <Typography role="alert" aria-live="assertive">
+            <Typography aria-live="assertive" role="alert">
                {queryPresentation.message}
             </Typography>
-            <Button onClick={query.refetch} className="normal-case!">
+            <Button className="normal-case!" onClick={query.refetch}>
                Retry
             </Button>
          </Box>
@@ -59,11 +59,11 @@ const UserDetailsPage = () => {
    return (
       <Box className="w-full space-y-6">
          {queryPresentation.category === "stale_error" && (
-            <Box className="flex items-center justify-between gap-3 rounded-lg border border-amber-200 bg-amber-50 px-4 py-3" role="status" aria-live="polite">
+            <Box className="flex items-center justify-between gap-3 rounded-lg border border-amber-200 bg-amber-50 px-4 py-3" aria-live="polite" role="status">
                <Typography className="text-sm! text-amber-900!">
                   {queryPresentation.message}
                </Typography>
-               <Button onClick={query.refetch} className="normal-case!">
+               <Button className="normal-case!" onClick={query.refetch}>
                   Retry
                </Button>
             </Box>
@@ -71,8 +71,8 @@ const UserDetailsPage = () => {
          <UserDetailsHeader user={user} />
 
          <UserDetailsTabs
-            user={user}
             stats={stats}
+            user={user}
          />
       </Box>
    )

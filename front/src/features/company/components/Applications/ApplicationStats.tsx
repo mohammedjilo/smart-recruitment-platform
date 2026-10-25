@@ -74,10 +74,10 @@ const ApplicationStats: React.FC<ApplicationStatsProps> = ({
          {statCards.map(stat => (
             <StatCard
                key={stat.label}
-               label={stat.label}
                value={stat.value}
                icon={stat.icon}
                iconClassName={stat.iconClass}
+               label={stat.label}
             />
          ))}
       </Box>

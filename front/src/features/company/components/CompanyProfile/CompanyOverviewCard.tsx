@@ -20,66 +20,45 @@ type CompanyOverviewCardProps = {
 
 const CompanyOverviewCard = ({ company, onEdit }: CompanyOverviewCardProps) => {
    return (
-      <Box className="rounded-xl border bg-surface p-6">
+      <Box className="bg-surface rounded-xl border p-6">
          <Box className="grid grid-cols-1 gap-8 xl:grid-cols-[minmax(0,1.05fr)_minmax(0,1.15fr)]">
             {/* Company Main Information */}
             <Box className="flex flex-col gap-5 border-b pb-7 xl:flex-row xl:border-r xl:border-b-0 xl:pr-8 xl:pb-0">
                <Box className="relative shrink-0">
                   <Avatar
-                     src={company.logoUrl ?? undefined}
+                     className="h-33! w-33! rounded-xl! bg-[#F5F3FF]! text-3xl! font-bold! text-[#5425d4]! border! border-[#E2E8F0]!"
                      alt={company.companyName}
-                     variant="rounded"
-                     sx={{
-                        width: 132,
-                        height: 132,
-                        borderRadius: "12px",
-                        backgroundColor: "#F5F3FF",
-                        color: "#5425d4",
-                        fontSize: "30px",
-                        fontWeight: 700,
-                        border: "1px solid #E2E8F0"
-                     }}>
+                     src={company.logoUrl ?? undefined}
+                     variant="rounded">
                      {getInitials(company.companyName)}
                   </Avatar>
 
                   <IconButton
-                     onClick={onEdit}
+                     className="absolute! -right-2.5! -bottom-2! h-9.5! w-9.5! bg-[#FFFFFF]! shadow-[0_4px_12px_rgba(15,_23,_42,_0.08)]! border! border-[#E2E8F0]!"
                      sx={{
-                        position: "absolute",
-                        right: -10,
-                        bottom: -8,
-                        width: 38,
-                        height: 38,
-                        backgroundColor: "#FFFFFF",
-                        border: "1px solid #E2E8F0",
-                        boxShadow: "0 4px 12px rgba(15, 23, 42, 0.08)",
                         "&:hover": {
                            backgroundColor: "#F8FAFC"
                         }
-                     }}>
-                     <EditOutlinedIcon
-                        sx={{
-                           fontSize: 18,
-                           color: "#475569"
-                        }}
-                     />
+                     }}
+                     onClick={onEdit}>
+                     <EditOutlinedIcon className="text-lg! text-[#475569]!" />
                   </IconButton>
                </Box>
 
                <Box className="min-w-0">
                   <Box className="flex flex-wrap items-center gap-3">
-                     <Typography className="text-2xl! font-bold! text-content">
+                     <Typography className="text-content text-2xl! font-bold!">
                         {company.companyName}
                      </Typography>
 
                      <CompanyStatusChip status={company.status} />
 
-                     <Typography className="text-xs! text-muted">
+                     <Typography className="text-muted text-xs!">
                         Member since {formatCreatedAt(company.createdAt)}
                      </Typography>
                   </Box>
 
-                  <Typography className="mt-5! max-w-md! text-sm! leading-7! text-muted">
+                  <Typography className="text-muted mt-5! max-w-md! text-sm! leading-7!">
                      {company.description || "No company description has been added yet."}
                   </Typography>
                </Box>
@@ -88,39 +67,39 @@ const CompanyOverviewCard = ({ company, onEdit }: CompanyOverviewCardProps) => {
             {/* Quick Information */}
             <Box className="grid grid-cols-1 gap-x-10 gap-y-6 sm:grid-cols-2">
                <ProfileInfoItem
-                  icon={<BusinessOutlinedIcon sx={{ fontSize: 20 }} />}
-                  label="Company Name"
                   value={company.companyName}
+                  icon={<BusinessOutlinedIcon className="text-xl!" />}
+                  label="Company Name"
                />
 
                <ProfileInfoItem
-                  icon={<LanguageOutlinedIcon sx={{ fontSize: 20 }} />}
-                  label="Website"
                   value={company.website || "Not provided"}
+                  icon={<LanguageOutlinedIcon className="text-xl!" />}
+                  label="Website"
                />
 
                <ProfileInfoItem
-                  icon={<EmailOutlinedIcon sx={{ fontSize: 20 }} />}
-                  label="Email"
                   value={company.email}
+                  icon={<EmailOutlinedIcon className="text-xl!" />}
+                  label="Email"
                />
 
                <ProfileInfoItem
-                  icon={<LocationOnOutlinedIcon sx={{ fontSize: 20 }} />}
-                  label="Location"
                   value={company.location || "Not provided"}
+                  icon={<LocationOnOutlinedIcon className="text-xl!" />}
+                  label="Location"
                />
 
                <ProfileInfoItem
-                  icon={<PhoneOutlinedIcon sx={{ fontSize: 20 }} />}
-                  label="Phone"
                   value={company.phone}
+                  icon={<PhoneOutlinedIcon className="text-xl!" />}
+                  label="Phone"
                />
 
                <ProfileInfoItem
-                  icon={<SecurityOutlinedIcon sx={{ fontSize: 20 }} />}
-                  label="Status"
                   value={<CompanyStatusChip status={company.status} />}
+                  icon={<SecurityOutlinedIcon className="text-xl!" />}
+                  label="Status"
                />
             </Box>
          </Box>

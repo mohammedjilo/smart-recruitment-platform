@@ -351,7 +351,7 @@ type UserApplicationsOptions = {
   pageSize?: number;
   search?: string;
   status?: ApplicationStatus;
-  matchScore?: "HIGH" | "GOOD" | "FAIR" | "LOW" | "UNSCORED";
+  matchScore?: "HIGH" | "GOOD" | "FAIR" | "LOW";
   sortOrder?: "asc" | "desc";
 };
 
@@ -373,9 +373,7 @@ export const getUserApplications = async (
           ? { matchScore: { gte: 50, lt: 70 } }
           : options.matchScore === "LOW"
             ? { matchScore: { lt: 50 } }
-            : options.matchScore === "UNSCORED"
-              ? { matchScore: null }
-              : {};
+            : {};
   const where: Prisma.ApplicationWhereInput = {
     userId,
     ...(options.status ? { status: options.status } : {}),
@@ -426,7 +424,7 @@ export const getUserApplications = async (
     prisma.application.count({ where }),
   ]);
 
-  // إرجاع البيانات مع معلومات الترقيم
+  // Return the data with pagination metadata.
   return {
     data: applications,
     ...buildPaginationMeta(pagination.page, pagination.pageSize, totalCount),
@@ -483,71 +481,6 @@ export const getUserApplicationDetails = async (
 
   return application;
 };
-export const getJobApplications = async (
-  companyId: string,
-  jobId: string,
-  page = 1,
-  pageSize = 6
-) => {
-  const job = await prisma.job.findFirst({
-    where: { id: jobId, companyId },
-    select: { id: true },
-  });
-
-  if (!job) {
-    throw new AppError("Job not found for this company", 404);
-  }
-
-  const pagination = parsePagination({ page, pageSize }, 6);
-  const where = { jobId };
-  const [data, totalCount] = await Promise.all([
-    prisma.application.findMany({
-      where,
-      select: {
-        id: true,
-        status: true,
-        matchScore: true,
-        recommendation: true,
-        strengths: true,
-        missingSkills: true,
-        resumeType: true,
-        cvId: true,
-        cvUrl: true,
-        profileSnapshot: true,
-        questionSnapshot: true,
-        createdAt: true,
-        updatedAt: true,
-        answers: {
-          orderBy: { question: { order: "asc" } },
-          select: {
-            id: true,
-            answer: true,
-            question: {
-              select: { question: true, type: true, required: true },
-            },
-          },
-        },
-        user: {
-          select: {
-            id: true,
-            firstName: true,
-            lastName: true,
-            email: true,
-          },
-        },
-      },
-      orderBy: { createdAt: "desc" },
-      skip: pagination.skip,
-      take: pagination.pageSize,
-    }),
-    prisma.application.count({ where }),
-  ]);
-  return {
-    data,
-    ...buildPaginationMeta(pagination.page, pagination.pageSize, totalCount),
-  };
-};
-
 type CompanyApplicationsOptions = {
   page?: number;
   pageSize?: number;
@@ -560,7 +493,7 @@ type CompanyApplicationsOptions = {
     | "REJECTED"
     | "WITHDRAWN";
   search?: string;
-  matchScore?: "ALL" | "HIGH" | "GOOD" | "FAIR" | "LOW" | "UNSCORED";
+  matchScore?: "ALL" | "HIGH" | "GOOD" | "FAIR" | "LOW";
   sortBy?: "createdAt" | "updatedAt";
   sortOrder?: "asc" | "desc";
 };
@@ -602,9 +535,7 @@ export const getCompanyApplications = async (
           ? { matchScore: { gte: 50, lt: 70 } }
           : options.matchScore === "LOW"
             ? { matchScore: { lt: 50 } }
-            : options.matchScore === "UNSCORED"
-              ? { matchScore: null }
-              : {};
+            : {};
   const where: Prisma.ApplicationWhereInput = {
     ...companyWhere,
     ...(options.status ? { status: options.status } : {}),
@@ -802,31 +733,6 @@ export const updateApplicationStatus = async (
   }
 
   return updatedApplication;
-};
-
-export const deleteApplication = async (
-  userId: string,
-  applicationId: string
-) => {
-  const application = await prisma.application.findFirst({
-    where: { id: applicationId, userId },
-  });
-
-  if (!application) {
-    throw new AppError("Application not found", 404);
-  }
-
-  if (application.status === "WITHDRAWN") {
-    throw new AppError(
-      "Withdrawn application history cannot be deleted",
-      409,
-      "WITHDRAWN_APPLICATION_HISTORY_IMMUTABLE"
-    );
-  }
-
-  await prisma.application.delete({ where: { id: applicationId } });
-
-  return { message: "Application deleted successfully" };
 };
 
 export const withdrawApplication = async (

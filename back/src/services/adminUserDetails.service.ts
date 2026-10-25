@@ -6,6 +6,23 @@ export const getAdminUserProfessionalProfile = async (userId: string) => {
     where: { id: userId },
     select: {
       id: true,
+      languages: {
+        orderBy: { language: { languageName: "asc" } },
+        select: {
+          id: true,
+          level: true,
+          createdAt: true,
+          updatedAt: true,
+          language: {
+            select: {
+              id: true,
+              languageName: true,
+              createdAt: true,
+              updatedAt: true,
+            },
+          },
+        },
+      },
       profile: {
         select: {
           id: true,
@@ -83,5 +100,12 @@ export const getAdminUserProfessionalProfile = async (userId: string) => {
   return {
     ...user.profile,
     skills: user.skills.map(({ skill }) => skill),
+    languages: user.languages.map(({ language, ...userLanguage }) => ({
+      ...language,
+      createdAt: userLanguage.createdAt,
+      updatedAt: userLanguage.updatedAt,
+      userLanguageId: userLanguage.id,
+      level: userLanguage.level,
+    })),
   };
 };

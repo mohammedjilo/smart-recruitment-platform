@@ -18,10 +18,10 @@ const CompanyNotificationFooter = ({ onClose }: Props) => {
    return (
       <Box className="border-t border-border px-4 py-1.5">
          <Button
-            fullWidth
-            onClick={handleClick}
+            className="w-full! py-2! text-[12px]! font-medium! text-blue-600! normal-case!"
             endIcon={<ArrowForwardIcon className="text-[16px]!" />}
-            className="w-full! py-2! text-[12px]! font-medium! text-blue-600! normal-case!">
+            fullWidth
+            onClick={handleClick}>
             View all notifications
          </Button>
       </Box>

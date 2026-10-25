@@ -1,4 +1,5 @@
 import { useState } from "react"
+import { Box } from "@mui/material"
 import {
    useGetNotificationsQuery,
    useMarkAllNotificationsAsReadMutation,
@@ -80,7 +81,7 @@ const CompanyNotifications = () => {
    }
 
    return (
-      <>
+      <Box className="contents">
          <CompanyNotificationButton
             unreadCount={unreadCount}
             onClick={handleOpen}
@@ -88,15 +89,15 @@ const CompanyNotifications = () => {
 
          <CompanyNotificationPopover
             anchorEl={anchorEl}
-            open={Boolean(anchorEl)}
-            onClose={handleClose}
-            onMarkAsRead={handleMarkAsRead}
-            onMarkAllAsRead={handleMarkAllAsRead}
+            isLoading={isLoading}
             isMarkingAllAsRead={isMarkingAllAsRead}
             notifications={notifications}
-            isLoading={isLoading}
+            open={Boolean(anchorEl)}
+            onClose={handleClose}
+            onMarkAllAsRead={handleMarkAllAsRead}
+            onMarkAsRead={handleMarkAsRead}
          />
-      </>
+      </Box>
    )
 }
 

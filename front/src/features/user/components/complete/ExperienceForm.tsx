@@ -84,8 +84,8 @@ const ExperienceForm: React.FC<Props> = ({ onSave, onCancel }) => {
          {formError && (
             <Box
                className="mb-4"
-               role="alert"
-               aria-live="assertive">
+               aria-live="assertive"
+               role="alert">
                <Typography color="error">{formError}</Typography>
             </Box>
          )}
@@ -98,14 +98,14 @@ const ExperienceForm: React.FC<Props> = ({ onSave, onCancel }) => {
                      render={({ field }) => (
                         <TextField
                            {...field}
-                           fullWidth
-                           label="Company Name"
                            placeholder="e.g. Google"
-                           variant="outlined"
-                           size="medium"
                            error={!!errors.companyName}
+                           fullWidth
                            helperText={errors.companyName?.message}
+                           label="Company Name"
+                           size="medium"
                            slotProps={{ inputLabel: { shrink: true } }}
+                           variant="outlined"
                         />
                      )}
                   />
@@ -118,14 +118,14 @@ const ExperienceForm: React.FC<Props> = ({ onSave, onCancel }) => {
                      render={({ field }) => (
                         <TextField
                            {...field}
-                           fullWidth
-                           label="Position / Job Title"
                            placeholder="e.g. Software Engineer"
-                           variant="outlined"
-                           size="medium"
                            error={!!errors.position}
+                           fullWidth
                            helperText={errors.position?.message}
+                           label="Position / Job Title"
+                           size="medium"
                            slotProps={{ inputLabel: { shrink: true } }}
+                           variant="outlined"
                         />
                      )}
                   />
@@ -138,16 +138,16 @@ const ExperienceForm: React.FC<Props> = ({ onSave, onCancel }) => {
                      render={({ field }) => (
                         <TextField
                            {...field}
-                           fullWidth
-                           label="Description (Optional)"
                            placeholder="Describe your responsibilities and achievements..."
+                           error={!!errors.description}
+                           fullWidth
+                           helperText={errors.description?.message}
+                           label="Description (Optional)"
                            multiline
                            rows={3}
-                           variant="outlined"
                            size="medium"
-                           error={!!errors.description}
-                           helperText={errors.description?.message}
                            slotProps={{ inputLabel: { shrink: true } }}
+                           variant="outlined"
                         />
                      )}
                   />
@@ -159,14 +159,14 @@ const ExperienceForm: React.FC<Props> = ({ onSave, onCancel }) => {
                   render={({ field }) => (
                      <TextField
                         {...field}
-                        fullWidth
-                        label="Start Date"
                         type="date"
-                        variant="outlined"
-                        size="medium"
                         error={!!errors.startDate}
+                        fullWidth
                         helperText={errors.startDate?.message}
+                        label="Start Date"
+                        size="medium"
                         slotProps={{ inputLabel: { shrink: true } }}
+                        variant="outlined"
                      />
                   )}
                />
@@ -177,14 +177,14 @@ const ExperienceForm: React.FC<Props> = ({ onSave, onCancel }) => {
                   render={({ field }) => (
                      <TextField
                         {...field}
-                        fullWidth
-                        label="End Date (Optional)"
                         type="date"
-                        variant="outlined"
-                        size="medium"
                         error={!!errors.endDate}
+                        fullWidth
                         helperText={errors.endDate?.message}
+                        label="End Date (Optional)"
+                        size="medium"
                         slotProps={{ inputLabel: { shrink: true } }}
+                        variant="outlined"
                      />
                   )}
                />
@@ -192,16 +192,16 @@ const ExperienceForm: React.FC<Props> = ({ onSave, onCancel }) => {
 
             <Box className="mt-5 flex justify-end gap-3">
                <Button
+                  className="normal-case!"
                   variant="outlined"
-                  onClick={onCancel}
-                  className="normal-case!">
+                  onClick={onCancel}>
                   Cancel
                </Button>
                <Button
                   className="normal-case!"
                   type="submit"
-                  variant="contained"
-                  disabled={isLoading}>
+                  disabled={isLoading}
+                  variant="contained">
                   {isLoading ? "Saving..." : "Save Experience"}
                </Button>
             </Box>

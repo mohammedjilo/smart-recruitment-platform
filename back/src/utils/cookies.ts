@@ -43,9 +43,3 @@ export function clearSupportAccessCookie(res: Response) {
     sameSite: "strict",
   });
 }
-
-// legacy: clear both (kept for compatibility)
-export function clearAuthCookies(res: Response) {
-  clearRefreshCookie(res);
-  res.clearCookie("token", { path: "/" });
-}

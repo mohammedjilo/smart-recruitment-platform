@@ -8,14 +8,14 @@ describe("user applications filters", () => {
       const onSearchSubmit = vi.fn()
       render(
          <ApplicationsFilters
-            search=""
-            status="ALL"
             matchScore="ALL"
+            search=""
             sort="newest"
-            onSearchSubmit={onSearchSubmit}
-            onStatusChange={vi.fn()}
+            status="ALL"
             onMatchScoreChange={vi.fn()}
+            onSearchSubmit={onSearchSubmit}
             onSortChange={vi.fn()}
+            onStatusChange={vi.fn()}
          />
       )
       const input = screen.getByPlaceholderText("Search job title or company...")
@@ -37,14 +37,14 @@ describe("user applications filters", () => {
       const onSortChange = vi.fn()
       render(
          <ApplicationsFilters
-            search=""
-            status="ALL"
             matchScore="ALL"
+            search=""
             sort="newest"
-            onSearchSubmit={vi.fn()}
-            onStatusChange={onStatusChange}
+            status="ALL"
             onMatchScoreChange={onMatchScoreChange}
+            onSearchSubmit={vi.fn()}
             onSortChange={onSortChange}
+            onStatusChange={onStatusChange}
          />
       )
       const [statusFilter, scoreFilter, sortFilter] = screen.getAllByRole("combobox")
@@ -54,6 +54,7 @@ describe("user applications filters", () => {
       expect(onStatusChange).toHaveBeenCalledWith("REVIEWING")
 
       await user.click(scoreFilter)
+      expect(screen.queryByRole("option", { name: /no score/i })).not.toBeInTheDocument()
       await user.click(await screen.findByRole("option", { name: "High (85%+)" }))
       expect(onMatchScoreChange).toHaveBeenCalledWith("HIGH")
 

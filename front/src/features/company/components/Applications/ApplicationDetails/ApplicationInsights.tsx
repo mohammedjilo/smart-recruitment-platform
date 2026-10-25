@@ -8,7 +8,7 @@ type Props = {
 }
 
 const ApplicationInsights = ({ recommendation, strengths, missingSkills }: Props) => (
-   <>
+   <Box className="contents">
       <Divider />
       {recommendation && (
          <Box className="p-5">
@@ -36,11 +36,11 @@ const ApplicationInsights = ({ recommendation, strengths, missingSkills }: Props
             <Box className="flex flex-wrap gap-2">
                {strengths.map((strength, index) => (
                   <Chip
-                     key={`${strength}-${index}`}
-                     size="small"
-                     label={strength}
-                     icon={<CheckCircleOutlined fontSize="small" />}
                      className="bg-[#ECFDF5]! text-[#059669]!"
+                     key={`${strength}-${index}`}
+                     icon={<CheckCircleOutlined fontSize="small" />}
+                     label={strength}
+                     size="small"
                      sx={{ "& .MuiChip-icon": { color: "#10B981" } }}
                   />
                ))}
@@ -58,16 +58,16 @@ const ApplicationInsights = ({ recommendation, strengths, missingSkills }: Props
             <Box className="flex flex-wrap gap-2">
                {missingSkills.map((skill, index) => (
                   <Chip
-                     key={`${skill}-${index}`}
-                     size="small"
-                     label={skill}
                      className="bg-[#FFF8E7]! text-[#D97706]!"
+                     key={`${skill}-${index}`}
+                     label={skill}
+                     size="small"
                   />
                ))}
             </Box>
          </Box>
       )}
-   </>
+   </Box>
 )
 
 export default ApplicationInsights

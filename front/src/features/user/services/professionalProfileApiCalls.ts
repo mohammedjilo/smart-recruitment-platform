@@ -17,7 +17,7 @@ const extendedSmartApi = smartApi.injectEndpoints({
       >({
          query: ({ data }) => ({
             url: "/api/user/professional-profile",
-            method: "POST",
+            method: "PUT",
             body: data
          }),
          invalidatesTags: (_result, _error, { userId }) => [
@@ -30,5 +30,4 @@ export const {
    useGetProfessionalProfileQuery,
    useUpdateProfessionalProfileMutation
 } = extendedSmartApi
-export const useUpdateBasicInformationMutation = useUpdateProfessionalProfileMutation
 export { extendedSmartApi as smartApi }

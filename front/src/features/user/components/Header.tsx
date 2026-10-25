@@ -26,12 +26,12 @@ const Header: React.FC<{
          color="primary">
          <Toolbar className="min-w-0! gap-1! px-2! sm:gap-3! sm:px-6!">
             <IconButton
-               aria-label={sidebarOpen ? "Close navigation menu" : "Open navigation menu"}
+               className="lg:hidden!"
                aria-controls="user-navigation"
                aria-expanded={sidebarOpen}
-               onClick={onMenuClick}
+               aria-label={sidebarOpen ? "Close navigation menu" : "Open navigation menu"}
                color="inherit"
-               className="lg:hidden!">
+               onClick={onMenuClick}>
                <MenuRounded />
             </IconButton>
             <Typography className="hidden flex-1! text-lg! font-semibold! sm:block">
@@ -41,8 +41,8 @@ const Header: React.FC<{
                {user && <UserNotifications />}
                <Box className="ml-1 flex min-w-0 items-center">
                   <Avatar
-                     src={avatar}
-                     alt={displayName}>
+                     alt={displayName}
+                     src={avatar}>
                      {initials}
                   </Avatar>
                   <Box className="ml-1 hidden max-w-40 min-w-0 flex-col sm:flex">

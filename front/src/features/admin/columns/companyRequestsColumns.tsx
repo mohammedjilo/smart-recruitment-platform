@@ -93,7 +93,7 @@ export const getCompanyRequestsColumns = ({
       header: "Requested On",
       width: 140,
       render: company => (
-         <>
+         <Box className="contents">
             <Typography className="text-sm! font-medium!">
                {formatCreatedAt(company.createdAt)}
             </Typography>
@@ -102,7 +102,7 @@ export const getCompanyRequestsColumns = ({
                color="textSecondary">
                {formatDate(company.createdAt, true).split(",").slice(-1)[0]}
             </Typography>
-         </>
+         </Box>
       )
    },
    {
@@ -138,40 +138,40 @@ export const getCompanyRequestsColumns = ({
             <Box className="flex flex-wrap items-center gap-2">
                <Button
                   className="min-w-22! rounded-lg! text-xs! font-medium! normal-case!"
-                  size="small"
-                  variant="text"
                   color="primary"
+                  size="small"
                   startIcon={<VisibilityOutlinedIcon fontSize="small" />}
+                  variant="text"
                   onClick={() => onView(company)}>
                   View
                </Button>
                {isPending && (
-                  <>
+                  <Box className="contents">
                      <Button
                         className="bg-surface! rounded-md! border-[#86EFAC]! text-[#15803D]! normal-case!"
-                        size="small"
-                        variant="outlined"
-                        startIcon={<CheckCircleOutlinedIcon fontSize="small" />}
                         disabled={isUpdating}
+                        size="small"
+                        startIcon={<CheckCircleOutlinedIcon fontSize="small" />}
+                        variant="outlined"
                         onClick={() => onApprove(company)}>
                         Approve
                      </Button>
                      <Button
                         className="bg-surface! rounded-md! border-[#FCA5A5]! text-[#DC2626]! normal-case!"
-                        size="small"
-                        variant="outlined"
-                        startIcon={<CloseIcon fontSize="small" />}
                         disabled={isUpdating}
+                        size="small"
+                        startIcon={<CloseIcon fontSize="small" />}
+                        variant="outlined"
                         onClick={() => onReject(company)}>
                         Reject
                      </Button>
-                  </>
+                  </Box>
                )}
                {isApproved && (
                   <Button
                      className="bg-surface!"
-                     size="small"
                      disabled
+                     size="small"
                      startIcon={<CheckCircleOutlinedIcon fontSize="small" />}>
                      Approved
                   </Button>
@@ -179,8 +179,8 @@ export const getCompanyRequestsColumns = ({
                {isRejected && (
                   <Button
                      className="bg-surface!"
-                     size="small"
                      disabled
+                     size="small"
                      startIcon={<CloseIcon fontSize="small" />}>
                      Rejected
                   </Button>

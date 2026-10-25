@@ -23,12 +23,12 @@ type StatCardProps = {
 const StatCard = ({ title, value, subtitle, icon, iconClassName }: StatCardProps) => {
    return (
       <CommonStatCard
-         label={title}
+         className="min-h-27.5 shadow-sm"
          value={value}
          description={subtitle}
          icon={icon}
          iconClassName={iconClassName}
-         className="min-h-27.5 shadow-sm"
+         label={title}
       />
    )
 }
@@ -52,43 +52,43 @@ const CompaniesStats = ({ stats }: Props) => {
    return (
       <Box className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
          <StatCard
-            title="Total Companies"
             value={stats.totalCompanies}
-            subtitle="All companies"
+            icon={<ApartmentOutlinedIcon className="text-[29px]!" />}
             iconClassName="
                bg-violet-50 text-violet-600
             "
-            icon={<ApartmentOutlinedIcon sx={{ fontSize: 29 }} />}
+            subtitle="All companies"
+            title="Total Companies"
          />
 
          <StatCard
-            title="Active Companies"
             value={stats.activeCompanies}
-            subtitle={`${activePercentage}% of total`}
+            icon={<CheckCircleOutlineOutlinedIcon className="text-[29px]!" />}
             iconClassName="
                bg-emerald-50 text-emerald-600
             "
-            icon={<CheckCircleOutlineOutlinedIcon sx={{ fontSize: 29 }} />}
+            subtitle={`${activePercentage}% of total`}
+            title="Active Companies"
          />
 
          <StatCard
-            title="Pending Approval"
             value={stats.pendingApproval}
-            subtitle={`${pendingPercentage}% of total`}
+            icon={<AccessTimeOutlinedIcon className="text-[29px]!" />}
             iconClassName="
                bg-amber-50 text-amber-600
             "
-            icon={<AccessTimeOutlinedIcon sx={{ fontSize: 29 }} />}
+            subtitle={`${pendingPercentage}% of total`}
+            title="Pending Approval"
          />
 
          <StatCard
-            title="Rejected Companies"
             value={stats.rejectedCompanies}
-            subtitle={`${rejectedPercentage}% of total`}
+            icon={<HighlightOffOutlinedIcon className="text-[29px]!" />}
             iconClassName="
                bg-red-50 text-red-600
             "
-            icon={<HighlightOffOutlinedIcon sx={{ fontSize: 29 }} />}
+            subtitle={`${rejectedPercentage}% of total`}
+            title="Rejected Companies"
          />
       </Box>
    )

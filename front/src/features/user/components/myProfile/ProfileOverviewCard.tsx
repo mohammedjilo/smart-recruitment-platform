@@ -57,11 +57,11 @@ const ProfileOverviewCard = ({ stats }: Props) => {
          <CardContent>
             <Box className="mb-2 flex items-center gap-1">
                <BoltOutlinedIcon
-                  className="text-mui-purple"
+                  className="text-violet-600"
                   fontSize="small"
                />
 
-               <Typography className="text-content">Profile Overview</Typography>
+               <Typography className="text-content text-sm!">Profile Overview</Typography>
             </Box>
 
             <Box>

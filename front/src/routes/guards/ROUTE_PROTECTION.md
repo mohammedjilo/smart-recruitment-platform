@@ -1,67 +1,66 @@
-# نظام حماية Routes (Route Protection System)
+# Route Protection System
 
-## نظرة عامة
+## Overview
 
-تم إنشاء نظام حماية شامل للـ routes يضمن أن كل نوع مستخدم (Admin, User, Company) لا يستطيع
-الوصول إلى routes الأنواع الأخرى.
+The route protection system ensures that each user type (Admin, User, Company) cannot access routes reserved for other user types.
 
-## المكونات الرئيسية
+## Main Guards
 
 ### 1. AdminGuard
 
-**الملف**: `AdminGuard.tsx`
+**File:** `AdminGuard.tsx`
 
-يحمي جميع routes الـ Admin (يبدأ بـ `/admin`)
+Protects all Admin routes under `/admin`.
 
-**القواعد**:
+**Rules:**
 
-- ✅ يسمح: المستخدمون بـ `role: "admin"`
-- ❌ يمنع: أي مستخدم عادي (`role: "user"`)
-- ❌ يمنع: أي شركة (`company`)
+- ✅ Allows users with `role: "admin"`.
+- ❌ Denies regular users (`role: "user"`).
+- ❌ Denies companies.
 
-**الإعادة التوجيه**:
+**Redirects:**
 
-- إذا كان المستخدم `company` → يذهب إلى `/dashboard`
-- إذا كان المستخدم غير مصرح → يذهب إلى `/login`
+- Companies are redirected to `/dashboard`.
+- Unauthorized users are redirected to `/login`.
 
 ### 2. UserGuard
 
-**الملف**: `UserGuard.tsx`
+**File:** `UserGuard.tsx`
 
-يحمي جميع routes المستخدمين العاديين (مثل `/jobs`, `/applications`, `/saved-jobs`)
+Protects regular-user routes such as `/jobs`, `/applications`, and `/saved-jobs`.
 
-**القواعل**:
+**Rules:**
 
-- ✅ يسمح: المستخدمون بـ `role: "user"` فقط
-- ❌ يمنع: المستخدمون بـ `role: "admin"`
-- ❌ يمنع: أي شركة (`company`)
+- ✅ Allows users with `role: "user"` only.
+- ❌ Denies users with `role: "admin"`.
+- ❌ Denies companies.
 
-**الإعادة التوجيه**:
+**Redirects:**
 
-- إذا كان المستخدم `company` → يذهب إلى `/dashboard`
-- إذا كان المستخدم غير مصرح → يذهب إلى `/login`
+- Companies are redirected to `/dashboard`.
+- Unauthorized users are redirected to `/login`.
 
 ### 3. CompanyGuard
 
-**الملف**: `CompanyGuard.tsx`
+**File:** `CompanyGuard.tsx`
 
-يحمي جميع routes الشركات (مثل `/company/jobs`, `/create-job`, `/company-profile`)
+Protects company routes such as `/company/jobs`, `/create-job`, and `/company-profile`.
 
-**القواعد**:
+**Rules:**
 
-- ✅ يسمح: الشركات فقط
-- ❌ يمنع: أي مستخدم (حتى لو كان `admin`)
-- ❌ يمنع: المستخدمون العاديون
+- ✅ Allows companies only.
+- ❌ Denies all users, including admins.
+- ❌ Denies regular users.
 
-**الإعادة التوجيه**:
+**Redirects:**
 
-- إذا كان المستخدم `user` → يذهب إلى `/dashboard`
-- إذا كان المستخدم غير مصرح → يذهب إلى `/login`
+- Users are redirected to `/dashboard`.
+- Unauthorized users are redirected to `/login`.
 
-## بنية الـ Routes المحمية
+## Protected Route Structure
 
-```
-Routes الـ Admin (محمية بـ AdminGuard)
+```text
+Admin routes (protected by AdminGuard)
 ├── /admin
 ├── /admin/company-requests
 ├── /admin/companies
@@ -69,14 +68,14 @@ Routes الـ Admin (محمية بـ AdminGuard)
 ├── /admin/jobs
 └── /admin/jobs/:id/:slug
 
-Routes المستخدمين (محمية بـ UserGuard)
+User routes (protected by UserGuard)
 ├── /profile/complete
 ├── /applications
 ├── /jobs
 ├── /jobs/:id/:slug
 └── /saved-jobs
 
-Routes الشركات (محمية بـ CompanyGuard)
+Company routes (protected by CompanyGuard)
 ├── /company/jobs
 ├── /company/applications
 ├── /company-profile
@@ -85,98 +84,95 @@ Routes الشركات (محمية بـ CompanyGuard)
 ├── /create-job
 └── /company/jobs/:id/:slug/edit
 
-Routes المتاحة للجميع (بدون حماية)
+Public routes (no guard)
 ├── /login
 ├── /register
 ├── /register/user
 ├── /register/company
-└── /dashboard (يوجهك إلى المكان الصحيح بناءً على النوع)
+└── /dashboard (redirects based on the user type)
 ```
 
-## جدول الوصول
+## Access Matrix
 
-| Route               | Admin | User | Company | الحالة               |
-| ------------------- | ----- | ---- | ------- | -------------------- |
-| `/admin/*`          | ✅    | ❌   | ❌      | محمي بـ AdminGuard   |
-| `/profile/complete` | ❌    | ✅   | ❌      | محمي بـ UserGuard    |
-| `/jobs/*`           | ❌    | ✅   | ❌      | محمي بـ UserGuard    |
-| `/applications`     | ❌    | ✅   | ❌      | محمي بـ UserGuard    |
-| `/company/*`        | ❌    | ❌   | ✅      | محمي بـ CompanyGuard |
-| `/create-job`       | ❌    | ❌   | ✅      | محمي بـ CompanyGuard |
-| `/login`            | ✅    | ✅   | ✅      | متاح للجميع          |
-| `/register*`        | ✅    | ✅   | ✅      | متاح للجميع          |
+| Route               | Admin | User | Company | Protection            |
+| ------------------- | ----- | ---- | ------- | --------------------- |
+| `/admin/*`          | ✅    | ❌   | ❌      | AdminGuard            |
+| `/profile/complete` | ❌    | ✅   | ❌      | UserGuard             |
+| `/jobs/*`           | ❌    | ✅   | ❌      | UserGuard             |
+| `/applications`     | ❌    | ✅   | ❌      | UserGuard             |
+| `/company/*`        | ❌    | ❌   | ✅      | CompanyGuard          |
+| `/create-job`       | ❌    | ❌   | ✅      | CompanyGuard          |
+| `/login`            | ✅    | ✅   | ✅      | Public                |
+| `/register*`        | ✅    | ✅   | ✅      | Public                |
 
-## آلية العمل
+## How It Works
 
-### مثال 1: محاولة Admin الوصول إلى routes الـ Company
+### Example 1: An admin opens a company route
 
-```
-1. Admin يحاول فتح /company/jobs
-2. CompanyGuard يتحقق:
-   - هل هناك user معرّف؟ نعم → قطع الوصول
-3. Admin يتم توجيهه إلى /dashboard
-```
-
-### مثال 2: محاولة User الوصول إلى routes الـ Admin
-
-```
-1. User يحاول فتح /admin
-2. AdminGuard يتحقق:
-   - هل هناك company معرّف؟ لا
-   - هل user موجود وبـ role "admin"؟ لا
-3. User يتم توجيهه إلى /login
+```text
+1. The admin opens /company/jobs.
+2. CompanyGuard checks the session and denies access to the admin.
+3. The admin is redirected to /dashboard.
 ```
 
-### مثال 3: محاولة Company الوصول إلى routes الـ User
+### Example 2: A user opens an admin route
 
-```
-1. Company يحاول فتح /jobs
-2. UserGuard يتحقق:
-   - هل هناك company معرّف؟ نعم → قطع الوصول
-3. Company يتم توجيهه إلى /dashboard
+```text
+1. The user opens /admin.
+2. AdminGuard checks the company and user identities and the user's role.
+3. The user is redirected to /login.
 ```
 
-## الحالات الخاصة
+### Example 3: A company opens a user route
+
+```text
+1. The company opens /jobs.
+2. UserGuard detects the company session and denies access.
+3. The company is redirected to /dashboard.
+```
+
+## Special Cases
 
 ### ProfileCompletionGuard
 
-- هذا الـ Guard موجود بالفعل ولا يتعارض مع النظام الجديد
-- يحمي routes المستخدمين بشرط التأكد من اكتمال ملفهم الشخصي
-- يتم تطبيقه بعد `UserGuard` على الـ routes التي تحتاجه
+- This guard already exists and works alongside the route protection system.
+- It protects user routes that require a completed profile.
+- Apply it after `UserGuard` to routes that require profile completion.
 
 ### DashboardRouter
 
-- `/dashboard` يعيد توجيه المستخدم إلى المكان الصحيح:
-   - Admin → `/admin`
-   - Company → `/company/jobs`
-   - User → `/dashboard` (يعرض UserDashboard)
-   - غير مسجل → `/login`
+`/dashboard` redirects users based on their type:
 
-## الأمان والحماية
+- Admin → `/admin`
+- Company → `/company/jobs`
+- User → `/dashboard` (renders `UserDashboard`)
+- Signed-out user → `/login`
 
-✅ **المميزات**:
+## Security Notes
 
-1. حماية من جانب الـ Frontend
-2. التحقق من البيانات المخزنة في Redux
-3. التعامل مع جميع الحالات الحدية
-4. توجيه آمن للمستخدمين غير المصرحين
+✅ **Features:**
 
-⚠️ **ملاحظات مهمة**:
+1. Frontend access protection.
+2. Checks data stored in Redux.
+3. Handles edge cases.
+4. Redirects unauthorized users safely.
 
-1. هذا النظام يوفر **حماية Frontend فقط**
-2. يجب تطبيق **حماية Backend** أيضاً
-3. تأكد من التحقق من الـ Token والـ Role في API
+⚠️ **Important:**
 
-## كيفية التوسع
+1. This system provides **frontend protection only**.
+2. **Backend protection** must also be implemented.
+3. Validate the token and role in the API.
 
-إذا كنت تريد إضافة نوع مستخدم جديد:
+## Extending the System
 
-1. أنشئ Guard جديد مثل `ModeratorGuard.tsx`
-2. أضف الـ Guard إلى `App.tsx`
-3. أضف Routes جديدة تحت الـ Guard الجديد
-4. تأكد من تحديث جدول الوصول
+To add a new user type:
 
-## الملفات المتعلقة
+1. Create a guard, such as `ModeratorGuard.tsx`.
+2. Add the guard to `App.tsx`.
+3. Add routes under the new guard.
+4. Update the access matrix.
+
+## Related Files
 
 - `src/routes/guards/AdminGuard.tsx`
 - `src/routes/guards/UserGuard.tsx`

@@ -8,7 +8,7 @@ export default function FormErrorAlert({ message }: FormErrorAlertProps) {
    if (!message) return null
 
    return (
-      <Alert severity="error" role="alert" aria-live="assertive">
+      <Alert aria-live="assertive" role="alert" severity="error">
          {message}
       </Alert>
    )

@@ -54,13 +54,13 @@ const CompanyStats = ({ jobs }: Props) => {
          <Box className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
             {stats.map(stat => (
                <StatCard
+                  className="min-h-32.5 justify-center"
                   key={stat.label}
-                  label={stat.label}
                   value={stat.value}
                   icon={stat.icon}
                   iconClassName={stat.iconBackground}
+                  label={stat.label}
                   layout="vertical"
-                  className="min-h-32.5 justify-center"
                />
             ))}
          </Box>

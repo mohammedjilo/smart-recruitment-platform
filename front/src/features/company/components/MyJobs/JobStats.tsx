@@ -72,23 +72,18 @@ const JobStats = ({ stats }: JobStatsProps) => {
 
             return (
                <StatCard
+                  className="transition hover:-translate-y-px hover:shadow-sm"
                   key={card.title}
+                  value={card.value}
+                  description={card.description}
+                  icon={<Icon className={`${card.iconColor} text-xl!`} />}
+                  iconClassName={card.iconBg}
                   label={
                      <span className="flex items-center gap-2">
                         <span className={`h-2 w-2 rounded-full ${card.dot} `} />
                         {card.title}
                      </span>
                   }
-                  value={card.value}
-                  description={card.description}
-                  icon={
-                     <Icon
-                        className={card.iconColor}
-                        sx={{ fontSize: 20 }}
-                     />
-                  }
-                  iconClassName={card.iconBg}
-                  className="transition hover:-translate-y-[1px] hover:shadow-sm"
                />
             )
          })}

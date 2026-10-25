@@ -65,21 +65,21 @@ const JobsPage = () => {
       <Box className="w-full space-y-6">
          {stats && <JobsStats stats={stats} />}
          <JobsFilters
+            employmentType={employmentType}
             search={search}
             status={status}
-            employmentType={employmentType}
+            onEmploymentTypeChange={handleEmploymentTypeChange}
             onSearchChange={handleSearchChange}
             onStatusChange={handleStatusChange}
-            onEmploymentTypeChange={handleEmploymentTypeChange}
          />
          <JobsTable
-            jobs={jobs}
-            isLoading={isLoading}
             isFetching={queryPresentation.category === "refreshing"}
-            queryState={queryState}
-            onRetry={query.refetch}
+            isLoading={isLoading}
+            jobs={jobs}
             pagination={pagination}
+            queryState={queryState}
             onPageChange={setPage}
+            onRetry={query.refetch}
          />
       </Box>
    )

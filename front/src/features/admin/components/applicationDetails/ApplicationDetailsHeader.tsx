@@ -20,10 +20,10 @@ const ApplicationDetailsHeader = () => {
          </Box>
 
          <Button
-            variant="outlined"
+            className="min-w-42.5! normal-case!"
             startIcon={<ArrowBackOutlinedIcon />}
-            onClick={() => navigate(-1)}
-            className="min-w-42.5! normal-case!">
+            variant="outlined"
+            onClick={() => navigate(-1)}>
             Back to Applications
          </Button>
       </Box>

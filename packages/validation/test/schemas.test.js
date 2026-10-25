@@ -3,6 +3,9 @@ import test from "node:test";
 import {
   companyRegistrationSchema,
   companyProfileUpdateSchema,
+  cityNameSchema,
+  personalInformationUpdateSchema,
+  updateProfessionalProfileSchema,
   createAdminSchema,
   createJobSchema,
   isDateOnOrAfterToday,
@@ -100,6 +103,39 @@ test("Company registration requires a valid slug and profile updates may omit it
     companyProfileUpdateSchema.safeParse({
       companyName: "Acme Technology",
       slug: "acme-tech",
+    }).success,
+    true,
+  );
+  assert.equal(
+    companyProfileUpdateSchema.safeParse({
+      companyName: "Acme Technology",
+      country: "United States",
+      countryCode: "US",
+      state: "California",
+      city: "Los Angeles",
+      cityGeonameId: "5368361",
+      location: "Los Angeles, California, United States",
+    }).success,
+    true,
+  );
+  assert.equal(
+    companyProfileUpdateSchema.safeParse({
+      companyName: "Acme Technology",
+      country: "United States",
+      countryCode: "US",
+    }).success,
+    false,
+  );
+  assert.equal(
+    companyProfileUpdateSchema.safeParse({
+      companyName: "Acme Technology",
+      location: "",
+      country: "",
+      countryCode: "",
+      state: "",
+      stateCode: "",
+      city: "",
+      cityGeonameId: "",
     }).success,
     true,
   );
@@ -267,6 +303,47 @@ test("user registration requires country and city and accepts an optional region
       .success,
     true,
   );
+});
+
+test("city names accept international punctuation without allowing control characters", () => {
+  assert.equal(cityNameSchema.safeParse("‘Alāqahdārī Aṯghar").success, true);
+  assert.equal(cityNameSchema.safeParse("’s-Hertogenbosch").success, true);
+  assert.equal(cityNameSchema.safeParse("Aït-Ben-Haddou").success, true);
+  assert.equal(cityNameSchema.safeParse("Aleppo\ninvalid").success, false);
+  assert.equal(cityNameSchema.safeParse("!!!").success, false);
+});
+
+test("personal information updates require valid contact, birthdate, and selected location", () => {
+  const personalInformation = {
+    phone: "1234567890",
+    birthdate: "1995-01-01",
+    country: "Afghanistan",
+    countryCode: "AF",
+    state: "Zabul",
+    stateCode: "",
+    city: "‘Alāqahdārī Aṯghar",
+    cityGeonameId: "1148114",
+  };
+
+  assert.equal(
+    personalInformationUpdateSchema.safeParse(personalInformation).success,
+    true,
+  );
+  assert.equal(
+    personalInformationUpdateSchema.safeParse({
+      ...personalInformation,
+      birthdate: "1995-02-30",
+    }).success,
+    false,
+  );
+  assert.equal(
+    personalInformationUpdateSchema.safeParse({
+      ...personalInformation,
+      cityGeonameId: "",
+    }).success,
+    false,
+  );
+  assert.equal(updateProfessionalProfileSchema.safeParse({}).success, false);
 });
 
 test("profile schemas enforce canonical shape and date ordering", () => {

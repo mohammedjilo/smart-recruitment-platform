@@ -13,7 +13,14 @@ import {
 } from "@mui/icons-material"
 import { useSelector } from "react-redux"
 import type { RootState } from "@/redux/store"
-import { Box, List, ListItemButton, ListItemIcon, ListItemText } from "@mui/material"
+import {
+   Box,
+   List,
+   ListItemButton,
+   ListItemIcon,
+   ListItemText,
+   Typography
+} from "@mui/material"
 import ResponsiveSidebarDrawer from "@/components/common/ResponsiveSidebarDrawer"
 import { useLocation, useNavigate } from "react-router-dom"
 import { useAuthLogOutMutation } from "@/features/auth/services/authApiCalls"
@@ -30,12 +37,12 @@ interface SidebarItemProps {
 const SidebarItem = ({ icon, label, active = false, onClick }: SidebarItemProps) => {
    return (
       <ListItemButton
-         onClick={onClick}
          className={`group! mt-1! min-h-8.5! rounded-lg! px-2! text-sm! transition-all! duration-200! ${
             active
                ? "bg-primary! hover:bg-primary-dark! text-white!"
                : "text-muted hover:bg-primary-tint hover:text-primary"
-         } `}>
+         } `}
+         onClick={onClick}>
          <ListItemIcon className="text-inherit!">{icon}</ListItemIcon>
          <ListItemText primary={label} />
       </ListItemButton>
@@ -80,45 +87,45 @@ const SideBar = ({ onNavigate, open, onClose }: SidebarProps) => {
 
    return (
       <ResponsiveSidebarDrawer
-         width={268}
          open={open}
+         width={268}
          onClose={onClose}>
          <Box className="border-border bg-surface flex h-full min-h-0 w-67 flex-col border-r pt-2">
             {/* Logo */}
             <Box className="flex h-27 items-center px-8">
                <Box className="flex items-center gap-3">
-                  {/* Logo */}
                   <Box className="bg-primary flex h-10 w-10 items-center justify-center rounded-xl">
-                     <BusinessRounded
-                        sx={{
-                           fontSize: 23,
-                           color: "white"
-                        }}
-                     />
+                     <BusinessRounded className="text-[23px]! text-white!" />
                   </Box>
 
                   <Box>
-                     <h1 className="text-content text-[17px] leading-5 font-semibold">
+                     <Typography
+                        className="text-content! text-[17px]! leading-5! font-semibold!"
+                        variant="h1">
                         {company?.companyName}
-                     </h1>
+                     </Typography>
 
-                     <p className="text-muted mt-1 text-sm">Company Portal</p>
+                     <Typography
+                        className="mt-1! text-sm!"
+                        color="textSecondary">
+                        Company Portal
+                     </Typography>
                   </Box>
                </Box>
             </Box>
 
             {/* Navigation */}
             <nav
+               className="min-h-0 flex-1 overflow-y-auto px-4"
                id="company-navigation"
-               aria-label="Company navigation"
-               className="min-h-0 flex-1 overflow-y-auto px-4">
+               aria-label="Company navigation">
                {/* Dashboard */}
                <Box className="mb-4">
                   <List className="space-y-1!">
                      <SidebarItem
-                        label="Dashboard"
-                        icon={<DashboardRounded fontSize="small" />}
                         active={isPathActive("/dashboard")}
+                        icon={<DashboardRounded fontSize="small" />}
+                        label="Dashboard"
                         onClick={() => handleNavigate("dashboard", "/dashboard")}
                      />
                   </List>
@@ -126,22 +133,24 @@ const SideBar = ({ onNavigate, open, onClose }: SidebarProps) => {
 
                {/* Jobs */}
                <Box className="mb-4">
-                  <p className="text-muted mb-3 px-4 text-[12px] font-medium tracking-wide uppercase">
+                  <Typography
+                     className="mb-3! px-4! text-xs! font-medium! tracking-wide! uppercase!"
+                     color="textSecondary">
                      Jobs
-                  </p>
+                  </Typography>
 
                   <List className="space-y-1!">
                      <SidebarItem
-                        label="My Jobs"
-                        icon={<WorkOutlineRounded fontSize="small" />}
                         active={isPathActive("/company/jobs")}
+                        icon={<WorkOutlineRounded fontSize="small" />}
+                        label="My Jobs"
                         onClick={() => handleNavigate("jobs", "/company/jobs")}
                      />
 
                      <SidebarItem
-                        label="Create Job"
-                        icon={<AddRounded fontSize="small" />}
                         active={isPathActive("/create-job")}
+                        icon={<AddRounded fontSize="small" />}
+                        label="Create Job"
                         onClick={() => handleNavigate("create-job", "/create-job")}
                      />
                   </List>
@@ -149,15 +158,17 @@ const SideBar = ({ onNavigate, open, onClose }: SidebarProps) => {
 
                {/* Applications */}
                <Box className="mb-4">
-                  <p className="text-muted mb-3 px-4 text-[12px] font-medium tracking-wide uppercase">
+                  <Typography
+                     className="mb-3! px-4! text-xs! font-medium! tracking-wide! uppercase!"
+                     color="textSecondary">
                      Applications
-                  </p>
+                  </Typography>
 
                   <List className="space-y-1!">
                      <SidebarItem
-                        label="Applications"
-                        icon={<PeopleOutlineRounded fontSize="small" />}
                         active={isPathActive("/company/applications")}
+                        icon={<PeopleOutlineRounded fontSize="small" />}
+                        label="Applications"
                         onClick={() =>
                            handleNavigate("applications", "/company/applications")
                         }
@@ -166,15 +177,17 @@ const SideBar = ({ onNavigate, open, onClose }: SidebarProps) => {
                </Box>
                {/* Users */}
                <Box className="mb-4">
-                  <p className="text-muted mb-3 px-4 text-[12px] font-medium tracking-wide uppercase">
+                  <Typography
+                     className="mb-3! px-4! text-xs! font-medium! tracking-wide! uppercase!"
+                     color="textSecondary">
                      Users
-                  </p>
+                  </Typography>
 
                   <List className="space-y-1!">
                      <SidebarItem
-                        label="Users"
-                        icon={<GroupsRounded fontSize="small" />}
                         active={isPathActive("/company/users")}
+                        icon={<GroupsRounded fontSize="small" />}
+                        label="Users"
                         onClick={() => handleNavigate("users", "/company/users")}
                      />
                   </List>
@@ -182,40 +195,42 @@ const SideBar = ({ onNavigate, open, onClose }: SidebarProps) => {
 
                {/* Company */}
                <Box>
-                  <p className="text-muted mb-3 px-4 text-[12px] font-medium tracking-wide uppercase">
+                  <Typography
+                     className="mb-3! px-4! text-xs! font-medium! tracking-wide! uppercase!"
+                     color="textSecondary">
                      Company
-                  </p>
+                  </Typography>
 
                   <List className="space-y-1">
                      <SidebarItem
-                        label="Messages"
-                        icon={<ChatBubbleOutlineRounded fontSize="small" />}
                         active={isPathActive("/company/messages")}
+                        icon={<ChatBubbleOutlineRounded fontSize="small" />}
+                        label="Messages"
                         onClick={() => handleNavigate("messages", "/company/messages")}
                      />
 
                      <SidebarItem
-                        label="Notifications"
-                        icon={<NotificationsNoneOutlined fontSize="small" />}
                         active={isPathActive("/company/notifications")}
+                        icon={<NotificationsNoneOutlined fontSize="small" />}
+                        label="Notifications"
                         onClick={() =>
                            handleNavigate("notifications", "/company/notifications")
                         }
                      />
 
                      <SidebarItem
-                        label="Company Profile"
-                        icon={<BusinessRounded fontSize="small" />}
                         active={isPathActive("/company-profile")}
+                        icon={<BusinessRounded fontSize="small" />}
+                        label="Company Profile"
                         onClick={() =>
                            handleNavigate("company-profile", "/company-profile")
                         }
                      />
 
                      <SidebarItem
-                        label="Support & Help"
-                        icon={<ContactSupportOutlined fontSize="small" />}
                         active={isPathActive("/company/support")}
+                        icon={<ContactSupportOutlined fontSize="small" />}
+                        label="Support & Help"
                         onClick={() => handleNavigate("support-help", "/company/support")}
                      />
                   </List>
@@ -226,9 +241,9 @@ const SideBar = ({ onNavigate, open, onClose }: SidebarProps) => {
             <Box className="border-border border-t p-4">
                <List className="space-y-1">
                   <SidebarItem
-                     label="Logout"
-                     icon={<LogoutRounded fontSize="small" />}
                      active={isPathActive("/login")}
+                     icon={<LogoutRounded fontSize="small" />}
+                     label="Logout"
                      onClick={handleLogout}
                   />
                </List>

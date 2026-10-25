@@ -11,9 +11,9 @@ const CompanyStatusChip = ({ status }: CompanyStatusChipProps) => {
 
    return (
       <Chip
+         className={`rounded-md! text-xs! font-semibold! ${config.className}`}
          label={config.label}
          size="small"
-         className={`rounded-md! text-xs! font-semibold! ${config.className}`}
       />
    )
 }

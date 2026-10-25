@@ -53,43 +53,43 @@ const ReviewStep: React.FC<ReviewStepProps> = ({ basicInformationsData, answers 
          {/* ================================================= */}
 
          <ReviewSection
-            title="Basic Information"
-            icon={<PersonOutlined sx={{ fontSize: 18 }} />}>
+            icon={<PersonOutlined className="text-lg!" />}
+            title="Basic Information">
             <Box className="grid grid-cols-2 gap-x-5 gap-y-5">
                <InfoItem
-                  label="Full Name"
                   value={fullName}
                   icon={<PersonOutlined />}
+                  label="Full Name"
                />
 
                <InfoItem
-                  label="Email Address"
                   value={email}
                   icon={<EmailOutlined />}
+                  label="Email Address"
                />
 
                <InfoItem
-                  label="Phone Number"
                   value={phone}
                   icon={<PhoneOutlined />}
+                  label="Phone Number"
                />
 
                <InfoItem
-                  label="Country"
                   value={country}
                   icon={<LocationOnOutlined />}
+                  label="Country"
                />
 
                <InfoItem
-                  label="Age"
                   value={age}
                   icon={<PersonOutlined />}
+                  label="Age"
                />
 
                <InfoItem
-                  label="Current Job Title"
                   value={jobTitle}
                   icon={<WorkOutlined />}
+                  label="Current Job Title"
                />
             </Box>
          </ReviewSection>
@@ -99,17 +99,12 @@ const ReviewStep: React.FC<ReviewStepProps> = ({ basicInformationsData, answers 
          {/* ================================================= */}
 
          <ReviewSection
-            title="Resume"
-            icon={<DescriptionOutlined sx={{ fontSize: 18 }} />}>
+            icon={<DescriptionOutlined className="text-lg!" />}
+            title="Resume">
             {useProfessionalProfile ? (
                <Box className="flex items-center gap-3 rounded-lg border border-[#ddd8f8] bg-[#faf9ff] p-3">
                   <Box className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-[#eeeafd]">
-                     <CheckCircle
-                        sx={{
-                           fontSize: 21,
-                           color: "#5421e8"
-                        }}
-                     />
+                     <CheckCircle className="text-[21px]! text-[#5421e8]!" />
                   </Box>
 
                   <Box className="min-w-0">
@@ -123,14 +118,9 @@ const ReviewStep: React.FC<ReviewStepProps> = ({ basicInformationsData, answers 
                   </Box>
                </Box>
             ) : (
-               <Box className="flex items-center gap-3 rounded-lg border border-[#e4e7ef] bg-surface p-3">
+               <Box className="bg-surface flex items-center gap-3 rounded-lg border border-[#e4e7ef] p-3">
                   <Box className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-[#f3f4f7]">
-                     <DescriptionOutlined
-                        sx={{
-                           fontSize: 21,
-                           color: "#5421e8"
-                        }}
-                     />
+                     <DescriptionOutlined className="text-[21px]! text-[#5421e8]!" />
                   </Box>
 
                   <Box className="min-w-0 flex-1">
@@ -147,12 +137,7 @@ const ReviewStep: React.FC<ReviewStepProps> = ({ basicInformationsData, answers 
                      )}
                   </Box>
 
-                  <CheckCircle
-                     sx={{
-                        fontSize: 20,
-                        color: "#5421e8"
-                     }}
-                  />
+                  <CheckCircle className="text-xl! text-[#5421e8]!" />
                </Box>
             )}
          </ReviewSection>
@@ -162,8 +147,8 @@ const ReviewStep: React.FC<ReviewStepProps> = ({ basicInformationsData, answers 
          {/* ================================================= */}
 
          <ReviewSection
-            title="Questions & Answers"
-            icon={<WorkOutlined sx={{ fontSize: 18 }} />}>
+            icon={<WorkOutlined className="text-lg!" />}
+            title="Questions & Answers">
             {answers.length === 0 ? (
                <Box className="rounded-lg border border-dashed border-[#dfe2ea] bg-[#fafbfc] px-4 py-5 text-center">
                   <Typography className="text-xs! text-[12px] text-[#7a8194]!">
@@ -178,9 +163,9 @@ const ReviewStep: React.FC<ReviewStepProps> = ({ basicInformationsData, answers 
                      .map((item, index) => (
                         <AnswerCard
                            key={item.questionId}
+                           answer={item.answer}
                            number={index + 1}
                            question={item.question}
-                           answer={item.answer}
                         />
                      ))}
                </Box>
@@ -193,13 +178,7 @@ const ReviewStep: React.FC<ReviewStepProps> = ({ basicInformationsData, answers 
 
          <Box className="mt-5 rounded-lg border border-[#e0dafa] bg-[#faf9ff] px-4 py-3">
             <Box className="flex gap-3">
-               <CheckCircle
-                  sx={{
-                     fontSize: 18,
-                     color: "#5421e8",
-                     marginTop: "1px"
-                  }}
-               />
+               <CheckCircle className="mt-px! text-lg! text-[#5421e8]!" />
 
                <Box>
                   <Typography className="text-xs! font-semibold! text-[#31256b]!">
@@ -230,7 +209,7 @@ interface ReviewSectionProps {
 
 const ReviewSection: React.FC<ReviewSectionProps> = ({ title, icon, children }) => {
    return (
-      <Box className="mb-5 rounded-xl border border-[#e4e7ef] bg-surface">
+      <Box className="bg-surface mb-5 rounded-xl border border-[#e4e7ef]">
          {/* Section Header */}
 
          <Box className="flex items-center gap-2 border-b border-[#eef0f4] px-4 py-3">
@@ -320,8 +299,8 @@ const AnswerCard: React.FC<AnswerCardProps> = ({ number, question, answer }) => 
                      <Box className="flex flex-wrap gap-1.5">
                         {normalizedAnswer.map((item, index) => (
                            <Typography
-                              key={`${item}-${index}`}
-                              className="rounded-md! bg-[#f0edff]! px-2.5! py-1! text-[11px]! font-medium! text-[#5421e8]!">
+                              className="rounded-md! bg-[#f0edff]! px-2.5! py-1! text-[11px]! font-medium! text-[#5421e8]!"
+                              key={`${item}-${index}`}>
                               {item}
                            </Typography>
                         ))}

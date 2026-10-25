@@ -11,8 +11,8 @@ const EmploymentTypeCard = ({ title, description, className }: Props) => {
       <Box className="border-border bg-surface flex min-h-26 items-start rounded-lg border p-4 transition hover:border-violet-200 hover:shadow-sm">
          <Box className="min-w-0">
             <Typography
-               component="span"
-               className={`inline-flex rounded-md px-2.5 py-1 text-xs! font-bold! ${className}`}>
+               className={`inline-flex rounded-md px-2.5 py-1 text-xs! font-bold! ${className}`}
+               component="span">
                {title}
             </Typography>
             <Typography

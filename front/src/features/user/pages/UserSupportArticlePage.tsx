@@ -1,8 +1,8 @@
 import { useNavigate, useParams } from "react-router-dom"
-import { Box, Typography } from "@mui/material"
+import { Box, Button, Typography } from "@mui/material"
 
-import SupportArticleDetails from "@/features/support/components/SupportArticleDetails"
-import { getCategoryNameForTopic } from "@/features/support/supportCategoryMap"
+import SupportArticleDetails from "@/features/shared/support/components/SupportArticleDetails"
+import { getCategoryNameForTopic } from "@/features/shared/support/supportCategoryMap"
 import { userTopicDetails } from "../config/support.config"
 
 export default function UserSupportArticlePage() {
@@ -24,12 +24,13 @@ export default function UserSupportArticlePage() {
                   The requested support topic could not be found.
                </Typography>
 
-               <button
+               <Button
+                  className="mt-6! rounded-lg! px-4! py-2! text-sm! font-medium! transition-colors! normal-case!"
                   type="button"
-                  onClick={() => navigate("/user/support")}
-                  className="app-button-secondary mt-6 rounded-lg px-4 py-2 text-sm font-medium transition-colors">
+                  variant="outlined"
+                  onClick={() => navigate("/user/support")}>
                   Back to Support & Help
-               </button>
+               </Button>
             </Box>
          </Box>
       )
@@ -47,12 +48,13 @@ export default function UserSupportArticlePage() {
                   The requested support article could not be found in this topic.
                </Typography>
 
-               <button
+               <Button
+                  className="mt-6! rounded-lg! px-4! py-2! text-sm! font-medium! transition-colors! normal-case!"
                   type="button"
-                  onClick={() => navigate(`/user/support/${topicId}`)}
-                  className="app-button-secondary mt-6 rounded-lg px-4 py-2 text-sm font-medium transition-colors">
+                  variant="outlined"
+                  onClick={() => navigate(`/user/support/${topicId}`)}>
                   Back to {topic.title}
-               </button>
+               </Button>
             </Box>
          </Box>
       )

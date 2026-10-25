@@ -67,19 +67,3 @@ export const updateEducation = async (
     },
   });
 };
-
-export const deleteEducation = async (userId: string, educationId: string) => {
-  const profile = await getProfileOrThrow(userId);
-
-  const education = await prisma.education.findFirst({
-    where: { id: educationId, profileId: profile.id },
-  });
-
-  if (!education) {
-    throw new AppError("Education not found", 404);
-  }
-
-  await prisma.education.delete({ where: { id: educationId } });
-
-  return { message: "Education deleted successfully" };
-};

@@ -1,5 +1,5 @@
 import type { JobStatus } from "@/types/createJob.types"
-import { Box } from "@mui/material"
+import { Box, Typography } from "@mui/material"
 import { useState } from "react"
 import { useUpdateJobStatusMutation } from "@/services/shared/jobApiCalls"
 import { showAlert } from "@/utils/swal"
@@ -152,55 +152,61 @@ const JobsTable = ({
                <span className="text-xl">•</span>
             </Box>
 
-            <h3 className="text-content mt-4 text-base font-semibold">No jobs found</h3>
+            <Typography
+               className="text-content! mt-4! text-base! font-semibold!"
+               variant="h3">
+               No jobs found
+            </Typography>
 
-            <p className="text-muted mt-1 text-sm">
+            <Typography className="mt-1! text-sm!" color="textSecondary">
                Try changing your filters or create a new job.
-            </p>
+            </Typography>
          </Box>
       )
    }
 
    return (
-      <>
+      <Box className="contents">
          <DataTable
-            rows={jobs}
             columns={getCompanyJobsColumns({
                onToggleJobStatus: handleToggleJobStatus,
                isUpdating: mutationPresentation.category === "loading"
             })}
-            getRowKey={job => job.id}
-            isLoading={isLoading}
-            isFetching={isFetching}
-            queryState={queryState}
-            onRetry={onRetry}
+            containerClassName="shadow-none!"
             emptyState={
                <Box className="border-border bg-surface rounded-xl border p-14 text-center">
                   <Box className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-violet-50">
                      <span className="text-xl">•</span>
                   </Box>
 
-                  <h3 className="text-content mt-4 text-base font-semibold">
+                  <Typography
+                     className="text-content! mt-4! text-base! font-semibold!"
+                     variant="h3">
                      No jobs found
-                  </h3>
+                  </Typography>
 
-                  <p className="text-muted mt-1 text-sm">
+                  <Typography className="mt-1! text-sm!" color="textSecondary">
                      Try changing your filters or create a new job.
-                  </p>
+                  </Typography>
                </Box>
             }
+            getRowKey={job => job.id}
+            isFetching={isFetching}
+            isLoading={isLoading}
             minWidth={1100}
-            containerClassName="shadow-none!"
+            queryState={queryState}
+            rows={jobs}
+            onRetry={onRetry}
          />
          <ReopenJobDialog
-            open={Boolean(jobToReopen)}
-            jobTitle={jobToReopen?.title ?? "this job"}
             currentDeadline={jobToReopen?.deadline}
+            jobTitle={jobToReopen?.title ?? "this job"}
+            open={Boolean(jobToReopen)}
             requireNewDate={jobToReopen?.status === "EXPIRED"}
             onClose={() => setJobToReopen(null)}
             onSubmit={handleReopenJob}
          />
-      </>
+      </Box>
    )
 }
 

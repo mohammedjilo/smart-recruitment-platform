@@ -5,6 +5,7 @@ import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
 import type { ApplicationStatus } from "@/features/user/components/dashboard/RecentApplicationItem"
 import type { AdminApplication } from "@/types/admin"
+import type { ApplicationMatchScore } from "@/types/application"
 import { useGetApplicationsByAdminQuery } from "@/features/admin/services/adminApiCalls"
 import ApplicationsStats from "@/features/admin/components/applications/ApplicationsStats"
 import ApplicationsFilters from "@/features/admin/components/applications/ApplicationsFilters"
@@ -23,6 +24,8 @@ const ApplicationsPage = () => {
    const [debouncedSearch, setDebouncedSearch] = useState("")
 
    const [status, setStatus] = useState<Partial<ApplicationStatus> | "ALL">("ALL")
+   const [matchScore, setMatchScore] =
+      useState<ApplicationMatchScore>("ALL")
 
    /*
     * Debounce Search
@@ -39,13 +42,15 @@ const ApplicationsPage = () => {
    const query = useGetApplicationsByAdminQuery({
       page,
       search: debouncedSearch || undefined,
-      status
+      status,
+      matchScore
    })
    const queryState = getQueryState(query, {
       isEmpty: response => response.data.length === 0,
       noResults:
          Boolean(debouncedSearch.trim()) ||
          status !== "ALL" ||
+         matchScore !== "ALL" ||
          (query.currentData?.data.length === 0 &&
             (query.currentData?.meta?.totalCount ?? 0) > 0)
    })
@@ -72,6 +77,11 @@ const ApplicationsPage = () => {
       setPage(1)
    }
 
+   const handleMatchScoreChange = (value: ApplicationMatchScore) => {
+      setMatchScore(value)
+      setPage(1)
+   }
+
    const handleViewApplication = (applicationId: string) => {
       navigate(`/admin/applications/${applicationId}`)
    }
@@ -79,8 +89,8 @@ const ApplicationsPage = () => {
    if (isLoading) {
       return (
          <AdminListSkeleton
+            filterFields={["search", "control", "control"]}
             statCount={7}
-            filterFields={["search", "control"]}
          />
       )
    }
@@ -90,15 +100,17 @@ const ApplicationsPage = () => {
          {/* Statistics */}
          {response && (
             <ApplicationsStats
-               totalCount={totalCount}
                statusCounts={statusCounts}
+               totalCount={totalCount}
             />
          )}
 
          {/* Filters */}
          <ApplicationsFilters
+            matchScore={matchScore}
             search={search}
             status={status}
+            onMatchScoreChange={handleMatchScoreChange}
             onSearchChange={setSearch}
             onStatusChange={handleStatusChange}
          />
@@ -111,13 +123,13 @@ const ApplicationsPage = () => {
 
             <ApplicationsTable
                applications={applications}
-               onView={handleViewApplication}
-               isLoading={isLoading}
                isFetching={queryPresentation.category === "refreshing"}
-               queryState={queryState}
-               onRetry={query.refetch}
+               isLoading={isLoading}
                pagination={pagination}
+               queryState={queryState}
                onPageChange={setPage}
+               onRetry={query.refetch}
+               onView={handleViewApplication}
             />
          </Box>
       </Box>

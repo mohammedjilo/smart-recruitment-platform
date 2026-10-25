@@ -24,8 +24,8 @@ const JobDescription = ({ description, skills }: JobDescriptionProps) => {
                <Box className="mt-3 flex flex-wrap gap-2">
                   {skills.map(({ id, skill }) => (
                      <Typography
-                        key={id}
-                        className="rounded-md! border! border-border! bg-bg! px-3! py-1.5! text-xs! font-medium! text-muted">
+                        className="rounded-md! border! border-border! bg-bg! px-3! py-1.5! text-xs! font-medium! text-muted"
+                        key={id}>
                         {skill.skillName}
                      </Typography>
                   ))}

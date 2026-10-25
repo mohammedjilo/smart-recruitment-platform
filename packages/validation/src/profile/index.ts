@@ -5,3 +5,4 @@ export * from "./project.schema.js";
 export * from "./certificate.schema.js";
 export * from "./skill.schema.js";
 export * from "./professional-profile.schema.js";
+export * from "./personal-information.schema.js";

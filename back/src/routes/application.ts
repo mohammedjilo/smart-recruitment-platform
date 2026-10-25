@@ -7,9 +7,7 @@ import {
 } from "../middlewares/auth";
 import {
   applyToJobController,
-  deleteApplicationController,
   getCompanyApplicationsController,
-  getJobApplicationsController,
   getUserApplicationDetailsController,
   getUserApplicationsController,
   updateApplicationStatusController,
@@ -65,15 +63,6 @@ applicationRouter.post(
   validate(applicationSubmissionSchema),
   applyToJobController
 );
-applicationRouter.get(
-  "/job/:jobId",
-  authMiddleware,
-  requireCompany,
-  requireApprovedCompany,
-  validate(jobIdParamsSchema, "params"),
-  validate(applicationListQuerySchema, "query"),
-  getJobApplicationsController
-);
 applicationRouter.patch(
   "/:applicationId/status",
   authMiddleware,
@@ -90,12 +79,4 @@ applicationRouter.patch(
   validate(applicationIdParamsSchema, "params"),
   withdrawApplicationController
 );
-applicationRouter.delete(
-  "/:applicationId",
-  authMiddleware,
-  requireUser,
-  validate(applicationIdParamsSchema, "params"),
-  deleteApplicationController
-);
-
 export default applicationRouter;

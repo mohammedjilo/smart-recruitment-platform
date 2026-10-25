@@ -1,8 +1,8 @@
 import { useState } from "react"
 import { Alert, Box, Button, CircularProgress, Typography } from "@mui/material"
 import { Link } from "react-router-dom"
-import SupportChip from "@/features/support/components/SupportChip"
-import PriorityChip from "@/features/support/components/PriorityChip"
+import SupportChip from "@/features/shared/support/components/SupportChip"
+import PriorityChip from "@/features/shared/support/components/PriorityChip"
 import { formatCreatedAt } from "@/utils/formatDate"
 import { useGetSupportOnlyTicketsQuery } from "@/services/api/supportOnlyApi"
 
@@ -35,9 +35,9 @@ export default function SupportOnlyHomePage() {
          <Box className="mb-6 flex flex-wrap items-center justify-between gap-3">
             <Box>
                <Typography
+                  className="text-content font-bold"
                   component="h2"
-                  variant="h5"
-                  className="text-content font-bold">
+                  variant="h5">
                   My Support Requests
                </Typography>
                <Typography className="text-muted mt-1 text-sm">
@@ -45,10 +45,10 @@ export default function SupportOnlyHomePage() {
                </Typography>
             </Box>
             <Button
+               className="normal-case"
                component={Link}
                to="/support-only/requests/create"
-               variant="contained"
-               className="normal-case">
+               variant="contained">
                Create request
             </Button>
          </Box>
@@ -59,14 +59,14 @@ export default function SupportOnlyHomePage() {
             </Box>
          ) : tickets.isError ? (
             <Alert
-               severity="error"
                action={
                   <Button
                      color="inherit"
                      onClick={() => void tickets.refetch()}>
                      Retry
                   </Button>
-               }>
+               }
+               severity="error">
                {errorText(tickets.error)}
             </Alert>
          ) : data.length === 0 ? (
@@ -75,18 +75,18 @@ export default function SupportOnlyHomePage() {
                   No support requests yet.
                </Typography>
                <Button
+                  className="mt-4 normal-case"
                   component={Link}
                   to="/support-only/requests/create"
-                  variant="contained"
-                  className="mt-4 normal-case">
+                  variant="contained">
                   Create a request
                </Button>
             </Box>
          ) : (
             <Box
                className="responsive-scroll-region bg-surface border-border overflow-x-auto rounded-xl border"
-               role="region"
                aria-label="Support requests; scroll horizontally to see all columns"
+               role="region"
                tabIndex={0}>
                <table className="w-full min-w-160 text-left">
                   <thead className="border-border border-b">
@@ -102,8 +102,8 @@ export default function SupportOnlyHomePage() {
                   <tbody>
                      {data.map(ticket => (
                         <tr
-                           key={ticket.id}
-                           className="border-border border-b last:border-0">
+                           className="border-border border-b last:border-0"
+                           key={ticket.id}>
                            <td className="text-content px-4 py-4 text-sm font-medium">
                               {ticket.subject}
                            </td>
@@ -115,8 +115,8 @@ export default function SupportOnlyHomePage() {
                            </td>
                            <td className="px-4 py-4">
                               <SupportChip
-                                 kind="status"
                                  value={ticket.status}
+                                 kind="status"
                               />
                            </td>
                            <td className="text-muted px-4 py-4 text-sm whitespace-nowrap">
@@ -124,11 +124,11 @@ export default function SupportOnlyHomePage() {
                            </td>
                            <td className="px-4 py-4 text-right">
                               <Button
+                                 className="normal-case"
                                  component={Link}
-                                 to={`/support-only/requests/${ticket.id}`}
                                  size="small"
-                                 variant="outlined"
-                                 className="normal-case">
+                                 to={`/support-only/requests/${ticket.id}`}
+                                 variant="outlined">
                                  View
                               </Button>
                            </td>
@@ -143,17 +143,17 @@ export default function SupportOnlyHomePage() {
                      </Typography>
                      <Box className="flex gap-2">
                         <Button
-                           size="small"
                            disabled={page <= 1 || tickets.isFetching}
+                           size="small"
                            onClick={() => setPage(current => current - 1)}>
                            Previous
                         </Button>
                         <Button
-                           size="small"
                            disabled={
                               page * meta.pageSize >= meta.totalCount ||
                               tickets.isFetching
                            }
+                           size="small"
                            onClick={() => setPage(current => current + 1)}>
                            Next
                         </Button>

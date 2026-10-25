@@ -10,6 +10,7 @@ export type Notification = {
    createdAt: string
    jobId: string | null
    applicationId: string | null
+   companyRequestId: string | null
    supportTicketId: string | null
    conversationId: string | null
    job?: { slug: string } | null

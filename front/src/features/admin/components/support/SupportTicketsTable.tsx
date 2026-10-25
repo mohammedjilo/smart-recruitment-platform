@@ -36,23 +36,23 @@ const SupportTicketsTable = ({
 
    return (
       <DataTable
-         rows={tickets}
          columns={getSupportColumns(ticketId => navigate(`/admin/support/${ticketId}`))}
-         getRowKey={ticket => ticket.id}
-         isLoading={isLoading}
-         isFetching={isFetching}
-         queryState={queryState}
-         onRetry={onRetry}
-         pagination={pagination}
-         onPageChange={onPageChange}
-         itemLabel="tickets"
          emptyState={
             <Box className="p-10 text-center">
-               <Typography className="text-sm! text-muted!">
+               <Typography className="text-sm!" color="textSecondary">
                   No support requests found.
                </Typography>
             </Box>
          }
+         getRowKey={ticket => ticket.id}
+         isFetching={isFetching}
+         isLoading={isLoading}
+         itemLabel="tickets"
+         pagination={pagination}
+         queryState={queryState}
+         rows={tickets}
+         onPageChange={onPageChange}
+         onRetry={onRetry}
       />
    )
 }

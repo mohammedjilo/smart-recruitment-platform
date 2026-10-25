@@ -69,11 +69,28 @@ const renderRoutes = (element: React.ReactNode, store = createStore()) =>
       <Provider store={store}>
          <MemoryRouter initialEntries={["/admin/private"]}>
             <Routes>
-               <Route path="/admin/private" element={element} />
-               <Route path="/admin/forbidden" element={<div>Forbidden route</div>} />
-               <Route path="/login" element={<div>Login route</div>} />
-               <Route path="/dashboard" element={<div>Dashboard route</div>} />
-               <Route path="*" element={<div>Unknown route</div>} />
+               <Route element={element} path="/admin/private" />
+               <Route element={<div>Forbidden route</div>} path="/admin/forbidden" />
+               <Route element={<div>Login route</div>} path="/login" />
+               <Route element={<div>Dashboard route</div>} path="/dashboard" />
+               <Route element={<div>Unknown route</div>} path="*" />
+            </Routes>
+         </MemoryRouter>
+      </Provider>
+   )
+
+const renderPermissionRoute = (
+   element: React.ReactNode,
+   store = createStore()
+) =>
+   render(
+      <Provider store={store}>
+         <MemoryRouter initialEntries={["/admin/private"]}>
+            <Routes>
+               <Route element={<AdminGuard />}>
+                  <Route element={element} path="/admin/private" />
+               </Route>
+               <Route element={<div>Forbidden route</div>} path="/admin/forbidden" />
             </Routes>
          </MemoryRouter>
       </Provider>
@@ -91,7 +108,12 @@ describe("admin guard characterization", () => {
    })
 
    it("renders guarded content when the required permission is present", () => {
-      renderRoutes(
+      query.data = {
+         status: "success",
+         data: { permissions: [ADMIN_PERMISSIONS.VIEW_USERS] }
+      }
+      query.currentData = query.data
+      renderPermissionRoute(
          <PermissionGuard permission={ADMIN_PERMISSIONS.VIEW_USERS}>
             <div>Users workspace</div>
          </PermissionGuard>,
@@ -102,7 +124,9 @@ describe("admin guard characterization", () => {
    })
 
    it("redirects to the forbidden route when permission is absent", async () => {
-      renderRoutes(
+      query.data = { status: "success", data: { permissions: [] } }
+      query.currentData = query.data
+      renderPermissionRoute(
          <PermissionGuard permission={ADMIN_PERMISSIONS.VIEW_USERS}>
             <div>Users workspace</div>
          </PermissionGuard>
@@ -113,7 +137,12 @@ describe("admin guard characterization", () => {
    })
 
    it("allows a route when any listed permission is present", () => {
-      renderRoutes(
+      query.data = {
+         status: "success",
+         data: { permissions: [ADMIN_PERMISSIONS.VIEW_COMPANIES] }
+      }
+      query.currentData = query.data
+      renderPermissionRoute(
          <PermissionGuard
             permissions={[
                ADMIN_PERMISSIONS.VIEW_USERS,
@@ -142,8 +171,8 @@ describe("admin guard characterization", () => {
                   <Routes>
                      <Route element={<AdminGuard />}>
                         <Route
-                           path="/admin/private"
                            element={<div>Admin workspace</div>}
+                           path="/admin/private"
                         />
                      </Route>
                   </Routes>

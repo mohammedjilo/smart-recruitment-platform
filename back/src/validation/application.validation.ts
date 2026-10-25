@@ -46,7 +46,7 @@ export const applicationListQuerySchema = z.object({
       "WITHDRAWN",
     ])
     .optional(),
-  matchScore: z.enum(["HIGH", "GOOD", "FAIR", "LOW", "UNSCORED"]).optional(),
+  matchScore: z.enum(["HIGH", "GOOD", "FAIR", "LOW"]).optional(),
   sortOrder: z.enum(["asc", "desc"]).optional().default("desc"),
 });
 
@@ -65,6 +65,7 @@ export const companyApplicationQuerySchema = z.object({
       "WITHDRAWN",
     ])
     .optional(),
+  matchScore: z.enum(["HIGH", "GOOD", "FAIR", "LOW"]).optional(),
   search: z.string().trim().max(120).optional(),
 });
 

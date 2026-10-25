@@ -23,9 +23,9 @@ const CandidateInformation = ({ application, fullName }: Props) => (
          </Box>
       </Box>
       <Box className="space-y-3">
-         <DetailRow label="Job" value={application.job.title} />
-         <DetailRow label="Candidate" value={fullName} />
-         <DetailRow label="Email" value={application.user.email} />
+         <DetailRow value={application.job.title} label="Job" />
+         <DetailRow value={fullName} label="Candidate" />
+         <DetailRow value={application.user.email} label="Email" />
       </Box>
    </Box>
 )

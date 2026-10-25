@@ -18,10 +18,10 @@ vi.mock("@/features/company/services/companyApiCalls", () => ({
 }))
 
 vi.mock("@/utils/swal", () => ({ showAlert: vi.fn() }))
-vi.mock("@/features/company/components/createJob/JobTips", () => ({
+vi.mock("@/features/company/components/JobForm/steps/JobTips", () => ({
    default: () => null
 }))
-vi.mock("@/features/company/components/createJob/QuestionTypesPreview", () => ({
+vi.mock("@/features/company/components/JobForm/steps/QuestionTypesPreview", () => ({
    default: () => null
 }))
 
@@ -48,19 +48,35 @@ describe("JobForm characterization", () => {
       const user = userEvent.setup()
       render(<JobForm mode="create" />)
 
+      const title = screen.getByPlaceholderText("e.g. Frontend Developer")
+      fireEvent.change(title, { target: { value: "F" } })
+      fireEvent.change(title, { target: { value: "" } })
+      expect(screen.queryByText("Title is required")).not.toBeInTheDocument()
+
       await user.click(screen.getByRole("button", { name: "Next" }))
 
-      expect(screen.getByText("Title is required")).toBeInTheDocument()
+      expect(screen.getAllByText("Title is required").length).toBeGreaterThan(0)
       expect(screen.getByText("Job Information")).toBeInTheDocument()
+      expect(
+         screen.getByText("Title is required").closest('[aria-live="assertive"]')
+      ).toBeNull()
       expect(createApplication).not.toHaveBeenCalled()
+
+      fireEvent.change(screen.getByPlaceholderText("e.g. Frontend Developer"), {
+         target: { value: "Frontend Engineer" }
+      })
+
+      await waitFor(() =>
+         expect(screen.queryByText("Title is required")).not.toBeInTheDocument()
+      )
    })
 
    it("initializes edit fields from supplied job data", () => {
       render(
          <JobForm
-            mode="edit"
             initialData={{ form: validForm, questions: [] }}
             jobId="job-7"
+            mode="edit"
          />
       )
 
@@ -78,8 +94,8 @@ describe("JobForm characterization", () => {
       const user = userEvent.setup()
       render(
          <JobForm
-            mode="create"
             initialData={{ form: validForm, questions: [] }}
+            mode="create"
          />
       )
 
@@ -112,10 +128,10 @@ describe("JobForm characterization", () => {
       const user = userEvent.setup()
       render(
          <JobForm
-            mode="edit"
             initialData={{ form: validForm, questions: [] }}
-            jobId="job-7"
             initialStep={3}
+            jobId="job-7"
+            mode="edit"
          />
       )
 
@@ -152,9 +168,9 @@ describe("JobForm characterization", () => {
       })
       render(
          <JobForm
-            mode="create"
             initialData={{ form: validForm, questions: [] }}
             initialStep={3}
+            mode="create"
          />
       )
 

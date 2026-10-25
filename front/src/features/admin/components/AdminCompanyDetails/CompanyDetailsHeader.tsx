@@ -1,4 +1,5 @@
 import {
+   ArrowBack,
    CalendarMonthOutlined,
    EmailOutlined,
    LocationOnOutlined,
@@ -7,13 +8,15 @@ import {
    ShieldOutlined
 } from "@mui/icons-material"
 
-import { Avatar, Box, Button, Menu, MenuItem, Typography } from "@mui/material"
+import { Avatar, Box, Button, Typography } from "@mui/material"
 
-import { useState } from "react"
+import { useNavigate } from "react-router-dom"
 
 import type { Company } from "@/types/company"
 import type { CompanyApprovalStatus, CompanyStatus } from "@/types/admin"
 import { useUpdateCompanyStatusByAdminMutation } from "@/features/admin/services/adminApiCalls"
+import { usePermissions } from "@/features/admin/authorization/usePermissions"
+import { ADMIN_PERMISSIONS } from "@/types/adminPermissions"
 import { showAlert } from "@/utils/swal"
 import { getMutationErrorState, getMutationState } from "@/utils/mutationState"
 import { getMutationPresentation } from "@/utils/presentationPolicy"
@@ -63,7 +66,9 @@ const InfoItem = ({
 }
 
 const CompanyDetailsHeader = ({ company }: Props) => {
-   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null)
+   const navigate = useNavigate()
+   const { hasPermission } = usePermissions()
+   const canChangeStatus = hasPermission(ADMIN_PERMISSIONS.SUSPEND_COMPANIES)
    const [updateCompanyStatus, statusResult] = useUpdateCompanyStatusByAdminMutation()
    const statusState = getMutationState(statusResult)
    const statusPresentation = getMutationPresentation(statusState, {
@@ -72,20 +77,10 @@ const CompanyDetailsHeader = ({ company }: Props) => {
    })
    const isUpdatingStatus = statusPresentation.category === "loading"
 
-   const handleOpenMenu = (event: React.MouseEvent<HTMLElement>) => {
-      setAnchorEl(event.currentTarget)
-   }
-
-   const handleCloseMenu = () => {
-      setAnchorEl(null)
-   }
-
    const handleStatusChange = async () => {
       const nextStatus: CompanyStatus =
          company.status === "ACTIVE" ? "DEACTIVATED" : "ACTIVE"
       const actionLabel = nextStatus === "ACTIVE" ? "reactivate" : "deactivate"
-
-      handleCloseMenu()
 
       const confirmation = await showAlert({
          type: "confirm",
@@ -117,10 +112,10 @@ const CompanyDetailsHeader = ({ company }: Props) => {
             })
          }
       } catch (error) {
-         const errorPresentation = getMutationPresentation(
-            getMutationErrorState(error),
-            { surface: "action", importance: "important" }
-         )
+         const errorPresentation = getMutationPresentation(getMutationErrorState(error), {
+            surface: "action",
+            importance: "important"
+         })
          if (errorPresentation.category === "silent") return
          await showAlert({
             type: "error",
@@ -133,47 +128,38 @@ const CompanyDetailsHeader = ({ company }: Props) => {
    return (
       <Box>
          {/* Actions */}
-         <Box className="mb-3 flex justify-end gap-2">
-            <Button
-               variant="outlined"
-               onClick={handleOpenMenu}
-               className="border-border! bg-surface! text-content! capitalize!">
-               More Actions
-            </Button>
+         <Box className="mb-3 flex flex-wrap justify-end gap-2">
+            {canChangeStatus && (
+               <Button
+                  className="normal-case!"
+                  disabled={isUpdatingStatus}
+                  color={company.status === "ACTIVE" ? "error" : "success"}
+                  variant="contained"
+                  onClick={handleStatusChange}>
+                  {company.status === "ACTIVE" ? "Deactivate" : "Reactivate"}
+               </Button>
+            )}
 
-            <Menu
-               anchorEl={anchorEl}
-               open={Boolean(anchorEl)}
-               onClose={handleCloseMenu}>
-               <MenuItem
-                  onClick={handleStatusChange}
-                  disabled={isUpdatingStatus}>
-                  {company.status === "ACTIVE"
-                     ? "Deactivate Company"
-                     : "Reactivate Company"}
-               </MenuItem>
-            </Menu>
+            <Button
+               className="px-5! normal-case!"
+               color="primary"
+               startIcon={<ArrowBack />}
+               variant="outlined"
+               onClick={() => navigate("/admin/companies")}>
+               Back to Companies
+            </Button>
          </Box>
 
          {/* Main Header */}
-         <Box className="rounded-xl border bg-surface p-5 shadow-sm">
+         <Box className="bg-surface rounded-xl border p-5 shadow-sm">
             <Box className="grid grid-cols-1 gap-6 xl:grid-cols-[1.15fr_0.7fr_0.85fr]">
                {/* Company Main Info */}
                <Box className="flex flex-col gap-5 sm:flex-row">
                   <Avatar
-                     src={company.logoUrl || undefined}
+                     className="h-35! w-35! rounded-[10px]! bg-[#F8FAFC]! text-[32px]! font-bold! text-[#5425D4]! border! border-[#E2E8F0]!"
                      alt={company.companyName}
-                     variant="rounded"
-                     sx={{
-                        width: 140,
-                        height: 140,
-                        borderRadius: "10px",
-                        border: "1px solid #E2E8F0",
-                        backgroundColor: "#F8FAFC",
-                        color: "#5425D4",
-                        fontSize: "32px",
-                        fontWeight: 700
-                     }}>
+                     src={company.logoUrl || undefined}
+                     variant="rounded">
                      {getInitials(company.companyName)}
                   </Avatar>
 
@@ -199,42 +185,42 @@ const CompanyDetailsHeader = ({ company }: Props) => {
                {/* Contact Information */}
                <Box className="grid gap-5 border-t pt-6 xl:border-t-0 xl:border-l xl:pt-1 xl:pl-7">
                   <InfoItem
+                     value={company.phone}
                      icon={<PhoneOutlined fontSize="small" />}
                      label="Phone"
-                     value={company.phone}
                   />
 
                   <InfoItem
+                     value={company.email}
                      icon={<EmailOutlined fontSize="small" />}
                      label="Email"
-                     value={company.email}
                   />
 
                   <InfoItem
+                     value={company.website || "Not provided"}
                      icon={<PublicOutlined fontSize="small" />}
                      label="Website"
-                     value={company.website || "Not provided"}
                   />
                </Box>
 
                {/* Additional Information */}
                <Box className="grid gap-5 border-t pt-6 xl:border-t-0 xl:border-l xl:pt-1 xl:pl-7">
                   <InfoItem
+                     value={company.location || "Not provided"}
                      icon={<LocationOnOutlined fontSize="small" />}
                      label="Location"
-                     value={company.location || "Not provided"}
                   />
 
                   <InfoItem
+                     value={formatCreatedAt(company.createdAt)}
                      icon={<CalendarMonthOutlined fontSize="small" />}
                      label="Joined On"
-                     value={formatCreatedAt(company.createdAt)}
                   />
 
                   <InfoItem
+                     value={<CompanyStatusChip status={company.status} />}
                      icon={<ShieldOutlined fontSize="small" />}
                      label="Status"
-                     value={<CompanyStatusChip status={company.status} />}
                   />
                </Box>
             </Box>

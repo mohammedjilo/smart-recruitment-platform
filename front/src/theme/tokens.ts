@@ -3,20 +3,20 @@ export type Role = "user" | "company" | "admin"
 export interface RoleColors {
    primary: string
    primaryDark: string // hover
-   primaryTint: string // خلفيات خفيفة
+   primaryTint: string // Light backgrounds.
 }
 
 export interface Neutrals {
-   bg: string // خلفية الصفحة
-   surface: string // الكروت والسايدبار
-   border: string // الحدود
-   text: string // النص الأساسي
-   muted: string // النص الثانوي
+   bg: string // Page background.
+   surface: string // Cards and sidebar.
+   border: string // Borders.
+   text: string // Primary text.
+   muted: string // Secondary text.
 }
 
-// ─── خيارات المحايدات ───────────────────────────────
-// A: خفيف ونظيف، والأزرق يبرز في الأزرار فقط (الموصى به)
-// B: خلفية أغمق قليلاً فتظهر الكروت البيضاء بوضوح أكبر
+// ─── Neutral palette options ───────────────────────────────
+// A: Light and clean; blue is emphasized only on buttons (recommended).
+// B: A slightly darker background makes white cards stand out more.
 const neutralOptions = {
    A: {
       bg: "#F8FAFC",
@@ -30,11 +30,11 @@ const neutralOptions = {
       surface: "#FFFFFF",
       border: "#CBD5E1",
       text: "#0F172A",
-      muted: "#475569" // أغمق لتحقيق تباين 4.5:1 على الخلفية
+      muted: "#475569" // Darker to achieve 4.5:1 contrast on the background.
    }
 } satisfies Record<string, Neutrals>
 
-// ← بدّل بين 'A' و 'B' من هنا فقط
+// Switch between 'A' and 'B' here.
 const ACTIVE_NEUTRALS: keyof typeof neutralOptions = "A"
 
 export const neutrals: Neutrals = neutralOptions[ACTIVE_NEUTRALS]

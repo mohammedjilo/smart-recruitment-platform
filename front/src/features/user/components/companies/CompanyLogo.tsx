@@ -10,9 +10,9 @@ type Props = {
 const CompanyLogo = ({ company }: Props) => {
    return (
       <Avatar
-         src={company.logoUrl ?? undefined}
+         className="h-14 w-14 shrink-0 rounded-xl border border-border bg-bg"
          alt={company.companyName}
-         className="h-14 w-14 shrink-0 rounded-xl border border-border bg-bg">
+         src={company.logoUrl ?? undefined}>
          {!company.logoUrl && <BusinessOutlinedIcon className="text-violet-600" />}
       </Avatar>
    )

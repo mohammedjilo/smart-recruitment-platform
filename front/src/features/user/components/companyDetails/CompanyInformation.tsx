@@ -27,33 +27,33 @@ const CompanyInformation = ({ company }: Props) => {
 
          <Box className="mt-5 space-y-4">
             <InformationRow
+               value={company.companyName}
                icon={<BusinessOutlinedIcon />}
                label="Company Name"
-               value={company.companyName}
             />
 
             <InformationRow
+               value={company.email}
                icon={<EmailOutlinedIcon />}
                label="Email"
-               value={company.email}
             />
 
             <InformationRow
+               value={company.phone}
                icon={<PhoneOutlinedIcon />}
                label="Phone"
-               value={company.phone}
             />
 
             <InformationRow
+               value={company.website || "—"}
                icon={<LanguageOutlinedIcon />}
                label="Website"
-               value={company.website || "—"}
             />
 
             <InformationRow
+               value={company.location || "—"}
                icon={<LocationOnOutlinedIcon />}
                label="Location"
-               value={company.location || "—"}
             />
          </Box>
       </Box>

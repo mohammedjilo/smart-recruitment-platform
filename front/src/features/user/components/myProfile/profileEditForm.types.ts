@@ -7,8 +7,9 @@ import type {
    UserLanguage
 } from "@/types/user"
 import type { LanguageLevel } from "@/types/language"
+import type { CompleteUserProfile } from "@/types/user"
 
-export type ProfileEditFormType =
+export type EditableProfileFormType =
    | "professionalProfile"
    | "skill"
    | "language"
@@ -17,6 +18,10 @@ export type ProfileEditFormType =
    | "project"
    | "certificate"
 
+export type ProfileEditFormType =
+   | "personalInformation"
+   | EditableProfileFormType
+
 export type SkillProfileEditData = {
    id: string
    skillName: string
@@ -24,7 +29,20 @@ export type SkillProfileEditData = {
    allSkills: string[]
 }
 
+export type PersonalInformationEditData = Pick<
+   CompleteUserProfile,
+   | "phone"
+   | "birthdate"
+   | "country"
+   | "countryCode"
+   | "state"
+   | "stateCode"
+   | "city"
+   | "cityGeonameId"
+>
+
 export type ProfileEditDataByType = {
+   personalInformation: PersonalInformationEditData
    professionalProfile: ProfessionalProfile
    skill: SkillProfileEditData
    language: UserLanguage

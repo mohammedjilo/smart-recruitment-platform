@@ -19,51 +19,51 @@ const SnapshotPersonalInfo = ({ snapshot }: SnapshotPersonalInfoProps) => {
       <Box className="overflow-hidden rounded-xl border bg-surface">
          <Box className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 [&>*:not(:last-child)]:border-b lg:[&>*:nth-child(-n+4)]:border-b sm:[&>*:nth-child(-n+6)]:border-b lg:[&>*:nth-child(4n+1)]:border-r lg:[&>*:nth-child(4n+2)]:border-r lg:[&>*:nth-child(4n+3)]:border-r lg:[&>*:nth-child(n+5)]:border-b-0 sm:[&>*:nth-child(odd)]:border-r">
             <InfoItem
+               value={snapshot.firstName}
                icon={<PersonOutlineOutlinedIcon />}
                label="First Name"
-               value={snapshot.firstName}
             />
 
             <InfoItem
+               value={snapshot.lastName}
                icon={<PersonOutlineOutlinedIcon />}
                label="Last Name"
-               value={snapshot.lastName}
             />
 
             <InfoItem
+               value={snapshot.email}
                icon={<EmailOutlinedIcon />}
                label="Email"
-               value={snapshot.email}
             />
 
             <InfoItem
+               value={snapshot.phone}
                icon={<PhoneOutlinedIcon />}
                label="Phone"
-               value={snapshot.phone}
             />
 
             <InfoItem
+               value={snapshot.country}
                icon={<PublicOutlinedIcon />}
                label="Country"
-               value={snapshot.country}
             />
 
             <InfoItem
+               value={snapshot.age}
                icon={<CakeOutlinedIcon />}
                label="Age"
-               value={snapshot.age}
             />
 
             <InfoItem
+               value={snapshot.jobTitle}
                icon={<BusinessCenterOutlinedIcon />}
                label="Job Title"
-               value={snapshot.jobTitle}
             />
 
             <InfoItem
+               value={formatExperience(snapshot.yearsOfExperience)}
                icon={<ScheduleOutlinedIcon />}
                label="Years of Experience"
-               value={formatExperience(snapshot.yearsOfExperience)}
             />
          </Box>
       </Box>

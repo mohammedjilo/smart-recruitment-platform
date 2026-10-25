@@ -13,9 +13,9 @@ const EmploymentTypeChip = ({ employmentType }: EmploymentTypeChipProps) => {
 
    return (
       <Chip
+         className={`w-22! rounded-md! text-xs! ${config?.className ?? "bg-slate-100 text-slate-600"}`}
          label={config?.label ?? employmentType}
          size="small"
-         className={`w-22! rounded-md! text-xs! ${config?.className ?? "bg-slate-100 text-slate-600"}`}
       />
    )
 }

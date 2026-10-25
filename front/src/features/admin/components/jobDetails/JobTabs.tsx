@@ -27,15 +27,15 @@ const JobTabs = ({ activeTab, applicationsCount, onChange }: JobTabsProps) => {
       <Box className="border-b border-border">
          <Tabs
             value={activeTab}
-            onChange={(_, value) => onChange(value)}
+            scrollButtons="auto"
             variant="scrollable"
-            scrollButtons="auto">
+            onChange={(_, value) => onChange(value)}>
             {tabs.map(tab => (
                <Tab
+                  className="min-h-12! px-5! text-xs! font-medium! normal-case!"
                   key={tab.value}
                   value={tab.value}
                   label={tab.label}
-                  className="min-h-12! px-5! text-xs! font-medium! normal-case!"
                />
             ))}
          </Tabs>

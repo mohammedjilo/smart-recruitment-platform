@@ -20,14 +20,14 @@ const ApplicationResume = ({ application }: { application: CompanyApplication })
          </Box>
          {application.cvUrl && (
             <Button
-               component="a"
+               className="normal-case!"
                href={application.cvUrl}
-               target="_blank"
+               color="primary"
+               component="a"
                rel="noopener noreferrer"
                size="small"
-               variant="outlined"
-               color="primary"
-               className="normal-case!">
+               target="_blank"
+               variant="outlined">
                View Resume
             </Button>
          )}

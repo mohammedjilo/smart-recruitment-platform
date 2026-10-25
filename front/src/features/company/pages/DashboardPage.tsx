@@ -1,3 +1,4 @@
+import { Box, Button, Typography } from "@mui/material"
 import WorkOutlineRoundedIcon from "@mui/icons-material/WorkOutlineRounded"
 import PeopleOutlineRoundedIcon from "@mui/icons-material/PeopleOutlineRounded"
 import CalendarTodayOutlinedIcon from "@mui/icons-material/CalendarTodayOutlined"
@@ -29,17 +30,22 @@ const DashboardPage = () => {
       queryPresentation.category === "resource_not_found"
    ) {
       return (
-         <div className="flex min-h-100 flex-col items-center justify-center">
-            <p className="text-sm text-[#667085]" role="alert" aria-live="assertive">
+         <Box className="flex min-h-100 flex-col items-center justify-center">
+            <Typography
+               className="text-sm!"
+               aria-live="assertive"
+               color="textSecondary"
+               role="alert">
                {queryPresentation.message}
-            </p>
+            </Typography>
 
-            <button
-               onClick={query.refetch}
-               className="app-button-primary mt-4 rounded-lg px-4 py-2 text-sm font-medium">
+            <Button
+               className="mt-4! rounded-lg! px-4! py-2! text-sm! font-medium! normal-case!"
+               variant="contained"
+               onClick={query.refetch}>
                Try Again
-            </button>
-         </div>
+            </Button>
+         </Box>
       )
    }
 
@@ -54,69 +60,72 @@ const DashboardPage = () => {
 
    if (!dashboard) {
       return (
-         <div className="flex min-h-100 items-center justify-center text-sm text-[#667085]">
+         <Box className="flex min-h-100 items-center justify-center text-sm text-[#667085]">
             Dashboard data could not be determined.
-         </div>
+         </Box>
       )
    }
 
    return (
-      <div className="w-full">
+      <Box className="w-full">
          {queryPresentation.category === "stale_error" && (
-            <div className="mb-5 flex items-center justify-between gap-3 rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-900" role="status" aria-live="polite">
+            <Box
+               className="mb-5 flex items-center justify-between gap-3 rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-900"
+               aria-live="polite"
+               role="status">
                <span>{queryPresentation.message}</span>
                <button
-                  onClick={query.refetch}
-                  className="font-semibold">
+                  className="font-semibold"
+                  onClick={query.refetch}>
                   Retry
                </button>
-            </div>
+            </Box>
          )}
          {/* ===================== */}
          {/* Stats */}
          {/* ===================== */}
 
-         <div className="grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-3">
+         <Box className="grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-3">
             <StatCard
-               title="Active Jobs"
                value={dashboard.stats.activeJobs}
                description="Open positions"
-               icon={<WorkOutlineRoundedIcon sx={{ fontSize: 28 }} />}
+               icon={<WorkOutlineRoundedIcon className="text-[28px]!" />}
+               title="Active Jobs"
             />
 
             <StatCard
-               title="Total Applications"
                value={dashboard.stats.totalApplications}
                description="All jobs"
-               icon={<PeopleOutlineRoundedIcon sx={{ fontSize: 29 }} />}
+               icon={<PeopleOutlineRoundedIcon className="text-[29px]!" />}
+               title="Total Applications"
             />
 
             <StatCard
-               title="Interviews"
                value={dashboard.stats.interviews}
                description="Scheduled"
-               icon={<CalendarTodayOutlinedIcon sx={{ fontSize: 26 }} />}
+               icon={<CalendarTodayOutlinedIcon className="text-[26px]!" />}
+               title="Interviews"
             />
-         </div>
+         </Box>
 
          {/* ===================== */}
          {/* Applications + Jobs */}
          {/* ===================== */}
 
-         <div className="mt-5 grid grid-cols-1 gap-5 xl:grid-cols-[1.5fr_1fr]">
+         <Box className="mt-5 grid grid-cols-1 gap-5 xl:grid-cols-[1.5fr_1fr]">
             <RecentApplications applications={dashboard.recentApplications} />
 
             <RecentJobs jobs={dashboard.recentJobs} />
-         </div>
+         </Box>
 
          {/* ===================== */}
          {/* Top Jobs */}
          {/* ===================== */}
 
-         <div className="mt-5">
+         <Box className="mt-5">
             <TopJobs jobs={dashboard.topJobs} />
-         </div>
-      </div>
+         </Box>
+      </Box>
    )
 }
 

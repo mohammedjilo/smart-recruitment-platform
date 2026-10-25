@@ -263,13 +263,14 @@ const extendedSmartApi = smartApi.injectEndpoints({
          GetJobApplicationsByAdminResult,
          { id: string } & GetJobApplicationsParams
       >({
-         query: ({ id, page = 1, search, status, experience }) => ({
+         query: ({ id, page = 1, search, status, experience, matchScore }) => ({
             url: `/api/admin/jobs/${id}/applications`,
             params: {
                page,
                search: search || undefined,
                status: status === "ALL" ? undefined : status,
-               experience: experience === "ALL" ? undefined : experience
+               experience: experience === "ALL" ? undefined : experience,
+               matchScore: matchScore === "ALL" ? undefined : matchScore
             }
          }),
          providesTags: result => [
@@ -282,13 +283,14 @@ const extendedSmartApi = smartApi.injectEndpoints({
          GetApplicationsByAdminResult,
          GetApplicationsByAdminQuery | void
       >({
-         query: ({ page = 1, search, status, experience } = {}) => ({
+         query: ({ page = 1, search, status, experience, matchScore } = {}) => ({
             url: "/api/admin/applications",
             params: {
                page,
                search: search || undefined,
                status: status === "ALL" ? undefined : status,
-               experience: experience === "ALL" ? undefined : experience
+               experience: experience === "ALL" ? undefined : experience,
+               matchScore: matchScore === "ALL" ? undefined : matchScore
             }
          }),
          providesTags: result => [

@@ -30,23 +30,15 @@ const CompanyCard = ({ company }: Props) => {
    }
 
    return (
-      <Box className="bg-surface flex min-h-62.5 flex-col overflow-hidden rounded-xl border shadow-sm transition-all duration-200 hover:-translate-y-1 hover:shadow-md">
+      <Box className="bg-surface border-border flex min-h-62.5 flex-col overflow-hidden rounded-xl border shadow-sm transition-all duration-200 hover:-translate-y-1 hover:shadow-md">
          {/* Top section */}
          <Box className="flex-1 px-5 pt-5">
             <Box className="flex items-start justify-between">
                <Avatar
-                  src={company.logoUrl || undefined}
+                  className="h-14.5! w-14.5! rounded-full! bg-[#F5F3FF]! text-lg! font-bold! text-[#5425D4]!"
                   alt={company.companyName}
-                  variant="rounded"
-                  sx={{
-                     width: 58,
-                     height: 58,
-                     borderRadius: "50%",
-                     backgroundColor: "#F5F3FF",
-                     color: "#5425D4",
-                     fontWeight: 700,
-                     fontSize: "18px"
-                  }}>
+                  src={company.logoUrl || undefined}
+                  variant="rounded">
                   {getInitials(company.companyName)}
                </Avatar>
 
@@ -58,7 +50,7 @@ const CompanyCard = ({ company }: Props) => {
             </Typography>
 
             <Box className="text-muted mt-2 flex items-center gap-1">
-               <LocationOnOutlinedIcon sx={{ fontSize: 15 }} />
+               <LocationOnOutlinedIcon className="text-[15px]!" />
 
                <Typography
                   className="truncate! text-xs!"
@@ -78,12 +70,7 @@ const CompanyCard = ({ company }: Props) => {
          <Box className="border-border mt-4 flex items-center justify-between border-t px-5 py-3">
             <Box className="flex items-center gap-5">
                <Box className="flex items-center gap-1.5">
-                  <WorkOutlineOutlinedIcon
-                     sx={{
-                        fontSize: 17,
-                        color: "#64748B"
-                     }}
-                  />
+                  <WorkOutlineOutlinedIcon className="text-[17px]! text-[#64748B]!" />
 
                   <Typography
                      className="text-xs!"
@@ -93,12 +80,7 @@ const CompanyCard = ({ company }: Props) => {
                </Box>
 
                <Box className="flex items-center gap-1.5">
-                  <CalendarMonthOutlinedIcon
-                     sx={{
-                        fontSize: 17,
-                        color: "#64748B"
-                     }}
-                  />
+                  <CalendarMonthOutlinedIcon className="text-[17px]! text-[#64748B]!" />
 
                   <Typography
                      className="text-xs! whitespace-nowrap!"
@@ -109,12 +91,9 @@ const CompanyCard = ({ company }: Props) => {
             </Box>
 
             <IconButton
+               className="rounded-lg! border! border-[#E2E8F0]!"
                size="small"
-               onClick={handleMenuOpen}
-               sx={{
-                  border: "1px solid #E2E8F0",
-                  borderRadius: "8px"
-               }}>
+               onClick={handleMenuOpen}>
                <MoreHorizIcon fontSize="small" />
             </IconButton>
 

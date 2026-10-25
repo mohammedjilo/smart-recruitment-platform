@@ -39,12 +39,6 @@ export const assignSupportTicketSchema = z.object({
   assignedAdminId: z.string().trim().min(1, "Assigned admin id is required"),
 });
 
-export const supportCategoriesQuerySchema = z.object({
-  page: z.coerce.number().int().min(1).optional().default(1),
-  pageSize: z.coerce.number().int().min(1).max(50).optional().default(20),
-  audience: z.enum(["USER", "COMPANY"]).optional(),
-});
-
 export const supportAdminTicketsQuerySchema = z.object({
   page: z.coerce.number().int().min(1).optional().default(1),
   pageSize: z.coerce.number().int().min(1).max(50).optional().default(20),
@@ -56,25 +50,4 @@ export const supportAdminTicketsQuerySchema = z.object({
   assignedAdminId: z
     .union([z.literal("UNASSIGNED"), z.string().trim().min(1)])
     .optional(),
-});
-
-export const createSupportCategorySchema = z.object({
-  name: z
-    .string()
-    .trim()
-    .min(2, "Category name must contain at least 2 characters")
-    .max(100, "Category name must be at most 100 characters"),
-  audience: z.enum(["USER", "COMPANY"]).optional().default("USER"),
-  active: z.boolean().optional().default(true),
-});
-
-export const updateSupportCategorySchema = z.object({
-  name: z
-    .string()
-    .trim()
-    .min(2, "Category name must contain at least 2 characters")
-    .max(100, "Category name must be at most 100 characters")
-    .optional(),
-  audience: z.enum(["USER", "COMPANY"]).optional(),
-  active: z.boolean().optional(),
 });

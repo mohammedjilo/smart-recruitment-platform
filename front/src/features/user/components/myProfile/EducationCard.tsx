@@ -21,11 +21,11 @@ const EducationCard = ({ educations }: Props) => {
             <Box className="mb-2.5 flex items-center justify-between">
                <Box className="flex items-center gap-1">
                   <SchoolOutlinedIcon
-                     className="text-mui-purple"
+                     className="text-violet-600"
                      fontSize="small"
                   />
 
-                  <Typography className="text-sm! text-content">Education</Typography>
+                  <Typography className="text-content text-sm!">Education</Typography>
                </Box>
 
                <ProfileCardMenu
@@ -40,12 +40,12 @@ const EducationCard = ({ educations }: Props) => {
                <Box className="flex flex-col gap-3">
                   {educations.map((education, index) => (
                      <Box
-                        key={education.id}
-                        className="relative pb-1 pl-3 last:pb-0">
-                        <Box className="absolute top-1 left-px h-2 w-2 rounded-full bg-violet-600" />
+                        className="relative pb-1 pl-3 last:pb-0"
+                        key={education.id}>
+                        <Box className="absolute top-2.5 left-0 h-2 w-2 -translate-y-1/2 rounded-full bg-violet-600" />
 
                         {index !== educations.length - 1 && (
-                           <Box className="absolute top-3.5 -bottom-4.5 left-2 w-px bg-slate-200" />
+                           <Box className="absolute top-3.5 -bottom-4.5 left-[3.5px] w-px bg-slate-200" />
                         )}
 
                         <Box className="flex flex-wrap justify-between gap-2">
@@ -56,15 +56,15 @@ const EducationCard = ({ educations }: Props) => {
                                  </Typography>
 
                                  <ProfileCardMenu
-                                    formType="education"
                                     editData={education}
+                                    formType="education"
                                  />
                               </Box>
 
                               <Typography
                                  className="text-xs!"
                                  color="textSecondary">
-                                 {education.major} آ· {education.university}
+                                 {education.major} · {education.university}
                               </Typography>
                               <Chip
                                  className="mt-2!"

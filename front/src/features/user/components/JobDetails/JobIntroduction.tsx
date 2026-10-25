@@ -35,9 +35,9 @@ const JobIntroduction = ({ job }: JobIntroductionProps) => {
                {job.company.logoUrl ? (
                   <Avatar
                      className="h-full! w-full! object-contain"
-                     variant="rounded"
-                     src={job.company.logoUrl}
                      alt={job.company.companyName}
+                     src={job.company.logoUrl}
+                     variant="rounded"
                   />
                ) : (
                   <span className="text-4xl font-bold text-[#4f20e8]">
@@ -52,8 +52,8 @@ const JobIntroduction = ({ job }: JobIntroductionProps) => {
                </Box>
 
                <Typography
-                  component="h1"
-                  className="text-content! text-[26px]! leading-[1.2]! font-bold! tracking-[-0.02em]!">
+                  className="text-[26px]! leading-[1.2]! font-bold! tracking-[-0.02em]!"
+                  component="h1">
                   {job.title}
                </Typography>
 
@@ -61,34 +61,29 @@ const JobIntroduction = ({ job }: JobIntroductionProps) => {
                   <span className="text-[17px] font-medium text-[#11162f]">
                      {job.company.companyName}
                   </span>
-                  <Verified sx={{ fontSize: 18, color: "#1477e8" }} />
+                  <Verified className="text-lg! text-[#1477e8]!" />
                </Box>
 
                <Box className="mt-4 flex flex-wrap items-center gap-x-5 gap-y-2 text-[14px] text-[#424b67]">
                   <Box className="flex items-center gap-2">
-                     <LocationOnOutlined sx={{ fontSize: 19, color: "#111936" }} />
+                     <LocationOnOutlined className="text-[19px]! text-[#111936]!" />
                      <span>{job.company.location}</span>
                   </Box>
                   <Box className="flex items-center gap-2">
-                     <WorkOutlined sx={{ fontSize: 19, color: "#111936" }} />
+                     <WorkOutlined className="text-[19px]! text-[#111936]!" />
                      <span>{job.employmentType}</span>
                   </Box>
                </Box>
 
                {skills.length > 0 && (
                   <Box className="mt-5 flex flex-wrap gap-2">
-                     {skills.slice(0, 4).map(skill => (
+                     {skills.map(skill => (
                         <span
-                           key={skill}
-                           className="rounded-md bg-[#f3f4f8] px-3 py-1.5 text-[13px] font-medium text-[#222a43]">
+                           className="rounded-md bg-[#f3f4f8] px-3 py-1.5 text-[13px] font-medium text-[#222a43]"
+                           key={skill}>
                            {skill}
                         </span>
                      ))}
-                     {skills.length > 4 && (
-                        <span className="rounded-md bg-[#f3f4f8] px-3 py-1.5 text-[13px] font-medium text-[#222a43]">
-                           +{skills.length - 4}
-                        </span>
-                     )}
                   </Box>
                )}
             </Box>
@@ -99,11 +94,11 @@ const JobIntroduction = ({ job }: JobIntroductionProps) => {
                </Box>
                <Box className="mt-1 text-[14px] text-[#424b67]">per year</Box>
                <Box className="mt-7 flex items-center gap-2 text-[14px] text-[#424b67]">
-                  <CalendarTodayOutlined sx={{ fontSize: 18 }} />
+                  <CalendarTodayOutlined className="text-lg!" />
                   <span>Posted on {postedDate}</span>
                </Box>
                <Box className="mt-5 flex items-center gap-2 text-[14px] text-[#424b67]">
-                  <AccessTimeOutlined sx={{ fontSize: 19 }} />
+                  <AccessTimeOutlined className="text-[19px]!" />
                   <span>Deadline</span>
                   <span className="font-medium text-red-500">{deadline}</span>
                </Box>

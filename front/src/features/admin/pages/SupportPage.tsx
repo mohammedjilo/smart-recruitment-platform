@@ -11,7 +11,6 @@ import type { RootState } from "@/redux/store"
 import SupportFilters, {
    type SupportAudience
 } from "@/features/admin/components/support/SupportFilters"
-import SupportHeader from "@/features/admin/components/support/SupportHeader"
 import SupportStats, {
    type SupportStatsValues
 } from "@/features/admin/components/support/SupportStats"
@@ -90,11 +89,10 @@ export default function SupportPage() {
 
    return (
       <Box className="w-full space-y-6">
-         <SupportHeader />
          {isLoading ? (
             <AdminStatsSkeleton
-               count={5}
                className="grid grid-cols-2 gap-3 md:grid-cols-5"
+               count={5}
             />
          ) : stats ? (
             <SupportStats stats={stats} />
@@ -103,8 +101,6 @@ export default function SupportPage() {
            queryPresentation.category === "access_denied" ||
            queryPresentation.category === "resource_not_found" ? (
             <Alert
-               severity="error"
-               role="alert"
                aria-live="assertive"
                action={
                   <Button
@@ -113,7 +109,9 @@ export default function SupportPage() {
                      onClick={() => void ticketsQuery.refetch()}>
                      Retry
                   </Button>
-               }>
+               }
+               role="alert"
+               severity="error">
                {queryPresentation.message}
             </Alert>
          ) : null}
@@ -123,10 +121,6 @@ export default function SupportPage() {
             adminsPresentation.category === "resource_not_found" ||
             adminsPresentation.category === "stale_error") && (
             <Alert
-               severity={
-                  adminsPresentation.category === "stale_error" ? "warning" : "error"
-               }
-               role={adminsPresentation.category === "stale_error" ? "status" : "alert"}
                aria-live={
                   adminsPresentation.category === "stale_error" ? "polite" : "assertive"
                }
@@ -137,6 +131,10 @@ export default function SupportPage() {
                      onClick={() => void adminsQuery.refetch()}>
                      Retry
                   </Button>
+               }
+               role={adminsPresentation.category === "stale_error" ? "status" : "alert"}
+               severity={
+                  adminsPresentation.category === "stale_error" ? "warning" : "error"
                }>
                {adminsPresentation.message}
             </Alert>
@@ -147,12 +145,6 @@ export default function SupportPage() {
             categoriesPresentation.category === "resource_not_found" ||
             categoriesPresentation.category === "stale_error") && (
             <Alert
-               severity={
-                  categoriesPresentation.category === "stale_error" ? "warning" : "error"
-               }
-               role={
-                  categoriesPresentation.category === "stale_error" ? "status" : "alert"
-               }
                aria-live={
                   categoriesPresentation.category === "stale_error"
                      ? "polite"
@@ -165,35 +157,36 @@ export default function SupportPage() {
                      onClick={() => void categoriesQuery.refetch()}>
                      Retry
                   </Button>
+               }
+               role={
+                  categoriesPresentation.category === "stale_error" ? "status" : "alert"
+               }
+               severity={
+                  categoriesPresentation.category === "stale_error" ? "warning" : "error"
                }>
                {categoriesPresentation.message}
             </Alert>
          )}
          {isLoading ? (
             <FiltersBarSkeleton
-               layout="grid"
                fields={["search", "control", "control", "control", "control", "control"]}
+               layout="grid"
             />
          ) : (
             <SupportFilters
-               search={search}
-               status={status}
-               priority={priority}
-               audience={audience}
-               categoryId={categoryId}
-               assignedAdminId={assignedAdminId}
                admins={admins}
+               assignedAdminId={assignedAdminId}
+               audience={audience}
                categories={categories}
+               categoryId={categoryId}
+               currentAdminId={currentAdminId}
                isLoadingAdmins={isLoadingAdmins}
                isLoadingCategories={isLoadingCategories}
-               currentAdminId={currentAdminId}
-               onSearchChange={setSearch}
-               onStatusChange={value => {
-                  setStatus(value)
-                  setPage(1)
-               }}
-               onPriorityChange={value => {
-                  setPriority(value)
+               priority={priority}
+               search={search}
+               status={status}
+               onAssignedAdminChange={value => {
+                  setAssignedAdminId(value)
                   setPage(1)
                }}
                onAudienceChange={value => {
@@ -204,20 +197,25 @@ export default function SupportPage() {
                   setCategoryId(value)
                   setPage(1)
                }}
-               onAssignedAdminChange={value => {
-                  setAssignedAdminId(value)
+               onPriorityChange={value => {
+                  setPriority(value)
+                  setPage(1)
+               }}
+               onSearchChange={setSearch}
+               onStatusChange={value => {
+                  setStatus(value)
                   setPage(1)
                }}
             />
          )}
          <SupportTicketsTable
-            tickets={tickets as TableTicket[]}
-            isLoading={isLoading}
             isFetching={ticketsQuery.isFetching}
-            onRetry={ticketsQuery.refetch}
-            queryState={queryState}
+            isLoading={isLoading}
             pagination={response?.meta}
+            queryState={queryState}
+            tickets={tickets as TableTicket[]}
             onPageChange={setPage}
+            onRetry={ticketsQuery.refetch}
          />
       </Box>
    )

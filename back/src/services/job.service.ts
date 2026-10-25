@@ -482,18 +482,6 @@ export const getCompanyJobById = async (
   return job;
 };
 
-export const deleteJob = async (companyId: string, jobId: string) => {
-  await assertApprovedCompany(companyId);
-  const job = await prisma.job.findFirst({
-    where: { id: jobId, companyId },
-    select: { id: true },
-  });
-  if (!job)
-    throw new AppError("Job not found for this company", 404, "JOB_NOT_OWNED");
-  await prisma.job.delete({ where: { id: jobId } });
-  return { message: "Job deleted successfully" };
-};
-
 export const getJobs = async (
   userId: string,
   pageNumber = 1,
@@ -504,7 +492,7 @@ export const getJobs = async (
   const skip = (page - 1) * JOBS_PER_PAGE;
 
   const where: Prisma.JobWhereInput = {
-    status: { not: "DRAFT" },
+    status: "OPEN",
     ...(employmentType ? { employmentType } : {}),
     ...(search
       ? {
@@ -587,7 +575,7 @@ export const getJobById = async (
   userId: string,
   jobId: string,
   slugParam: string
-  // userId?: string // (اختياري) إذا أردت التحقق من حالة الحفظ
+  // userId?: string // Optional; use it to check whether the job is saved.
 ) => {
   const job = await prisma.job.findFirst({
     where: { id: jobId, status: { not: "DRAFT" } },
@@ -623,25 +611,25 @@ export const getJobById = async (
     },
   });
 
-  // 2. التحقق من وجود الوظيفة
+  // 2. Check whether the job exists.
   if (!job) {
     throw new AppError("Job not found", 404);
   }
 
-  // 3. التحقق من صحة الـ Slug (SEO / التحقق من الروابط)
+  // 3. Validate the slug for SEO and link correctness.
   if (job.slug !== slugParam) {
-    // هناك طريقتان للتعامل مع هذا الموقف:
-    // الخيار أ: رمي خطأ 404 (لن تكون الوظيفة متاحة على هذا الرابط)
+    // There are two ways to handle this case:
+    // Option A: throw a 404 error (the job will not be available at this URL).
     // throw new NotFoundError('Invalid job URL');
 
-    // الخيار ب (الأفضل لتجربة المستخدم): إعادة توجيه (لكن لا يمكنك فعلها من الـ Service)
-    // سنقوم برمي خطأ مخصص لكي تتعامل معه الـ Controller بعمل Redirect
-    // ولكني سأعطي الخيار الأول (خطأ 404) لأنه الأكثر أماناً في الـ APIs،
-    // وسأوضح لك في الـ Controller كيف تعمل Redirect إذا أردت ذلك.
+    // Option B (better UX): redirect, which cannot be done from a service.
+    // Throw a custom error so the controller can perform the redirect.
+    // The 404 option is used here because it is safer for APIs.
+    // The controller can perform a redirect if needed.
     throw new AppError("Invalid job URL. Please use the correct link.", 404);
   }
 
-  // 4. إرجاع البيانات
+  // 4. Return the data.
   return {
     ...job,
     isSaved: job.savedBy.length > 0,

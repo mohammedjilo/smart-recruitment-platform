@@ -18,18 +18,18 @@ export default function StatCard({
 }: StatCardProps) {
    return (
       <CommonStatCard
-         label={title}
+         className="min-h-29 shadow-[0_2px_12px_rgba(15,23,42,0.04)]"
          value={value}
          icon={
             <Icon
+               className="text-[27px]!"
                sx={{
-                  fontSize: 27,
                   color: iconColor
                }}
             />
          }
          iconSx={{ backgroundColor: iconBackground }}
-         className="min-h-29 shadow-[0_2px_12px_rgba(15,23,42,0.04)]"
+         label={title}
       />
    )
 }

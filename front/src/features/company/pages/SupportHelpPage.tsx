@@ -1,4 +1,4 @@
-import SupportHelpContent from "@/features/support/components/SupportHelpPage"
+import SupportHelpContent from "@/features/shared/support/components/SupportHelpPage"
 import { companySupportConfig } from "../config/support.config"
 
 export default function SupportHelpPage() {

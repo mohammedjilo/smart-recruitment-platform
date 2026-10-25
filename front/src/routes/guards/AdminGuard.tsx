@@ -20,24 +20,24 @@ export default function AdminGuard() {
       if (user) {
          return (
             <Navigate
-               to="/dashboard"
                replace
+               to="/dashboard"
             />
          )
       }
       if (company) {
          return (
             <Navigate
-               to="/dashboard"
                replace
+               to="/dashboard"
             />
          )
       }
       return (
          <Navigate
-            to="/login"
             replace
             state={{ from: location }}
+            to="/login"
          />
       )
    }
@@ -56,15 +56,15 @@ export default function AdminGuard() {
    ) {
       return (
          <Box className="space-y-3 p-6">
-            <Typography className="text-sm! text-red-600!" role="alert" aria-live="assertive">
+            <Typography className="text-sm! text-red-600!" aria-live="assertive" role="alert">
                {permissionsPresentation.category === "page_error" &&
                permissionsState.status === "inconsistent"
                   ? "Admin permissions could not be verified."
                   : permissionsPresentation.message}
             </Typography>
             <Button
-               onClick={() => void permissionsQuery.refetch()}
-               className="normal-case!">
+               className="normal-case!"
+               onClick={() => void permissionsQuery.refetch()}>
                Retry
             </Button>
          </Box>
@@ -72,5 +72,11 @@ export default function AdminGuard() {
    }
    if (permissionsPresentation.category === "silent") return null
 
-   return <Outlet />
+   const serverPermissions = permissionsQuery.currentData?.data.permissions
+
+   if (!serverPermissions) {
+      return <Box className="text-muted p-6 text-sm">Loading permissions...</Box>
+   }
+
+   return <Outlet context={serverPermissions} />
 }

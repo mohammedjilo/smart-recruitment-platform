@@ -23,9 +23,11 @@ const AdminPermissionSynchronizer = () => {
          return
       }
 
+      if (!serverPermissions) return
+
       if (lastAdminId.current !== adminId) {
          lastAdminId.current = adminId
-         const permissionsForAdmin = serverPermissions ?? []
+         const permissionsForAdmin = serverPermissions
          if (
             storedPermissions.length !== permissionsForAdmin.length ||
             storedPermissions.some(

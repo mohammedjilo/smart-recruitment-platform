@@ -10,14 +10,17 @@ import { companyNotificationConfig } from "@/features/company/utils/companyNotif
 
 type Props = {
    notification: Notification
+   onMarkAsRead: (notificationId: string) => Promise<void>
 }
 
-const NotificationListItem = ({ notification }: Props) => {
+const NotificationListItem = ({ notification, onMarkAsRead }: Props) => {
    const navigate = useNavigate()
 
    const config = companyNotificationConfig[notification.type]
 
-   const handleClick = () => {
+   const handleClick = async () => {
+      if (!notification.isRead) await onMarkAsRead(notification.id)
+
       if (notification.supportTicketId) {
          navigate(`/company/support/requests/${notification.supportTicketId}`)
 
@@ -51,13 +54,13 @@ const NotificationListItem = ({ notification }: Props) => {
 
    return (
       <Box
-         component="button"
-         type="button"
-         onClick={handleClick}
          className={[
             "relative flex min-h-26.5 w-full items-center gap-2 px-2 py-1.5 text-left transition-colors hover:bg-[#F8FAFD] sm:px-2.5",
             notification.isRead ? "bg-surface" : "bg-[#FCFDFF]"
-         ].join(" ")}>
+         ].join(" ")}
+         type="button"
+         component="button"
+         onClick={handleClick}>
          {/* Unread dot */}
          {!notification.isRead && (
             <Box className="absolute top-1/2 left-2.5 h-1.75 w-1.75 -translate-y-1/2 rounded-full bg-[#2167E8]" />
@@ -101,9 +104,9 @@ const NotificationListItem = ({ notification }: Props) => {
 
          {/* Arrow */}
          <IconButton
+            className="shrink-0! p-1! text-[#8FA1B8]"
             size="small"
-            tabIndex={-1}
-            className="shrink-0! p-1! text-[#8FA1B8]">
+            tabIndex={-1}>
             <ChevronRightIcon className="text-[18px]" />
          </IconButton>
       </Box>

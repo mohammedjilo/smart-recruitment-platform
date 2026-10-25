@@ -7,7 +7,7 @@ import {
    PhoneOutlined
 } from "@mui/icons-material"
 
-import { Paper } from "@mui/material"
+import { Box, Paper, Typography } from "@mui/material"
 import type { CompanyProfileFormValues } from "./types"
 
 interface CompanyPreviewProps {
@@ -18,59 +18,65 @@ interface CompanyPreviewProps {
 const CompanyPreview: React.FC<CompanyPreviewProps> = ({ form, logoPreview }) => {
    return (
       <Paper
-         elevation={0}
-         className="rounded-[10px]! border! p-5">
-         <h2 className="text-[15px] font-semibold text-[#172033]">Preview</h2>
+         className="rounded-[10px]! border! p-5"
+         elevation={0}>
+         <Typography
+            className="text-[15px]! font-semibold!"
+            variant="h2">
+            Preview
+         </Typography>
 
          {/* Logo */}
-         <div className="mt-5">
+         <Box className="mt-5">
             {logoPreview ? (
                <img
-                  src={logoPreview}
-                  alt={form.companyName}
                   className="h-20.5 w-20.5 rounded-xl border border-border object-contain p-2"
+                  alt={form.companyName}
+                  src={logoPreview}
                />
             ) : (
-               <div className="flex h-20.5 w-20.5 items-center justify-center rounded-xl border border-border bg-bg text-[22px] font-semibold text-violet-600">
+               <Box className="flex h-20.5 w-20.5 items-center justify-center rounded-xl border border-border bg-bg text-[22px] font-semibold text-violet-600">
                   {form.companyName.charAt(0) || "C"}
-               </div>
+               </Box>
             )}
-         </div>
+         </Box>
 
          {/* Name */}
-         <div className="mt-4 flex items-center gap-2">
-            <h3 className="text-[14px] font-semibold text-[#172033]">
+         <Box className="mt-4 flex items-center gap-2">
+            <Typography
+               className="text-[14px]! font-semibold!"
+               variant="h3">
                {form.companyName || "Company Name"}
-            </h3>
-         </div>
+            </Typography>
+         </Box>
 
          {/* Description */}
-         <p className="mt-4 text-[11px] leading-5 text-muted">
+         <Typography className="mt-4! text-[11px]! leading-5!" color="textSecondary">
             {form.description || "Your company description will appear here."}
-         </p>
+         </Typography>
 
          {/* Contact */}
-         <div className="mt-5 space-y-4 border-t border-border pt-5">
+         <Box className="mt-5 space-y-4 border-t border-border pt-5">
             <PreviewItem
-               icon={<EmailOutlined />}
                value={form.email}
+               icon={<EmailOutlined />}
             />
 
             <PreviewItem
-               icon={<PhoneOutlined />}
                value={form.phone}
+               icon={<PhoneOutlined />}
             />
 
             <PreviewItem
-               icon={<LanguageOutlined />}
                value={form.website}
+               icon={<LanguageOutlined />}
             />
 
             <PreviewItem
-               icon={<LocationOnOutlined />}
                value={form.location}
+               icon={<LocationOnOutlined />}
             />
-         </div>
+         </Box>
       </Paper>
    )
 }
@@ -84,11 +90,11 @@ const PreviewItem: React.FC<PreviewItemProps> = ({ icon, value }) => {
    if (!value) return null
 
    return (
-      <div className="flex items-center gap-3">
-         <div className="text-violet-600 [&>svg]:text-[17px]">{icon}</div>
+      <Box className="flex items-center gap-3">
+         <Box className="text-violet-600 [&>svg]:text-[17px]">{icon}</Box>
 
          <span className="text-[10px] break-all text-muted">{value}</span>
-      </div>
+      </Box>
    )
 }
 

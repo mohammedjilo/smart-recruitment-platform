@@ -9,7 +9,7 @@ export type CompanySummary = CompanySummaryEntity
 export type CompanyDetails = CompanyDetailsEntity
 
 // ==========================================
-// 3. نوع JobSummary (للقوائم)
+// 3. JobSummary type for lists.
 // ==========================================
 export type JobSummary = {
    id: string
@@ -18,34 +18,34 @@ export type JobSummary = {
    salary: number
    employmentType: EmploymentType
    createdAt: Date
-   // ❌ لا يوجد description للوظيفة (يمكن إضافته إذا أردت، لكن في الغالب لا تحتاجه في القائمة)
+   // Job descriptions are omitted from list summaries.
    company: CompanySummary
    skills: { skill: { skillName: string } }[]
-   _count?: { applications: number } // عدد المتقدمين (اختياري)
+   _count?: { applications: number } // Optional application count.
    isSaved: boolean
    isApplied: boolean
    hasWithdrawnApplication?: boolean
 }
 
 // ==========================================
-// 4. نوع JobDetails (للتفاصيل)
+// 4. JobDetails type for detail views.
 // ==========================================
 export type JobDetails = {
    id: string
    title: string
    slug: string
-   description: string // ✅ وصف الوظيفة (موجود هنا)
+   description: string // Job description.
    salary: number | null
    employmentType: EmploymentType
-   status: string // OPEN, CLOSED, إلخ
+   status: string // OPEN, CLOSED, etc.
    deadline: Date | string
    experienceRequired: number
    createdAt: Date
    updatedAt: Date
-   company: CompanyDetails // ✅ يشمل description
+   company: CompanyDetails // Includes the company description.
    skills: { skill: { skillName: string } }[]
    applicationQuestions: {
-      // ✅ أسئلة التقديم (فقط في التفاصيل)
+      // Application questions, included only in detail views.
       id: string
       question: string
       type: string
@@ -54,18 +54,18 @@ export type JobDetails = {
       options: any
    }[]
    _count: { applications: number }
-   // حقول محسوبة
-   isSaved: boolean // اختياري، يضاف في الـ Service
+   // Computed fields.
+   isSaved: boolean // Optional; added by the service.
    isApplied: boolean
    hasWithdrawnApplication?: boolean
 }
 
 // ==========================================
-// 5. أنواع الـ Response من الـ API
+// 5. API response types.
 // ==========================================
 export type GetJobsResult = {
    success: true
-   data: JobSummary[] // مصفوفة من الملخصات
+   data: JobSummary[] // Array of job summaries.
    meta: { totalCount: number; page: number; pageSize: number }
 }
 

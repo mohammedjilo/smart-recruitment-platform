@@ -47,12 +47,12 @@ const ApplicationsStats = ({ totalCount, statusCounts }: ApplicationsStatsProps)
          {stats.map(stat => {
             return (
                <StatCard
+                  className="min-h-23 shadow-sm"
                   key={stat.key}
-                  label={stat.label}
                   value={stat.value}
                   icon={stat.icon}
                   iconClassName={stat.iconClass}
-                  className="min-h-23 shadow-sm"
+                  label={stat.label}
                />
             )
          })}

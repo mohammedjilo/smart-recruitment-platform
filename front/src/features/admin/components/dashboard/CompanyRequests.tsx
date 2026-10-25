@@ -20,7 +20,7 @@ interface CompanyRequestsProps {
 
 export default function CompanyRequests({ requests, onViewAll }: CompanyRequestsProps) {
    return (
-      <Box className="bg-surface overflow-hidden rounded-xl border shadow-[0_2px_12px_rgba(15,23,42,0.04)]">
+      <Box className="bg-surface border-border overflow-hidden rounded-xl border shadow-[0_2px_12px_rgba(15,23,42,0.04)]">
          {/* Header */}
          <Box className="flex items-center justify-between px-5 py-5">
             <Box className="flex items-center gap-2">
@@ -30,9 +30,9 @@ export default function CompanyRequests({ requests, onViewAll }: CompanyRequests
             </Box>
 
             <Typography
+               className="text-link hover:text-link-hover cursor-pointer border-0 bg-transparent text-xs font-medium hover:underline"
                component="button"
-               onClick={onViewAll}
-               className="text-link hover:text-link-hover cursor-pointer border-0 bg-transparent text-xs font-medium hover:underline">
+               onClick={onViewAll}>
                View all
             </Typography>
          </Box>
@@ -40,19 +40,14 @@ export default function CompanyRequests({ requests, onViewAll }: CompanyRequests
          {/* Table */}
          <Box
             className="responsive-scroll-region overflow-x-auto px-4 pb-4"
-            role="region"
             aria-label="Company requests; scroll horizontally to see all columns"
+            role="region"
             tabIndex={0}>
             <Table
-               size="small"
-               sx={{
-                  minWidth: 560
-               }}>
+               className="min-w-140!"
+               size="small">
                <TableHead>
-                  <TableRow
-                     sx={{
-                        backgroundColor: "#F8F9FC"
-                     }}>
+                  <TableRow className="bg-[#F8F9FC]!">
                      <TableCell>
                         <Typography className="text-muted text-[11px]! font-semibold!">
                            Company Name
@@ -86,7 +81,7 @@ export default function CompanyRequests({ requests, onViewAll }: CompanyRequests
                         hover
                         sx={{
                            "&:not(:last-child) td": {
-                              borderBottom: "1px solid #1d4ed8"
+                              borderBottom: "1px solid #E2E8F0"
                            },
                            "&:last-child td": {
                               borderBottom: 0
@@ -96,13 +91,9 @@ export default function CompanyRequests({ requests, onViewAll }: CompanyRequests
                         <TableCell>
                            <Box className="flex items-center gap-2">
                               <Avatar
-                                 src={getLogoUrl(request.logoUrl)}
+                                 className="h-7! w-7! text-[11px]!"
                                  alt={request.companyName}
-                                 sx={{
-                                    width: 28,
-                                    height: 28,
-                                    fontSize: 11
-                                 }}
+                                 src={getLogoUrl(request.logoUrl)}
                               />
 
                               <Typography className="text-[11px]! font-medium! whitespace-nowrap!">

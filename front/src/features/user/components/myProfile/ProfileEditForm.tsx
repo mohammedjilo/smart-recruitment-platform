@@ -1,5 +1,5 @@
-import { Button, DialogActions, DialogContent, MenuItem, TextField } from "@mui/material"
-import { useState, type FormEvent } from "react"
+import { Box, Button, DialogActions, DialogContent, MenuItem, TextField } from "@mui/material"
+import { Controller, useForm } from "react-hook-form"
 import { useSelector } from "react-redux"
 import { useUpdateExperienceMutation } from "@/features/user/services/experienceApiCalls"
 import { useUpdateEducationMutation } from "@/features/user/services/educationApiCalls"
@@ -16,7 +16,7 @@ import type {
    ProjectBody
 } from "@/types/api/profile"
 import type {
-   ProfileEditFormType,
+   EditableProfileFormType,
    ProfileEditDataByType,
    ProfileEditFormValues,
    ProfileEditField
@@ -26,21 +26,24 @@ import type { RootState } from "@/redux/store"
 import { getMutationErrorState, getMutationState } from "@/utils/mutationState"
 import { getMutationPresentation } from "@/utils/presentationPolicy"
 
-type Props<TFormType extends ProfileEditFormType> = {
+type Props<TFormType extends EditableProfileFormType> = {
    formType: TFormType
    data: ProfileEditDataByType[TFormType]
    onSave: () => void
    onCancel: () => void
 }
 
-const ProfileEditForm = <TFormType extends ProfileEditFormType>({
+const ProfileEditForm = <TFormType extends EditableProfileFormType>({
    formType,
    data,
    onSave,
    onCancel
 }: Props<TFormType>) => {
    const userId = useSelector((state: RootState) => state.auth.user?.id)
-   const [values, setValues] = useState<ProfileEditFormValues>(data)
+   const { control, handleSubmit } = useForm<ProfileEditFormValues>({
+      mode: "onSubmit",
+      defaultValues: data
+   })
    const [updateExperience, experienceState] = useUpdateExperienceMutation()
    const [updateEducation, educationState] = useUpdateEducationMutation()
    const [updateProject, projectState] = useUpdateProjectMutation()
@@ -69,13 +72,7 @@ const ProfileEditForm = <TFormType extends ProfileEditFormType>({
       presentation => presentation.category === "loading"
    )
 
-   const setValue = (key: ProfileEditField | "level", value: string) => {
-      setValues(current => ({ ...current, [key]: value }))
-   }
-
-   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
-      event.preventDefault()
-
+   const onSubmit = async (values: ProfileEditFormValues) => {
       try {
          if (!userId) return
          if (formType === "experience") {
@@ -163,98 +160,130 @@ const ProfileEditForm = <TFormType extends ProfileEditFormType>({
    }
 
    const field = (key: ProfileEditField, label: string, multiline = false) => (
-      <TextField
-         fullWidth
-         label={label}
-         value={values[key] ?? ""}
-         onChange={event => setValue(key, event.target.value)}
-         multiline={multiline}
-         minRows={multiline ? 3 : undefined}
-         disabled={isLoading}
+      <Controller
+         name={key}
+         control={control}
+         render={({ field: formField }) => (
+            <TextField
+               {...formField}
+               disabled={isLoading}
+               value={formField.value ?? ""}
+               fullWidth
+               label={label}
+               minRows={multiline ? 3 : undefined}
+               multiline={multiline}
+            />
+         )}
       />
    )
 
    return (
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit(onSubmit)}>
          <DialogContent className="grid gap-4! pt-2!">
             {formType === "experience" && (
-               <>
+               <Box className="contents">
                   {field("companyName", "Company Name")}
                   {field("position", "Position")}
                   {field("description", "Description", true)}
                   {field("startDate", "Start Date")}
                   {field("endDate", "End Date")}
-               </>
+               </Box>
             )}
             {formType === "education" && (
-               <>
+               <Box className="contents">
                   {field("university", "University")}
                   {field("degree", "Degree")}
                   {field("major", "Major")}
                   {field("startDate", "Start Date")}
                   {field("endDate", "End Date")}
-               </>
+               </Box>
             )}
             {formType === "project" && (
-               <>
+               <Box className="contents">
                   {field("title", "Project Title")}
                   {field("description", "Description", true)}
-               </>
+               </Box>
             )}
             {formType === "certificate" && (
-               <>
+               <Box className="contents">
                   {field("certificateName", "Certificate Name")}
                   {field("organization", "Issuing Organization")}
-               </>
+               </Box>
             )}
             {formType === "skill" && field("skillName", "Skill Name")}
             {formType === "language" && (
-               <TextField
-                  select
-                  fullWidth
-                  label="Language Level"
-                  value={values.level ?? ""}
-                  onChange={event => setValue("level", event.target.value)}
-                  disabled={isLoading}>
-                  {(
-                     [
-                        "BEGINNER",
-                        "INTERMEDIATE",
-                        "ADVANCED",
-                        "FLUENT",
-                        "NATIVE"
-                     ] as LanguageLevel[]
-                  ).map(level => (
-                     <MenuItem
-                        key={level}
-                        value={level}>
-                        {level}
-                     </MenuItem>
-                  ))}
-               </TextField>
+               <Controller
+                  name="level"
+                  control={control}
+                  render={({ field: formField }) => (
+                     <TextField
+                        {...formField}
+                        disabled={isLoading}
+                        value={formField.value ?? ""}
+                        fullWidth
+                        label="Language Level"
+                        select>
+                        {(
+                           [
+                              "BEGINNER",
+                              "INTERMEDIATE",
+                              "ADVANCED",
+                              "FLUENT",
+                              "NATIVE"
+                           ] as LanguageLevel[]
+                        ).map(level => (
+                           <MenuItem
+                              key={level}
+                              value={level}>
+                              {level}
+                           </MenuItem>
+                        ))}
+                     </TextField>
+                  )}
+               />
             )}
             {formType === "professionalProfile" && (
-               <>
+               <Box className="contents">
                   {field("jobTitle", "Job Title")}
                   {field("summary", "Summary", true)}
-                  {field("yearsOfExperience", "Years of Experience")}
+                  <Controller
+                     name="yearsOfExperience"
+                     control={control}
+                     render={({ field: formField, fieldState }) => (
+                        <TextField
+                           {...formField}
+                           disabled={isLoading}
+                           value={formField.value ?? ""}
+                           error={!!fieldState.error}
+                           fullWidth
+                           helperText={fieldState.error?.message}
+                           label="Years of Experience"
+                           slotProps={{ htmlInput: { inputMode: "numeric" } }}
+                        />
+                     )}
+                     rules={{
+                        validate: value =>
+                           /^\d+$/.test(String(value ?? "").trim()) ||
+                           "Enter a non-negative whole number of years."
+                     }}
+                  />
                   {field("cvPath", "CV Path")}
-               </>
+               </Box>
             )}
          </DialogContent>
          <DialogActions className="px-6! pb-4!">
             <Button
-               onClick={onCancel}
-               variant="outlined"
+               className="normal-case!"
                disabled={isLoading}
-               className="normal-case!">
+               variant="outlined"
+               onClick={onCancel}>
                Cancel
             </Button>
             <Button
+               className="normal-case!"
                type="submit"
-               variant="contained"
                disabled={isLoading}
-               className="normal-case!">
+               variant="contained">
                {isLoading ? "Updating..." : "Update"}
             </Button>
          </DialogActions>

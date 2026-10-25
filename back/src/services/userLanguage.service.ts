@@ -30,23 +30,6 @@ const ensureLanguage = async (languageName: string) => {
   });
 };
 
-export const getUserLanguages = async (userId: string) => {
-  const existingUser = await prisma.user.findUnique({
-    where: { id: userId },
-    select: { id: true },
-  });
-
-  if (!existingUser) {
-    throw new AppError("User not found", 404);
-  }
-
-  return prisma.userLanguage.findMany({
-    where: { userId },
-    include: { language: true },
-    orderBy: { language: { languageName: "asc" } },
-  });
-};
-
 export const addUserLanguage = async (
   userId: string,
   input: { languageName: string; level: LanguageLevelValue }
@@ -107,21 +90,4 @@ export const updateUserLanguage = async (
     data: { level },
     include: { language: true },
   });
-};
-
-export const deleteUserLanguage = async (
-  userId: string,
-  userLanguageId: string
-) => {
-  const existingUserLanguage = await prisma.userLanguage.findFirst({
-    where: { id: userLanguageId, userId },
-  });
-
-  if (!existingUserLanguage) {
-    throw new AppError("User language not found", 404);
-  }
-
-  await prisma.userLanguage.delete({ where: { id: userLanguageId } });
-
-  return { message: "User language deleted successfully" };
 };

@@ -7,7 +7,7 @@ import JobInformation from "@/features/company/components/JobDetails/JobInformat
 import JobDescription from "@/features/company/components/JobDetails/JobDescription"
 import ApplicationQuestions from "@/features/company/components/JobDetails/ApplicationQuestions"
 import JobTimeline from "@/features/company/components/JobDetails/JobTimeline"
-import { Box, Button } from "@mui/material"
+import { Box, Button, Typography } from "@mui/material"
 import { CompanyDetailsSkeleton } from "@/features/company/components/CompanySkeletons"
 import { showAlert } from "@/utils/swal"
 import ReopenJobDialog from "@/features/company/components/JobDetails/ReopenJobDialog"
@@ -45,7 +45,7 @@ const JobDetailsPage = () => {
    if (!id || !slug) {
       return (
          <Box className="flex min-h-125 items-center justify-center">
-            <Button onClick={() => navigate(-1)} className="normal-case!">
+            <Button className="normal-case!" onClick={() => navigate(-1)}>
                Go Back
             </Button>
          </Box>
@@ -64,18 +64,23 @@ const JobDetailsPage = () => {
    ) {
       return (
          <Box className="flex min-h-125 flex-col items-center justify-center gap-3">
-            <p className="text-muted text-sm" role="alert" aria-live="assertive">
+            <Typography
+               className="text-sm!"
+               aria-live="assertive"
+               color="textSecondary"
+               role="alert">
                {queryPresentation.message}
-            </p>
+            </Typography>
 
             <Button
-               onClick={query.refetch}
-               className="normal-case!">
+               className="normal-case!"
+               onClick={query.refetch}>
                Retry
             </Button>
             <Button
-               onClick={() => navigate(-1)}
-               className="app-button-primary mt-5! rounded-lg! px-5! py-2.5! text-sm! font-medium! capitalize! transition!">
+               className="mt-5! rounded-lg! px-5! py-2.5! text-sm! font-medium! normal-case! transition!"
+               variant="contained"
+               onClick={() => navigate(-1)}>
                Go Back
             </Button>
          </Box>
@@ -200,20 +205,20 @@ const JobDetailsPage = () => {
    return (
       <Box className="min-h-screen">
          {queryPresentation.category === "stale_error" && (
-            <Box className="mb-4 flex items-center justify-between gap-3 rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-900" role="status" aria-live="polite">
+            <Box className="mb-4 flex items-center justify-between gap-3 rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-900" aria-live="polite" role="status">
                <span>{queryPresentation.message}</span>
                <Button
-                  onClick={query.refetch}
-                  className="normal-case!">
+                  className="normal-case!"
+                  onClick={query.refetch}>
                   Retry
                </Button>
             </Box>
          )}
          <JobDetailsHeader
-            job={job}
-            onEdit={handleEdit}
             isUpdating={isUpdatingStatus}
+            job={job}
             onCloseJob={handleCloseJob}
+            onEdit={handleEdit}
             onReopenJob={() => setIsReopenDialogOpen(true)}
          />
 
@@ -239,9 +244,9 @@ const JobDetailsPage = () => {
             </aside>
          </Box>
          <ReopenJobDialog
-            open={isReopenDialogOpen}
-            jobTitle={job.title}
             currentDeadline={job.deadline}
+            jobTitle={job.title}
+            open={isReopenDialogOpen}
             requireNewDate={job.status === "EXPIRED"}
             onClose={() => setIsReopenDialogOpen(false)}
             onSubmit={handleReopenJob}

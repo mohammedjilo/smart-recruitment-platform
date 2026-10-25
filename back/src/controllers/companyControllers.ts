@@ -3,15 +3,12 @@ import {
   getCompanyProfile,
   getCompanyUsers,
   getDashboardCompany,
-  updateCompanyLogo,
   updateCompanyProfile,
 } from "../services/company.service";
 import {
-  createJob,
   updateJob,
   getCompanyJobs,
   getCompanyJobById,
-  deleteJob as deleteCompanyJob,
 } from "../services/job.service";
 import { asyncHandler } from "../utils/asyncHandler";
 import { AppError } from "../utils/appError.js";
@@ -25,6 +22,12 @@ import { getCompanyUsersQuerySchema } from "../validation/company.validation";
  * business rules to services; it must not contain database queries.
  */
 
+/**
+ * @desc Get the authenticated company's dashboard data
+ * @route /api/company/dashboard
+ * @method GET
+ * @access private
+ */
 export const getDashboardCompanyController = asyncHandler(
   async (req: Request, res: Response) => {
     const companyId = req.company?.id;
@@ -36,9 +39,15 @@ export const getDashboardCompanyController = asyncHandler(
     const dashboardData = await getDashboardCompany(companyId);
 
     sendSuccess(res, 200, dashboardData);
-  },
+  }
 );
 
+/**
+ * @desc Get users associated with the authenticated company
+ * @route /api/company/users
+ * @method GET
+ * @access private
+ */
 export const getCompanyUsersController = asyncHandler(
   async (req: Request, res: Response) => {
     const companyId = req.company?.id;
@@ -57,27 +66,7 @@ export const getCompanyUsersController = asyncHandler(
     sendSuccess(res, 200, result.users, {
       meta: result.pagination,
     });
-  },
-);
-
-/**
- * @desc Create a new job for the authenticated company
- * @route /api/company/jobs
- * @method POST
- * @access private
- */
-export const createJobController = asyncHandler(
-  async (req: Request, res: Response) => {
-    const companyId = req.company?.id;
-
-    if (!companyId) {
-      throw new AppError("Company authentication required", 401);
-    }
-
-    const job = await createJob(companyId, req.body as any);
-
-    sendSuccess(res, 201, job);
-  },
+  }
 );
 
 /**
@@ -147,11 +136,12 @@ export const getCompanyJobsController = asyncHandler(
       },
       stats: result.stats,
     });
-  },
+  }
 );
 
 /**
  * @desc Get one job by id for the authenticated company
+ * @route /api/company/jobs/:id/:slug
  * @route /api/company/jobs/:id
  * @method GET
  * @access private
@@ -169,7 +159,7 @@ export const getCompanyJobByIdController = asyncHandler(
     const job = await getCompanyJobById(companyId, id, slug);
 
     sendSuccess(res, 200, job);
-  },
+  }
 );
 
 /**
@@ -190,32 +180,9 @@ export const updateJobController = asyncHandler(
     const job = await updateJob(companyId, id, req.body as any);
 
     sendSuccess(res, 200, job);
-  },
+  }
 );
 
-/**
- * @desc Delete a job of the authenticated company
- * @route /api/company/jobs/:id
- * @method DELETE
- * @access private
- */
-export const deleteJobController = asyncHandler(
-  async (req: Request, res: Response) => {
-    const companyId = req.company?.id;
-    const id = req.params.id as string;
-
-    if (!companyId) {
-      throw new AppError("Company authentication required", 401);
-    }
-
-    const result = await deleteCompanyJob(companyId, id);
-
-    res.status(200).json({
-      status: "success",
-      message: result.message,
-    });
-  },
-);
 /**
  * @desc Update company profile
  * @route /api/company/profile
@@ -236,7 +203,7 @@ export const updateCompanyProfileController = asyncHandler(
     if (file?.buffer) {
       const uploadResult = await cloudinaryUploadImage(
         file.buffer,
-        file.mimetype,
+        file.mimetype
       );
       profileInput.logoId = uploadResult.public_id;
       profileInput.logoUrl = uploadResult.secure_url;
@@ -248,7 +215,7 @@ export const updateCompanyProfileController = asyncHandler(
     sendSuccess(res, 200, updatedCompany, {
       message: "Profile updated successfully",
     });
-  },
+  }
 );
 
 /**
@@ -268,49 +235,5 @@ export const getCompanyProfileController = asyncHandler(
     const company = await getCompanyProfile(companyId);
 
     sendSuccess(res, 200, company);
-  },
-);
-
-/**
- * @desc Upload company logo
- * @route /api/company/logo
- * @method POST
- * @access private
- */
-export const uploadCompanyLogoController = asyncHandler(
-  async (req: Request, res: Response) => {
-    const companyId = req.company?.id;
-    const file = req.file;
-
-    if (!companyId) {
-      throw new AppError("Company authentication required", 401);
-    }
-
-    if (!file?.buffer) {
-      throw new AppError("No image file provided", 400);
-    }
-
-    const uploadResult = await cloudinaryUploadImage(
-      file.buffer,
-      file.mimetype,
-    );
-
-    const company = await updateCompanyLogo(
-      companyId,
-      uploadResult.public_id,
-      uploadResult.secure_url,
-    );
-
-    sendSuccess(
-      res,
-      200,
-      {
-        logoId: company.logoId,
-        logoUrl: company.logoUrl,
-      },
-      {
-        message: "Company logo uploaded successfully",
-      },
-    );
-  },
+  }
 );

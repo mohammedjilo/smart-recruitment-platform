@@ -22,10 +22,10 @@ const StatisticCard: React.FC<StatisticCardProps> = ({
 }) => {
    return (
       <StatCard
-         label={label}
          value={value}
          icon={icon}
          iconClassName={iconClass}
+         label={label}
       />
    )
 }
@@ -63,66 +63,66 @@ const Statistics = ({ applications }: { applications: Application[] }) => {
    return (
       <Box className="mb-6 grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
          <StatisticCard
-            label="Total Applications"
             value={statistics.total}
             icon={<WorkspacePremiumOutlinedIcon />}
             iconClass="bg-[#F3EFFF]! text-[#6741E8]!"
+            label="Total Applications"
          />
 
          {/* PENDING */}
          <StatisticCard
-            label={pendingConfig.label}
             value={statistics.pending}
             icon={<PendingIcon />}
             iconClass={pendingConfig.className}
+            label={pendingConfig.label}
          />
 
          {/* INREVIEW */}
          <StatisticCard
-            label={reviewingConfig.label}
             value={statistics.inReview}
             icon={<ReviewingIcon />}
             iconClass={reviewingConfig.className}
+            label={reviewingConfig.label}
          />
 
          {/* SHORTLISTED */}
          <StatisticCard
-            label={shortlistedConfig.label}
             value={statistics.shortlisted}
             icon={<ShortlistedIcon />}
             iconClass={shortlistedConfig.className}
+            label={shortlistedConfig.label}
          />
 
-         {/* INTERVIEW (ط¬ط¯ظٹط¯) */}
+         {/* INTERVIEW */}
          <StatisticCard
-            label={interviewConfig.label}
             value={statistics.interview}
             icon={<InterviewIcon />}
             iconClass={interviewConfig.className}
+            label={interviewConfig.label}
          />
 
-         {/* ACCEPTED (ط¬ط¯ظٹط¯) */}
+         {/* ACCEPTED */}
          <StatisticCard
-            label={acceptedConfig.label}
             value={statistics.accepted}
             icon={<AcceptedIcon />}
             iconClass={acceptedConfig.className}
+            label={acceptedConfig.label}
          />
 
          {/* REJECTED */}
          <StatisticCard
-            label={rejectedConfig.label}
             value={statistics.rejected}
             icon={<RejectedIcon />}
             iconClass={rejectedConfig.className}
+            label={rejectedConfig.label}
          />
 
-         {/* WITHDRAWN (ط¬ط¯ظٹط¯) */}
+         {/* WITHDRAWN */}
          <StatisticCard
-            label={withdrawnConfig.label}
             value={statistics.withdrawn}
             icon={<WithdrawnIcon />}
             iconClass={withdrawnConfig.className}
+            label={withdrawnConfig.label}
          />
       </Box>
    )

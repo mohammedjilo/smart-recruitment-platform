@@ -13,7 +13,7 @@ const { getCountries, useGetLocationCitiesQuery } = vi.hoisted(() => ({
 }))
 
 vi.mock("@countrystatecity/countries-browser", () => ({ getCountries }))
-vi.mock("@/features/location/locationApiCalls", () => ({
+vi.mock("@/services/shared/locationApiCalls", () => ({
    useGetLocationCitiesQuery
 }))
 
@@ -48,12 +48,12 @@ const renderSelector = () => {
       const [value, setValue] = useState<LocationSelection>(emptyLocationSelection)
       return (
          <CountryCitySelector
+            required
             value={value}
             onChange={next => {
                onChange(next)
                setValue(next)
             }}
-            required
          />
       )
    }

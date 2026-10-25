@@ -40,30 +40,75 @@ const extendedSmartApi = smartApi.injectEndpoints({
             method: "PATCH"
          }),
          invalidatesTags: (_result, _error, notificationId) => [
-            { type: "Notifications", id: notificationId }
-         ]
+            { type: "Notifications", id: notificationId },
+            { type: "Notifications", id: "READ-STATE" }
+         ],
+         async onQueryStarted(notificationId, { dispatch, getState, queryFulfilled }) {
+            const cachedQueries = extendedSmartApi.util.selectInvalidatedBy(getState(), [
+               { type: "Notifications", id: notificationId },
+               { type: "Notifications", id: "READ-STATE" }
+            ])
+            const patches = cachedQueries.map(({ originalArgs }) =>
+               dispatch(
+                  extendedSmartApi.util.updateQueryData(
+                     "getNotifications",
+                     originalArgs as GetNotificationsQueryParams | void,
+                     draft => {
+                        for (const notification of draft.data) {
+                           if (notification.id === notificationId) {
+                              notification.isRead = true
+                           }
+                        }
+                     }
+                  )
+               )
+            )
+            try {
+               await queryFulfilled
+            } catch {
+               patches.forEach(patch => patch.undo())
+            }
+         }
       }),
       markAllNotificationsAsRead: builder.mutation<NotificationActionResult, void>({
          query: () => ({
             url: "/api/notification/read-all",
             method: "PATCH"
          }),
-         invalidatesTags: [{ type: "Notifications", id: "READ-STATE" }]
+         invalidatesTags: [
+            { type: "Notifications", id: "READ-STATE" },
+            { type: "Notifications", id: "PARTIAL-LIST" }
+         ],
+         async onQueryStarted(_arg, { dispatch, getState, queryFulfilled }) {
+            const cachedQueries = extendedSmartApi.util.selectInvalidatedBy(getState(), [
+               { type: "Notifications", id: "READ-STATE" }
+            ])
+            const patches = cachedQueries.map(({ originalArgs }) =>
+               dispatch(
+                  extendedSmartApi.util.updateQueryData(
+                     "getNotifications",
+                     originalArgs as GetNotificationsQueryParams | void,
+                     draft => {
+                        for (const notification of draft.data) {
+                           notification.isRead = true
+                        }
+                     }
+                  )
+               )
+            )
+            try {
+               await queryFulfilled
+            } catch {
+               patches.forEach(patch => patch.undo())
+            }
+         }
       }),
-      deleteNotification: builder.mutation<NotificationActionResult, string>({
-         query: notificationId => ({
-            url: `/api/notification/${notificationId}`,
-            method: "DELETE"
-         }),
-         invalidatesTags: [{ type: "Notifications", id: "PARTIAL-LIST" }]
-      })
    })
 })
 
 export const {
    useGetNotificationsQuery,
    useMarkNotificationAsReadMutation,
-   useMarkAllNotificationsAsReadMutation,
-   useDeleteNotificationMutation
+   useMarkAllNotificationsAsReadMutation
 } = extendedSmartApi
 export { extendedSmartApi as smartApi }

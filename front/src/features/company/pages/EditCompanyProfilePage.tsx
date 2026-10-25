@@ -1,4 +1,10 @@
 import React, { useEffect, useMemo, useRef, useState } from "react"
+import { Box, Typography } from "@mui/material"
+import {
+   emptyLocationSelection,
+   isLocationSelectionComplete,
+   type LocationSelection
+} from "@/components/common/CountryCitySelector"
 
 import {
    useGetCompanyProfileQuery,
@@ -31,6 +37,7 @@ const EditCompanyProfilePage: React.FC = () => {
       phone: "",
       website: "",
       location: "",
+      locationSelection: emptyLocationSelection,
       description: ""
    })
 
@@ -49,6 +56,17 @@ const EditCompanyProfilePage: React.FC = () => {
          phone: company.phone ?? "",
          website: company.website ?? "",
          location: company.location ?? "",
+         locationSelection:
+            company.countryCode && company.city && company.cityGeonameId
+               ? {
+                    countryCode: company.countryCode,
+                    countryName: company.country ?? "",
+                    stateCode: company.stateCode ?? "",
+                    stateName: company.state ?? "",
+                    cityName: company.city,
+                    cityGeonameId: company.cityGeonameId
+                 }
+               : emptyLocationSelection,
          description: company.description ?? ""
       }
 
@@ -81,6 +99,26 @@ const EditCompanyProfilePage: React.FC = () => {
       }))
    }
 
+   const handleLocationChange = (locationSelection: LocationSelection) => {
+      setForm(previous => ({
+         ...previous,
+         locationSelection,
+         ...(isLocationSelectionComplete(locationSelection)
+            ? {
+                 location: [
+                    locationSelection.cityName,
+                    locationSelection.stateName,
+                    locationSelection.countryName
+                 ]
+                    .filter(Boolean)
+                    .join(", ")
+              }
+            : locationSelection.countryCode
+              ? {}
+              : { location: "" })
+      }))
+   }
+
    const handleLogoChange = (file: File | null) => {
       setLogoFile(file)
    }
@@ -104,9 +142,34 @@ const EditCompanyProfilePage: React.FC = () => {
 
       formData.append("phone", form.phone)
 
+      const initialLocation = initialDataRef.current?.locationSelection
+      const locationChanged =
+         initialLocation !== undefined &&
+         JSON.stringify(form.locationSelection) !== JSON.stringify(initialLocation)
+      const hasLocationSelection = Boolean(
+         form.locationSelection.countryCode ||
+            form.locationSelection.cityName ||
+            form.locationSelection.cityGeonameId
+      )
+
+      if (locationChanged && hasLocationSelection) {
+         if (!isLocationSelectionComplete(form.locationSelection)) return
+         formData.append("country", form.locationSelection.countryName)
+         formData.append("countryCode", form.locationSelection.countryCode)
+         formData.append("state", form.locationSelection.stateName)
+         formData.append("stateCode", form.locationSelection.stateCode)
+         formData.append("city", form.locationSelection.cityName)
+         formData.append(
+            "cityGeonameId",
+            String(form.locationSelection.cityGeonameId)
+         )
+         formData.append("location", form.location)
+      } else if (locationChanged) {
+         formData.append("location", "")
+      }
+
       const optionalFields = {
          website: form.website,
-         location: form.location,
          description: form.description
       }
 
@@ -165,61 +228,69 @@ const EditCompanyProfilePage: React.FC = () => {
 
       return formChanged || Boolean(logoFile)
    }, [form, logoFile])
+   const hasPartialLocation = Boolean(
+      form.locationSelection.countryCode ||
+         form.locationSelection.cityName ||
+         form.locationSelection.cityGeonameId
+   ) && !isLocationSelectionComplete(form.locationSelection)
 
    if (isLoading) {
       return (
-         <div className="min-h-screen">
-            <div className="mx-auto max-w-362.5">
+         <Box className="min-h-screen">
+            <Box className="mx-auto max-w-362.5">
                <EditCompanyProfileSkeleton />
-            </div>
-         </div>
+            </Box>
+         </Box>
       )
    }
 
    return (
-      <div className="min-h-screen">
-         <div className="mx-auto max-w-362.5">
+      <Box className="min-h-screen">
+         <Box className="mx-auto max-w-362.5">
             {/* Header */}
-            <div className="mb-6 flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
-               <div>
-                  <h1 className="text-[25px] font-semibold tracking-[-0.5px] text-[#172033]">
+            <Box className="mb-6 flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
+               <Box>
+                  <Typography
+                     className="text-[25px]! font-semibold! tracking-[-0.5px]!"
+                     variant="h1">
                      Edit Company Profile
-                  </h1>
+                  </Typography>
 
-                  <p className="mt-1 text-[13px] text-muted">
+                  <Typography className="mt-1! text-[13px]!" color="textSecondary">
                      Update your company information.
-                  </p>
-               </div>
+                  </Typography>
+               </Box>
 
                <EditProfileActions
+                  disabled={!isChanged || hasPartialLocation}
                   isLoading={isUpdating}
-                  disabled={!isChanged}
                   onCancel={handleCancel}
                   onSave={handleSubmit}
                />
-            </div>
+            </Box>
 
             {/* Main Content */}
-            <div className="grid grid-cols-1 gap-6 xl:grid-cols-[minmax(0,1fr)_320px]">
+            <Box className="grid grid-cols-1 gap-6 xl:grid-cols-[minmax(0,1fr)_320px]">
                {/* Left */}
-               <div className="space-y-4">
+               <Box className="space-y-4">
                   <CompanyInformationForm
                      form={form}
                      onChange={updateField}
+                     onLocationChange={handleLocationChange}
                   />
 
                   <AccountInformation company={company} />
 
-                  <div className="rounded-2 border border-violet-100 bg-violet-50/60 px-4 py-3">
-                     <p className="text-[11px] font-medium text-violet-700">
+                  <Box className="rounded-2 border border-violet-100 bg-violet-50/60 px-4 py-3">
+                     <Typography className="text-[11px]! font-medium! text-violet-700!">
                         Changes you make will be reflected across your company profile and
                         job postings.
-                     </p>
-                  </div>
-               </div>
+                     </Typography>
+                  </Box>
+               </Box>
 
                {/* Right */}
-               <div className="space-y-4">
+               <Box className="space-y-4">
                   <CompanyLogoUpload
                      logoPreview={logoPreview}
                      onLogoChange={handleLogoChange}
@@ -229,10 +300,10 @@ const EditCompanyProfilePage: React.FC = () => {
                      form={form}
                      logoPreview={logoPreview}
                   />
-               </div>
-            </div>
-         </div>
-      </div>
+               </Box>
+            </Box>
+         </Box>
+      </Box>
    )
 }
 

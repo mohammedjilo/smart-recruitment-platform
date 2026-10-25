@@ -25,16 +25,15 @@ const UsersTable = ({
 }: Props) => {
    const emptyState = (
       <Box className="flex min-h-100 flex-col items-center justify-center px-6 text-center">
-         <PeopleOutlineOutlinedIcon
-            className="text-muted mb-4"
-            sx={{ fontSize: 48 }}
-         />
+         <PeopleOutlineOutlinedIcon className="text-muted mb-4 text-[48px]!" />
 
-         <Typography className="text-content text-base! font-semibold!">
+         <Typography className="text-base! font-semibold!">
             {hasFilters ? "No matching users found" : "No users found"}
          </Typography>
 
-         <Typography className="text-muted mt-2! text-sm!">
+         <Typography
+            className="mt-2! text-sm!"
+            color="textSecondary">
             {hasFilters
                ? "Try changing your search or experience filter."
                : "There are no users available at the moment."}
@@ -44,16 +43,15 @@ const UsersTable = ({
 
    return (
       <DataTable
-         rows={users}
          columns={getCompanyUsersColumns()}
-         getRowKey={user => user.id}
-         isLoading={isLoading}
-         isFetching={isFetching}
-         queryState={queryState}
-         onRetry={onRetry}
-         emptyState={emptyState}
-         minWidth={1200}
          containerClassName="shadow-none!"
+         emptyState={emptyState}
+         getRowKey={user => user.id}
+         isFetching={isFetching}
+         isLoading={isLoading}
+         queryState={queryState}
+         rows={users}
+         onRetry={onRetry}
       />
    )
 }

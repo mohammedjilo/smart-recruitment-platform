@@ -8,8 +8,8 @@ const UserSkills = ({ skills }: Props) => {
    if (skills.length === 0) {
       return (
          <Typography
-            component="span"
-            className="text-sm text-muted">
+            className="text-sm text-muted"
+            component="span">
             —
          </Typography>
       )
@@ -23,8 +23,8 @@ const UserSkills = ({ skills }: Props) => {
       <Box className="flex flex-wrap items-center gap-2">
          {visibleSkills.map(skill => (
             <Box
-               key={skill}
-               className="rounded-md bg-violet-50 px-2.5 py-1 text-[11px] font-medium text-violet-700">
+               className="rounded-md bg-violet-50 px-2.5 py-1 text-[11px] font-medium text-violet-700"
+               key={skill}>
                {skill}
             </Box>
          ))}

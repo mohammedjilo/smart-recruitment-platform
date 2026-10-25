@@ -8,7 +8,6 @@ import { PERMISSIONS } from "../authorization/permissions.js";
 import { validate } from "../middlewares/validate";
 import {
   approveCompanyController,
-  deleteCompanyController,
   getAllCompaniesController,
   getCompanyByAdminController,
   getCompanyRequestsController,
@@ -16,7 +15,6 @@ import {
   updateCompanyStatusController,
 } from "../controllers/admin/adminCompanyControllers";
 import {
-  deleteJobController,
   getAllJobsController,
   getCompanyJobsByAdminController,
   getJobApplicationsByAdminController,
@@ -25,7 +23,6 @@ import {
   updateJobStatusController,
 } from "../controllers/admin/adminJobControllers";
 import {
-  deleteUserController,
   getAllUsersController,
   getUserByAdminController,
   updateUserStatusController,
@@ -66,8 +63,6 @@ import {
   getCurrentAdminPermissionsController,
   listAdminRolesController,
   listAdminsController,
-  listAuditLogsController,
-  listPermissionsController,
   updateAdminStatusController,
 } from "../controllers/adminAuthorizationControllers.js";
 import { getAdminUserProfessionalProfileController } from "../controllers/adminUserDetailsControllers.js";
@@ -112,11 +107,6 @@ adminRouter.get(
   requirePermission(PERMISSIONS.VIEW_ADMINS),
   listAdminRolesController
 );
-adminRouter.get(
-  "/permissions",
-  requirePermission(PERMISSIONS.MANAGE_ADMIN_PERMISSIONS),
-  listPermissionsController
-);
 adminRouter.patch(
   "/admins/:userId/role",
   requirePermission(PERMISSIONS.ASSIGN_ADMIN_ROLE),
@@ -128,11 +118,6 @@ adminRouter.patch(
   requirePermission(PERMISSIONS.DISABLE_ADMIN),
   validate(updateAdminStatusSchema),
   updateAdminStatusController
-);
-adminRouter.get(
-  "/audit-logs",
-  requirePermission(PERMISSIONS.VIEW_AUDIT_LOG),
-  listAuditLogsController
 );
 adminRouter.get(
   "/users",
@@ -155,11 +140,6 @@ adminRouter.patch(
   requirePermission(PERMISSIONS.SUSPEND_USERS),
   validate(updateUserStatusSchema),
   updateUserStatusController
-);
-adminRouter.delete(
-  "/users/:userId",
-  requirePermission(PERMISSIONS.DELETE_USERS),
-  deleteUserController
 );
 
 adminRouter.get(
@@ -195,11 +175,6 @@ adminRouter.patch(
   requirePermission(PERMISSIONS.SUSPEND_COMPANIES),
   validate(updateCompanyStatusSchema),
   updateCompanyStatusController
-);
-adminRouter.delete(
-  "/companies/:companyId",
-  requirePermission(PERMISSIONS.DELETE_COMPANIES),
-  deleteCompanyController
 );
 adminRouter.get(
   "/companies/:companyId/jobs",
@@ -258,10 +233,4 @@ adminRouter.patch(
   validate(updateJobStatusSchema),
   updateJobStatusController
 );
-adminRouter.delete(
-  "/jobs/:jobId",
-  requirePermission(PERMISSIONS.DELETE_JOBS),
-  deleteJobController
-);
-
 export default adminRouter;

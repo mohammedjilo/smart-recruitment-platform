@@ -17,12 +17,12 @@ const NotificationList = ({ notifications, isLoading, onClose, onMarkAsRead }: P
          <Box className="space-y-3 px-3 py-4">
             {[0, 1, 2, 3].map(item => (
                <Box
-                  key={item}
-                  className="flex items-start gap-3">
+                  className="flex items-start gap-3"
+                  key={item}>
                   <Skeleton
+                     height={30}
                      variant="circular"
                      width={30}
-                     height={30}
                   />
                   <Box className="flex-1 space-y-1">
                      <Skeleton
@@ -46,8 +46,8 @@ const NotificationList = ({ notifications, isLoading, onClose, onMarkAsRead }: P
             <Typography className="text-content!">No notifications</Typography>
 
             <Typography
-               variant="caption"
-               color="textSecondary">
+               color="textSecondary"
+               variant="caption">
                You&apos;re all caught up.
             </Typography>
          </Box>

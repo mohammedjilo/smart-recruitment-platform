@@ -19,8 +19,8 @@ const DashboardPage = () => {
    const isLoading = queryPresentation.category === "loading"
    const pageHeader = (
       <PageHeader
-         title="Dashboard"
          description="Your activity and opportunities at a glance."
+         title="Dashboard"
       />
    )
 
@@ -31,23 +31,23 @@ const DashboardPage = () => {
             <Box className="grid grid-cols-3 gap-4">
                {Array.from({ length: 3 }).map((_, index) => (
                   <Card
-                     key={index}
-                     className="col-span-1 flex items-center px-2 py-4">
+                     className="col-span-1 flex items-center px-2 py-4"
+                     key={index}>
                      <Skeleton
+                        height={56}
                         variant="rounded"
                         width={56}
-                        height={56}
                      />
                      <Box className="ml-4 flex flex-col gap-2">
                         <Skeleton
+                           height={32}
                            variant="text"
                            width={70}
-                           height={32}
                         />
                         <Skeleton
+                           height={20}
                            variant="text"
                            width={100}
-                           height={20}
                         />
                      </Box>
                   </Card>
@@ -56,14 +56,14 @@ const DashboardPage = () => {
 
             <Box className="my-2 flex justify-between">
                <Skeleton
+                  height={28}
                   variant="text"
                   width={180}
-                  height={28}
                />
                <Skeleton
+                  height={24}
                   variant="text"
                   width={90}
-                  height={24}
                />
             </Box>
 
@@ -71,22 +71,22 @@ const DashboardPage = () => {
                {Array.from({ length: 3 }).map((_, index) => (
                   <Skeleton
                      key={index}
-                     variant="rounded"
                      height={180}
+                     variant="rounded"
                   />
                ))}
             </Box>
 
             <Box className="my-2 flex justify-between">
                <Skeleton
+                  height={28}
                   variant="text"
                   width={170}
-                  height={28}
                />
                <Skeleton
+                  height={24}
                   variant="text"
                   width={90}
-                  height={24}
                />
             </Box>
 
@@ -94,8 +94,8 @@ const DashboardPage = () => {
                {Array.from({ length: 3 }).map((_, index) => (
                   <Skeleton
                      key={index}
-                     variant="rounded"
                      height={80}
+                     variant="rounded"
                   />
                ))}
             </Box>
@@ -113,10 +113,10 @@ const DashboardPage = () => {
          <Box className="flex flex-col">
             {pageHeader}
             <Box className="flex min-h-100 flex-col items-center justify-center gap-3">
-               <Typography className="text-sm! text-red-600!" role="alert" aria-live="assertive">
+               <Typography className="text-sm! text-red-600!" aria-live="assertive" role="alert">
                   {queryPresentation.message}
                </Typography>
-               <Button onClick={query.refetch} className="normal-case!">
+               <Button className="normal-case!" onClick={query.refetch}>
                   Retry
                </Button>
             </Box>
@@ -135,7 +135,7 @@ const DashboardPage = () => {
          <Box>
             {pageHeader}
             <Box className="py-10 text-center">
-               <Typography className="text-sm! text-muted!">
+               <Typography className="text-sm!" color="textSecondary">
                   Dashboard data could not be determined.
                </Typography>
             </Box>
@@ -149,11 +149,11 @@ const DashboardPage = () => {
       <Box className="flex flex-col">
          {pageHeader}
          {queryPresentation.category === "stale_error" && (
-            <Box className="mb-4 flex items-center justify-between gap-3 rounded-lg border border-amber-200 bg-amber-50 px-4 py-3" role="status" aria-live="polite">
+            <Box className="mb-4 flex items-center justify-between gap-3 rounded-lg border border-amber-200 bg-amber-50 px-4 py-3" aria-live="polite" role="status">
                <Typography className="text-sm! text-amber-900!">
                   {queryPresentation.message}
                </Typography>
-               <Button onClick={query.refetch} className="normal-case!">
+               <Button className="normal-case!" onClick={query.refetch}>
                   Retry
                </Button>
             </Box>
@@ -206,8 +206,8 @@ const DashboardPage = () => {
             <Typography>Recommended For You</Typography>
             <Typography>
                <Link
-                  to={`/jobs`}
-                  className="text-primary hover:text-primary-dark underline">
+                  className="text-primary hover:text-primary-dark underline"
+                  to={`/jobs`}>
                   View All
                </Link>
             </Typography>
@@ -226,8 +226,8 @@ const DashboardPage = () => {
             <Typography>Recent Applications</Typography>
             <Typography>
                <Link
-                  to={`/applications`}
-                  className="text-primary hover:text-primary-dark underline">
+                  className="text-primary hover:text-primary-dark underline"
+                  to={`/applications`}>
                   View All
                </Link>
             </Typography>

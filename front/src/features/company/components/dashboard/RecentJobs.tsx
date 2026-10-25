@@ -12,8 +12,8 @@ const RecentJobs = ({ jobs }: RecentJobsProps) => {
    return (
       <Box className="bg-surface overflow-hidden rounded-xl border shadow-[0_1px_2px_rgba(16,24,40,0.03)]">
          <SectionHeader
-            title="Recent Jobs"
             href="/company/jobs"
+            title="Recent Jobs"
          />
 
          <Box className="mt-4 px-5 pb-4">
@@ -37,8 +37,8 @@ const RecentJobs = ({ jobs }: RecentJobsProps) => {
                         {/* Job */}
                         <Box className="mr-2 min-w-0">
                            <Link
-                              to={`/company/jobs/${job.id}/${job.slug}`}
-                              className="hover:text-mui-blue-900 block truncate text-[13px] font-semibold">
+                              className="hover:text-mui-blue-900 block truncate text-[13px] font-semibold"
+                              to={`/company/jobs/${job.id}/${job.slug}`}>
                               {job.title}
                            </Link>
 

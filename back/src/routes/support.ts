@@ -4,29 +4,21 @@ import { validate } from "../middlewares/validate";
 import {
   addSupportMessageSchema,
   assignSupportTicketSchema,
-  createSupportCategorySchema,
   createSupportTicketSchema,
-  supportCategoriesQuerySchema,
   supportAdminTicketsQuerySchema,
-  updateSupportCategorySchema,
   updateSupportTicketPrioritySchema,
   updateSupportTicketStatusSchema,
 } from "../validation/support.validation";
 import {
   addSupportMessageController,
   assignSupportTicketController,
-  closeSupportTicketController,
-  createSupportCategoryController,
   createSupportTicketController,
   getMySupportTicketsController,
   getSupportCategoriesController,
   getSupportDashboardController,
   getSupportTicketByIdController,
   listAllSupportTicketsController,
-  listAssignedSupportTicketsController,
-  listUnassignedSupportTicketsController,
   unassignSupportTicketController,
-  updateSupportCategoryController,
   updateSupportTicketPriorityController,
   updateSupportTicketStatusController,
 } from "../controllers/supportControllers";
@@ -60,16 +52,6 @@ supportRouter.get(
   validate(supportAdminTicketsQuerySchema, "query"),
   listAllSupportTicketsController
 );
-supportRouter.get(
-  "/admin/tickets/unassigned",
-  requireAdmin,
-  listUnassignedSupportTicketsController
-);
-supportRouter.get(
-  "/admin/tickets/assigned",
-  requireAdmin,
-  listAssignedSupportTicketsController
-);
 supportRouter.patch(
   "/admin/tickets/:ticketId/assign",
   requireAdmin,
@@ -93,28 +75,4 @@ supportRouter.patch(
   validate(updateSupportTicketPrioritySchema),
   updateSupportTicketPriorityController
 );
-supportRouter.patch(
-  "/admin/tickets/:ticketId/close",
-  requireAdmin,
-  closeSupportTicketController
-);
-supportRouter.post(
-  "/admin/categories",
-  requireAdmin,
-  validate(createSupportCategorySchema),
-  createSupportCategoryController
-);
-supportRouter.get(
-  "/admin/categories",
-  requireAdmin,
-  validate(supportCategoriesQuerySchema, "query"),
-  getSupportCategoriesController
-);
-supportRouter.patch(
-  "/admin/categories/:categoryId",
-  requireAdmin,
-  validate(updateSupportCategorySchema),
-  updateSupportCategoryController
-);
-
 export default supportRouter;

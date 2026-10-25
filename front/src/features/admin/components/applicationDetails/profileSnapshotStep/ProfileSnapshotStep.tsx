@@ -3,18 +3,20 @@ import { Box, Button, Typography } from "@mui/material"
 import { useState } from "react"
 
 import SnapshotPersonalInfo from "./SnapshotPersonalInfo"
-import SnapshotStats from "./SnapshotStats"
-import SnapshotTabs, { type SnapshotTab } from "./SnapshotTabs"
+import SnapshotStats from "@/features/shared/components/profileSnapshot/SnapshotStats"
+import SnapshotTabs, {
+   type SnapshotTab
+} from "@/features/shared/components/profileSnapshot/SnapshotTabs"
 
-import ExperienceSection from "./ExperienceSection"
-import EducationSection from "./EducationSection"
-import SkillsSection from "./SkillsSection"
-import ProjectsSection from "./ProjectsSection"
-import CertificatesSection from "./CertificatesSection"
-import LanguagesSection from "./LanguagesSection"
+import ExperienceSection from "@/features/shared/components/profileSnapshot/ExperienceSection"
+import EducationSection from "@/features/shared/components/profileSnapshot/EducationSection"
+import SkillsSection from "@/features/shared/components/profileSnapshot/SkillsSection"
+import ProjectsSection from "@/features/shared/components/profileSnapshot/ProjectsSection"
+import CertificatesSection from "@/features/shared/components/profileSnapshot/CertificatesSection"
+import LanguagesSection from "@/features/shared/components/profileSnapshot/LanguagesSection"
 import SnapshotEmptyState from "./SnapshotEmptyState"
 import { useGetProfileSnapshotByAdminQuery } from "@/features/admin/services/adminApiCalls"
-import { AdminProfileSnapshotSkeleton } from "@/features/admin/components/AdminSkeletons"
+import ProfileSnapshotStepSkeleton from "./ProfileSnapshotStepSkeleton"
 import { getQueryState } from "@/utils/queryState"
 import { getQueryPresentation } from "@/utils/presentationPolicy"
 
@@ -31,7 +33,7 @@ const ProfileSnapshotStep = ({ applicationId }: ProfileSnapshotStepProps) => {
    const response = "data" in queryState ? queryState.data : undefined
    const isLoading = queryPresentation.category === "loading"
 
-   if (isLoading) return <AdminProfileSnapshotSkeleton />
+   if (isLoading) return <ProfileSnapshotStepSkeleton />
 
    if (
       queryPresentation.category === "section_error" ||
@@ -41,10 +43,10 @@ const ProfileSnapshotStep = ({ applicationId }: ProfileSnapshotStepProps) => {
    ) {
       return (
          <Box className="flex min-h-64 flex-col items-center justify-center gap-3">
-            <Typography className="text-sm! text-red-600!" role="alert" aria-live="assertive">
+            <Typography className="text-sm! text-red-600!" aria-live="assertive" role="alert">
                {queryPresentation.message}
             </Typography>
-            <Button onClick={query.refetch} className="normal-case!">
+            <Button className="normal-case!" onClick={query.refetch}>
                Retry
             </Button>
          </Box>
@@ -66,11 +68,11 @@ const ProfileSnapshotStep = ({ applicationId }: ProfileSnapshotStepProps) => {
 
    if (queryState.status === "inconsistent" || !response) {
       return (
-         <Box className="flex flex-col items-center gap-3 py-10 text-center" role="alert" aria-live="assertive">
-            <Typography className="text-sm! text-muted!">
+         <Box className="flex flex-col items-center gap-3 py-10 text-center" aria-live="assertive" role="alert">
+            <Typography className="text-sm!" color="textSecondary">
                {queryPresentation.message ?? "Profile snapshot could not be determined."}
             </Typography>
-            <Button onClick={query.refetch} className="normal-case!">
+            <Button className="normal-case!" onClick={query.refetch}>
                Retry
             </Button>
          </Box>
@@ -83,10 +85,10 @@ const ProfileSnapshotStep = ({ applicationId }: ProfileSnapshotStepProps) => {
       if (queryPresentation.category === "stale_error") {
          return (
             <Box className="flex flex-col items-center gap-3 py-10 text-center">
-               <Typography className="text-sm! text-amber-900!" role="status" aria-live="polite">
+               <Typography className="text-sm! text-amber-900!" aria-live="polite" role="status">
                   {queryPresentation.message}
                </Typography>
-               <Button onClick={query.refetch} className="normal-case!">
+               <Button className="normal-case!" onClick={query.refetch}>
                   Retry
                </Button>
             </Box>
@@ -98,11 +100,11 @@ const ProfileSnapshotStep = ({ applicationId }: ProfileSnapshotStepProps) => {
    return (
       <Box className="space-y-4">
          {queryPresentation.category === "stale_error" && (
-            <Box className="flex items-center justify-between gap-3 rounded-lg border border-amber-200 bg-amber-50 px-4 py-3" role="status" aria-live="polite">
+            <Box className="flex items-center justify-between gap-3 rounded-lg border border-amber-200 bg-amber-50 px-4 py-3" aria-live="polite" role="status">
                <Typography className="text-sm! text-amber-900!">
                   {queryPresentation.message}
                </Typography>
-               <Button onClick={query.refetch} className="normal-case!">
+               <Button className="normal-case!" onClick={query.refetch}>
                   Retry
                </Button>
             </Box>

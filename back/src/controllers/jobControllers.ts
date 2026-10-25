@@ -14,13 +14,21 @@ import { AppError } from "../utils/appError.js";
 import { sendSuccess } from "../utils/apiResponse";
 
 const isEmploymentType = (value: string): value is EmploymentType =>
-  Object.values(EmploymentType).some((employmentType) => employmentType === value);
+  Object.values(EmploymentType).some(
+    (employmentType) => employmentType === value
+  );
 
 /**
  * Job HTTP adapter for user reads and company mutations. Job lifecycle,
  * approval, ownership, and deadline rules belong to `job.service.ts`.
  */
 
+/**
+ * @desc Update a company's job status and deadline
+ * @route /api/jobs/:id/status
+ * @method PATCH
+ * @access private
+ */
 export const updateJobStatusController = asyncHandler(
   async (req: Request, res: Response) => {
     const companyId = req.company?.id;
@@ -108,7 +116,7 @@ export const getJobsController = asyncHandler(
 );
 /**
  * @desc Get a job by its ID for the authenticated user
- * @route /api/jobs/:id
+ * @route /api/jobs/:id/:slug
  * @method GET
  * @access private
  */

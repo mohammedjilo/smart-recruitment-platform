@@ -2,18 +2,18 @@ import { ArrowBack, PersonOutlineOutlined } from "@mui/icons-material"
 import { Avatar, Box, Button, Typography } from "@mui/material"
 import { useState } from "react"
 import { useNavigate, useParams } from "react-router-dom"
-import type { ProfileSnapshot } from "@/types/admin"
+import type { ProfileSnapshot } from "@/types/profileSnapshot"
 import { useGetCompleteUserProfileQuery } from "@/features/user/services/userApiCalls"
-import SnapshotStats from "@/features/admin/components/applicationDetails/profileSnapshotStep/SnapshotStats"
+import SnapshotStats from "@/features/shared/components/profileSnapshot/SnapshotStats"
 import SnapshotTabs, {
    type SnapshotTab
-} from "@/features/admin/components/applicationDetails/profileSnapshotStep/SnapshotTabs"
-import ExperienceSection from "@/features/admin/components/applicationDetails/profileSnapshotStep/ExperienceSection"
-import EducationSection from "@/features/admin/components/applicationDetails/profileSnapshotStep/EducationSection"
-import SkillsSection from "@/features/admin/components/applicationDetails/profileSnapshotStep/SkillsSection"
-import ProjectsSection from "@/features/admin/components/applicationDetails/profileSnapshotStep/ProjectsSection"
-import CertificatesSection from "@/features/admin/components/applicationDetails/profileSnapshotStep/CertificatesSection"
-import LanguagesSection from "@/features/admin/components/applicationDetails/profileSnapshotStep/LanguagesSection"
+} from "@/features/shared/components/profileSnapshot/SnapshotTabs"
+import ExperienceSection from "@/features/shared/components/profileSnapshot/ExperienceSection"
+import EducationSection from "@/features/shared/components/profileSnapshot/EducationSection"
+import SkillsSection from "@/features/shared/components/profileSnapshot/SkillsSection"
+import ProjectsSection from "@/features/shared/components/profileSnapshot/ProjectsSection"
+import CertificatesSection from "@/features/shared/components/profileSnapshot/CertificatesSection"
+import LanguagesSection from "@/features/shared/components/profileSnapshot/LanguagesSection"
 import { CompanyCandidateProfileSkeleton } from "@/features/company/components/CompanySkeletons"
 import { getQueryState } from "@/utils/queryState"
 import { getQueryPresentation } from "@/utils/presentationPolicy"
@@ -38,9 +38,9 @@ const CandidateProfilePage = () => {
                Select an application to view the candidate profile.
             </Typography>
             <Button
+               className="normal-case!"
                startIcon={<ArrowBack />}
-               onClick={() => navigate("/company/applications")}
-               className="normal-case!">
+               onClick={() => navigate("/company/applications")}>
                Back to Applications
             </Button>
          </Box>
@@ -61,19 +61,19 @@ const CandidateProfilePage = () => {
          <Box className="flex min-h-[60vh] flex-col items-center justify-center gap-3">
             <Typography
                className="text-muted text-sm!"
-               role="alert"
-               aria-live="assertive">
+               aria-live="assertive"
+               role="alert">
                {queryPresentation.message}
             </Typography>
             <Button
-               onClick={query.refetch}
-               className="normal-case!">
+               className="normal-case!"
+               onClick={query.refetch}>
                Retry
             </Button>
             <Button
+               className="normal-case!"
                startIcon={<ArrowBack />}
-               onClick={() => navigate("/company/applications")}
-               className="normal-case!">
+               onClick={() => navigate("/company/applications")}>
                Back to Applications
             </Button>
          </Box>
@@ -133,7 +133,8 @@ const CandidateProfilePage = () => {
       ),
       languages: profile.languages.map(
          (language: (typeof profile.languages)[number]) => ({
-            language: language.languageName
+            language: language.languageName,
+            level: language.level
          })
       )
    }
@@ -143,33 +144,33 @@ const CandidateProfilePage = () => {
          {queryPresentation.category === "stale_error" && (
             <Box
                className="flex items-center justify-between gap-3 rounded-lg border border-amber-200 bg-amber-50 px-4 py-3"
-               role="status"
-               aria-live="polite">
+               aria-live="polite"
+               role="status">
                <Typography className="text-sm! text-amber-900!">
                   {queryPresentation.message}
                </Typography>
                <Button
-                  onClick={query.refetch}
-                  className="normal-case!">
+                  className="normal-case!"
+                  onClick={query.refetch}>
                   Retry
                </Button>
             </Box>
          )}
          <Button
-            startIcon={<ArrowBack />}
-            onClick={() => navigate("/company/users")}
-            variant="outlined"
+            className="my-2! normal-case!"
             color="primary"
-            className="my-2! normal-case!">
+            startIcon={<ArrowBack />}
+            variant="outlined"
+            onClick={() => navigate("/company/users")}>
             Back to Users
          </Button>
 
          <Box className="bg-surface rounded-xl border p-5 shadow-none">
             <Box className="flex items-center gap-4">
                <Avatar
-                  src={profile.profilePicUrl ?? undefined}
+                  className="h-20! w-20! text-2xl!"
                   alt={fullName}
-                  className="h-20! w-20! text-2xl!">
+                  src={profile.profilePicUrl ?? undefined}>
                   {profile.firstName.charAt(0)}
                </Avatar>
                <Box className="min-w-0">

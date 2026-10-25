@@ -13,9 +13,9 @@ const ApplicationOverview = ({ application }: ApplicationOverviewProps) => {
          <ApplicationSummary application={application} />
 
          <RecommendationCard
+            missingSkills={application.missingSkills}
             recommendation={application.recommendation}
             strengths={application.strengths}
-            missingSkills={application.missingSkills}
          />
       </Box>
    )

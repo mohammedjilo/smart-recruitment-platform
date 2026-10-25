@@ -124,15 +124,9 @@ const UsersTable = ({
    })
 
    return (
-      <>
+      <Box className="contents">
          <DataTable
-            rows={users}
             columns={columns}
-            getRowKey={user => user.id}
-            isLoading={isLoading}
-            isFetching={isFetching}
-            queryState={queryState}
-            onRetry={onRetry}
             emptyState={
                <Box className="flex min-h-50 items-center justify-center py-20">
                   <Typography className="text-sm! text-muted">
@@ -140,9 +134,15 @@ const UsersTable = ({
                   </Typography>
                </Box>
             }
-            pagination={pagination}
-            onPageChange={onPageChange}
+            getRowKey={user => user.id}
+            isFetching={isFetching}
+            isLoading={isLoading}
             itemLabel="users"
+            pagination={pagination}
+            queryState={queryState}
+            rows={users}
+            onPageChange={onPageChange}
+            onRetry={onRetry}
          />
 
          <Menu
@@ -150,14 +150,14 @@ const UsersTable = ({
             open={Boolean(menuAnchor)}
             onClose={closeActionsMenu}>
             <MenuItem
-               onClick={handleStatusChange}
-               disabled={isUpdatingStatus}>
+               disabled={isUpdatingStatus}
+               onClick={handleStatusChange}>
                {selectedUser?.accountStatus === "ACTIVE"
                   ? "Deactivate User"
                   : "Reactivate User"}
             </MenuItem>
          </Menu>
-      </>
+      </Box>
    )
 }
 

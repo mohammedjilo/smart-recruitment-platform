@@ -63,7 +63,7 @@ export const getCompanyJobsQuerySchema = z.object({
   page: z.coerce.number().int().min(1).optional().default(1),
   search: z.string().trim().optional(),
   status: z
-    .enum(["ALL", "OPEN", "CLOSED", "DRAFT", "EXPIRED"])
+    .enum(["ALL", "OPEN", "CLOSED", "EXPIRED"])
     .optional()
     .default("ALL"),
   employmentType: z
@@ -118,6 +118,10 @@ export const getJobApplicationsQuerySchema = z.object({
     .optional()
     .default("ALL"),
   experience: z.enum(["ALL", "0-2", "3-5", "6+"]).optional().default("ALL"),
+  matchScore: z
+    .enum(["ALL", "HIGH", "GOOD", "FAIR", "LOW"])
+    .optional()
+    .default("ALL"),
 });
 
 export const getAdminApplicationsQuerySchema = getJobApplicationsQuerySchema;
@@ -140,7 +144,7 @@ export const getAdminCompanyApplicationsQuerySchema = z.object({
     .optional()
     .default("ALL"),
   matchScore: z
-    .enum(["ALL", "HIGH", "GOOD", "FAIR", "LOW", "UNSCORED"])
+    .enum(["ALL", "HIGH", "GOOD", "FAIR", "LOW"])
     .optional()
     .default("ALL"),
 });

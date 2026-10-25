@@ -1,6 +1,5 @@
 import type { ReactNode } from "react"
-import { Navigate } from "react-router-dom"
-import { usePermissions } from "./usePermissions"
+import { Navigate, useOutletContext } from "react-router-dom"
 import type { AdminPermission } from "@/types/adminPermissions"
 
 type Props = {
@@ -16,17 +15,18 @@ export default function PermissionGuard({
    children,
    fallback
 }: Props) {
-   const { hasPermission } = usePermissions()
+   const serverPermissions = useOutletContext<AdminPermission[]>()
+
    const isAllowed =
-      (permission ? hasPermission(permission) : false) ||
-      Boolean(permissions?.some(requiredPermission => hasPermission(requiredPermission)))
+      (permission ? serverPermissions.includes(permission) : false) ||
+      Boolean(permissions?.some(requiredPermission => serverPermissions.includes(requiredPermission)))
 
    if (!isAllowed) {
       return (
          fallback ?? (
             <Navigate
-               to="/admin/forbidden"
                replace
+               to="/admin/forbidden"
             />
          )
       )

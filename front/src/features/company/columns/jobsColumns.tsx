@@ -69,62 +69,61 @@ const JobActionsCell = ({
    const showOpenAction = isJobClosed || isJobDraft || isExpired
 
    return (
-      <>
+      <Box className="contents">
          <Box className="flex items-center justify-center gap-1">
             <IconButton
-               title="View Job"
                className="text-primary! hover:bg-primary-tint! flex h-8 w-8 items-center justify-center rounded-lg transition"
+               title="View Job"
                onClick={() => navigate(`/company/jobs/${job.id}/${job.slug}`)}>
-               <VisibilityOutlinedIcon sx={{ fontSize: 18 }} />
+               <VisibilityOutlinedIcon className="text-lg!" />
             </IconButton>
 
             <IconButton
-               title="Edit Job"
                className="text-primary! hover:bg-primary-tint! hover:text-primary-dark! flex h-8 w-8 items-center justify-center rounded-lg transition"
+               title="Edit Job"
                onClick={() => navigate(`/company/jobs/${job.id}/${job.slug}/edit`)}>
-               <EditOutlinedIcon sx={{ fontSize: 18 }} />
+               <EditOutlinedIcon className="text-lg!" />
             </IconButton>
 
             <IconButton
-               title="More"
-               disabled={isUpdating}
                className="text-muted flex h-8 w-8 items-center justify-center rounded-lg transition hover:bg-slate-100"
+               disabled={isUpdating}
+               title="More"
                onClick={handleMenuOpen}>
-               <MoreVertIcon sx={{ fontSize: 18 }} />
+               <MoreVertIcon className="text-lg!" />
             </IconButton>
          </Box>
 
          <Menu
             anchorEl={menuAnchor}
-            open={Boolean(menuAnchor)}
-            onClose={handleMenuClose}
             anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
-            transformOrigin={{ vertical: "top", horizontal: "right" }}
+            open={Boolean(menuAnchor)}
             slotProps={{
                paper: {
                   className: "!rounded-xl !border !border-border !shadow-lg"
                }
-            }}>
+            }}
+            transformOrigin={{ vertical: "top", horizontal: "right" }}
+            onClose={handleMenuClose}>
             <MenuItem
-               onClick={handleToggleJobStatus}
-               disabled={isUpdating}
-               className={
+               className={`${
                   showOpenAction
                      ? "px-3! py-2! text-green-600!"
                      : "px-3! py-2! text-red-600!"
-               }
-               sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+               } flex! items-center! gap-2!`}
+               disabled={isUpdating}
+               onClick={handleToggleJobStatus}>
                {showOpenAction ? (
-                  <LockOpenOutlinedIcon sx={{ fontSize: 18 }} />
+                  <LockOpenOutlinedIcon className="text-lg!" />
                ) : (
-                  <DeleteOutlineOutlinedIcon sx={{ fontSize: 18 }} />
+                  <DeleteOutlineOutlinedIcon className="text-lg!" />
                )}
                <Box className="text-sm font-medium">
                   {isExpired ? "Reopen Job" : showOpenAction ? "Open Job" : "Close Job"}
                </Box>
             </MenuItem>
          </Menu>
-      </>
+      </Box>
    )
 }
 
@@ -203,13 +202,7 @@ export const getCompanyJobsColumns = ({
 
          return (
             <Box className="flex items-start gap-2">
-               <CalendarTodayOutlinedIcon
-                  sx={{
-                     fontSize: 15,
-                     color: "#64748b",
-                     marginTop: "2px"
-                  }}
-               />
+               <CalendarTodayOutlinedIcon className="mt-0.5! text-[15px]! text-[#64748b]!" />
 
                <Box>
                   <Typography
@@ -246,9 +239,9 @@ export const getCompanyJobsColumns = ({
       width: 120,
       render: job => (
          <JobActionsCell
+            isUpdating={isUpdating}
             job={job}
             onToggleJobStatus={onToggleJobStatus}
-            isUpdating={isUpdating}
          />
       )
    }

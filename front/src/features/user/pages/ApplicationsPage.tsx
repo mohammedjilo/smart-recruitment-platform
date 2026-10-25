@@ -1,5 +1,3 @@
-// ApplicationsPage.tsx
-
 import React, { useEffect, useMemo, useState } from "react"
 import { Box, Paper, Typography } from "@mui/material"
 import { skipToken } from "@reduxjs/toolkit/query"
@@ -15,7 +13,6 @@ import Statistics, {
 import PaginationFooter from "@/components/common/PaginationFooter"
 import { useSearchParams } from "react-router-dom"
 import ApplicationItem from "@/features/user/components/application/ApplicationItem"
-import ApplicationsHeader from "@/features/user/components/application/ApplicationsHeader"
 import ApplicationsLoadingState from "@/features/user/components/application/ApplicationsLoadingState"
 import ApplicationsErrorState from "@/features/user/components/application/ApplicationsErrorState"
 import ApplicationsEmptyState from "@/features/user/components/application/ApplicationsEmptyState"
@@ -28,6 +25,7 @@ import ApplicationsFilters, {
 import type { ApplicationStatus } from "@/types/common/enums"
 import { getQueryState } from "@/utils/queryState"
 import { getQueryPresentation } from "@/utils/presentationPolicy"
+import PageHeader from "@/components/common/PageHeader"
 
 /* =========================================================
    Main Component
@@ -39,9 +37,7 @@ const ApplicationsPage: React.FC = () => {
    const search = searchParams.get("search") ?? ""
    const statusParam = searchParams.get("status") ?? "ALL"
    const status: ApplicationStatus | "ALL" =
-      statusParam === "ALL" || isApplicationStatus(statusParam)
-      ? statusParam
-      : "ALL"
+      statusParam === "ALL" || isApplicationStatus(statusParam) ? statusParam : "ALL"
    const matchScoreParam = searchParams.get("matchScore") ?? "ALL"
    const matchScore: ApplicationMatchScore = isApplicationMatchScore(matchScoreParam)
       ? matchScoreParam
@@ -57,8 +53,7 @@ const ApplicationsPage: React.FC = () => {
       sortOrder: sort === "newest" ? "desc" : "asc"
    })
    const queryState = getQueryState(query, {
-      isEmpty: response =>
-         !Array.isArray(response?.data) || response.data.length === 0,
+      isEmpty: response => !Array.isArray(response?.data) || response.data.length === 0,
       noResults:
          (Boolean(search) ||
             status !== "ALL" ||
@@ -69,9 +64,7 @@ const ApplicationsPage: React.FC = () => {
    })
    const queryPresentation = getQueryPresentation(queryState, "page")
 
-   const [selectedApplicationId, setSelectedApplicationId] = useState<string | null>(
-      null
-   )
+   const [selectedApplicationId, setSelectedApplicationId] = useState<string | null>(null)
    const applicationDetailsQuery = useGetMyApplicationDetailsQuery(
       selectedApplicationId ?? skipToken
    )
@@ -140,25 +133,28 @@ const ApplicationsPage: React.FC = () => {
    ) {
       return (
          <ApplicationsErrorState
-            onRetry={query.refetch}
             message={queryPresentation.message}
+            onRetry={query.refetch}
          />
       )
    }
 
    return (
       <Box className="min-h-full">
-         <ApplicationsHeader />
-
+         <PageHeader
+            description="Track the status of your job applications and view match insights."
+            title="My Applications"
+         />
          {/* =================================================
              Statistics
          ================================================= */}
          <Statistics applications={applications} />
          <ApplicationsFilters
-            search={search}
-            status={status}
             matchScore={matchScore}
+            search={search}
             sort={sort}
+            status={status}
+            onMatchScoreChange={value => updateFilter("matchScore", value)}
             onSearchSubmit={submittedSearch => {
                const params = new URLSearchParams(searchParams)
                if (submittedSearch.trim()) {
@@ -170,19 +166,21 @@ const ApplicationsPage: React.FC = () => {
                setSearchParams(params)
                setSelectedApplicationId(null)
             }}
-            onStatusChange={value => updateFilter("status", value)}
-            onMatchScoreChange={value => updateFilter("matchScore", value)}
             onSortChange={value => updateFilter("sort", value)}
+            onStatusChange={value => updateFilter("status", value)}
          />
          {queryPresentation.category === "stale_error" && (
-            <Box className="mt-6 flex items-center justify-between gap-3 rounded-lg border border-amber-200 bg-amber-50 px-4 py-3" role="status" aria-live="polite">
+            <Box
+               className="mt-6 flex items-center justify-between gap-3 rounded-lg border border-amber-200 bg-amber-50 px-4 py-3"
+               aria-live="polite"
+               role="status">
                <Typography className="text-sm! text-amber-900!">
                   {queryPresentation.message}
                </Typography>
                <button
+                  className="text-sm font-semibold text-amber-900"
                   type="button"
-                  onClick={query.refetch}
-                  className="text-sm font-semibold text-amber-900">
+                  onClick={query.refetch}>
                   Try again
                </button>
             </Box>
@@ -204,8 +202,8 @@ const ApplicationsPage: React.FC = () => {
                ================================================= */}
 
                <Paper
-                  elevation={0}
-                  className="overflow-hidden rounded-xl! border! border-[#E7EAF0]! bg-surface!">
+                  className="bg-surface! overflow-hidden rounded-xl! border! border-[#E7EAF0]!"
+                  elevation={0}>
                   <Box className="border-b border-[#E7EAF0] px-5 py-4">
                      <Typography className="font-semibold! text-[#17213B]!">
                         All ApplicationsPage
@@ -254,15 +252,15 @@ const ApplicationsPage: React.FC = () => {
                               <ApplicationItem
                                  key={application.id}
                                  application={application}
-                                 selected={selected}
                                  handleSelectApplication={handleSelectApplication}
+                                 selected={selected}
                               />
                            )
                         })}
                      </Box>
                   ) : queryPresentation.category === "silent" ? null : (
                      <Box className="p-8 text-center">
-                        <Typography className="text-sm! text-muted!">
+                        <Typography className="text-sm!" color="textSecondary">
                            {queryPresentation.message ??
                               "Unable to determine the current applications."}
                         </Typography>
@@ -274,13 +272,13 @@ const ApplicationsPage: React.FC = () => {
                    Pagination
                ================================================= */}
                <PaginationFooter
-                  page={page}
-                  totalCount={totalCount}
-                  pageSize={pageSize}
-                  setPage={setPage}
-                  itemLabel="applications"
                   isFetching={queryPresentation.category === "refreshing"}
+                  itemLabel="applications"
+                  page={page}
+                  pageSize={pageSize}
                   queryState={queryState}
+                  setPage={setPage}
+                  totalCount={totalCount}
                />
             </Box>
 
@@ -288,27 +286,28 @@ const ApplicationsPage: React.FC = () => {
                 Application Details
             ================================================= */}
 
-            {selectedApplicationId && applicationDetailsQuery.isFetching &&
+            {selectedApplicationId &&
+            applicationDetailsQuery.isFetching &&
             !applicationDetailsQuery.currentData ? (
                <Paper
-                  elevation={0}
-                  className="h-fit rounded-xl! border! border-[#E7EAF0]! bg-surface! p-6">
+                  className="bg-surface! h-fit rounded-xl! border! border-[#E7EAF0]! p-6"
+                  elevation={0}>
                   <Typography className="text-sm! text-[#64748B]!">
                      Loading application details...
                   </Typography>
                </Paper>
             ) : selectedApplicationId && applicationDetailsQuery.isError ? (
                <Paper
+                  className="bg-surface! h-fit rounded-xl! border! border-[#E7EAF0]! p-6"
                   elevation={0}
-                  className="h-fit rounded-xl! border! border-[#E7EAF0]! bg-surface! p-6"
                   role="alert">
                   <Typography className="text-sm! text-[#B42318]!">
                      Could not load this application’s details.
                   </Typography>
                   <button
+                     className="mt-3 text-sm font-semibold text-[#6741E8]"
                      type="button"
-                     onClick={() => void applicationDetailsQuery.refetch()}
-                     className="mt-3 text-sm font-semibold text-[#6741E8]">
+                     onClick={() => void applicationDetailsQuery.refetch()}>
                      Try again
                   </button>
                </Paper>

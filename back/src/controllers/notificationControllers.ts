@@ -3,7 +3,6 @@ import { asyncHandler } from "../utils/asyncHandler";
 import { AppError } from "../utils/appError";
 import { parsePagination } from "../utils/pagination";
 import {
-  deleteNotification,
   getAdminNotifications,
   getCompanyNotifications,
   getUserNotifications,
@@ -17,6 +16,12 @@ import { sendSuccess } from "../utils/apiResponse";
  * recipient context so ownership stays in the notification service.
  */
 
+/**
+ * @desc Get notifications for the authenticated account
+ * @route /api/notification
+ * @method GET
+ * @access private
+ */
 export const getNotificationsController = asyncHandler(
   async (req: Request, res: Response) => {
     const userId = req.user?.id;
@@ -106,6 +111,12 @@ export const getNotificationsController = asyncHandler(
   }
 );
 
+/**
+ * @desc Mark one notification as read
+ * @route /api/notification/:notificationId/read
+ * @method PATCH
+ * @access private
+ */
 export const markNotificationAsReadController = asyncHandler(
   async (req: Request, res: Response) => {
     const userId = req.user?.id;
@@ -130,6 +141,12 @@ export const markNotificationAsReadController = asyncHandler(
   }
 );
 
+/**
+ * @desc Mark all notifications as read
+ * @route /api/notification/read-all
+ * @method PATCH
+ * @access private
+ */
 export const markAllNotificationsAsReadController = asyncHandler(
   async (req: Request, res: Response) => {
     const userId = req.user?.id;
@@ -142,28 +159,6 @@ export const markAllNotificationsAsReadController = asyncHandler(
     const result = companyId
       ? await markAllNotificationsAsRead({ companyId })
       : await markAllNotificationsAsRead({ userId: userId! });
-
-    sendSuccess(res, 200, undefined, { message: result.message });
-  }
-);
-
-export const deleteNotificationController = asyncHandler(
-  async (req: Request, res: Response) => {
-    const userId = req.user?.id;
-    const companyId = req.company?.id;
-    const { notificationId } = req.params as { notificationId?: string };
-
-    if (!userId && !companyId) {
-      throw new AppError("Authentication required", 401);
-    }
-
-    if (!notificationId) {
-      throw new AppError("Notification id is required", 400);
-    }
-
-    const result = companyId
-      ? await deleteNotification({ companyId }, notificationId)
-      : await deleteNotification({ userId: userId! }, notificationId);
 
     sendSuccess(res, 200, undefined, { message: result.message });
   }

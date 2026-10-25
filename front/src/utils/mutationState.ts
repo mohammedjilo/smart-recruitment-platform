@@ -20,11 +20,6 @@ export type SemanticMutationState<TData = unknown> =
            | "no_lifecycle_state"
      }
 
-export type MutationActionOutcome<TData = unknown> = Extract<
-   SemanticMutationState<TData>,
-   { status: "success" | "error" | "aborted" }
->
-
 export interface RawMutationState<TData> {
    isUninitialized: boolean
    isLoading: boolean

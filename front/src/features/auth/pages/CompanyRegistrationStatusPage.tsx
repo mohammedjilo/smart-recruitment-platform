@@ -24,12 +24,12 @@ export default function CompanyRegistrationStatusPage({
    if (review && review.registrationStatus !== status) {
       return (
          <Navigate
+            replace
             to={
                review.registrationStatus === "PENDING"
                   ? "/company/registration/pending"
                   : "/company/registration/rejected"
             }
-            replace
          />
       )
    }
@@ -45,7 +45,7 @@ export default function CompanyRegistrationStatusPage({
          <CustomCard>
             <Box className="space-y-5">
                <Box className="space-y-2">
-                  <Typography variant="h4" component="h1" className="font-bold!">
+                  <Typography className="font-bold!" component="h1" variant="h4">
                      {isPending
                         ? "Registration Under Review"
                         : "Registration Rejected"}
@@ -62,8 +62,8 @@ export default function CompanyRegistrationStatusPage({
                      Current status:
                   </Typography>
                   <Chip
-                     label={isPending ? "Pending Review" : "Registration Rejected"}
                      color={isPending ? "warning" : "error"}
+                     label={isPending ? "Pending Review" : "Registration Rejected"}
                   />
                   {relevantDate && (
                      <Typography color="text.secondary">

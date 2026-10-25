@@ -18,17 +18,17 @@ const ApplicationActionsCell = ({
    onViewApplication: (application: CompanyApplication) => void
 }) => {
    return (
-      <>
+      <Box className="contents">
          <Box className="flex justify-center gap-1">
             <IconButton
-               size="small"
+               className="border-border! border!"
                color="primary"
-               onClick={() => onViewApplication(application)}
-               className="border! border-border!">
-               <RemoveRedEyeOutlined sx={{ fontSize: 16 }} />
+               size="small"
+               onClick={() => onViewApplication(application)}>
+               <RemoveRedEyeOutlined className="text-base!" />
             </IconButton>
          </Box>
-      </>
+      </Box>
    )
 }
 
@@ -47,12 +47,8 @@ export const getCompanyApplicationsColumns = ({
          return (
             <Box className="flex items-center gap-3">
                <Avatar
-                  src={application.user.profilePicUrl ?? undefined}
-                  sx={{
-                     width: 34,
-                     height: 34,
-                     fontSize: "12px"
-                  }}>
+                  className="h-8.5! w-8.5! text-xs!"
+                  src={application.user.profilePicUrl ?? undefined}>
                   {application.user.firstName?.charAt(0)}
                </Avatar>
 

@@ -14,6 +14,7 @@ import { getQueryState } from "@/utils/queryState"
 import { getQueryPresentation } from "@/utils/presentationPolicy"
 import {
    emptyLocationSelection,
+   isLocationSelectionComplete,
    type LocationSelection
 } from "@/components/common/CountryCitySelector"
 
@@ -28,6 +29,7 @@ const UsersPage = () => {
 
    const [status, setStatus] = useState<UserStatus | "ALL">("ALL")
    const [location, setLocation] = useState<LocationSelection>(emptyLocationSelection)
+   const hasCompleteLocation = isLocationSelectionComplete(location)
 
    /*
     * Debounce Search
@@ -46,17 +48,19 @@ const UsersPage = () => {
       search: debouncedSearch || undefined,
       status,
       role: "USER",
-      country: location.countryName || undefined,
-      countryCode: location.countryCode || undefined,
-      city: location.cityName || undefined,
-      cityGeonameId: location.cityGeonameId ?? undefined
+      country: hasCompleteLocation ? location.countryName : undefined,
+      countryCode: hasCompleteLocation ? location.countryCode : undefined,
+      city: hasCompleteLocation ? location.cityName : undefined,
+      cityGeonameId: hasCompleteLocation
+         ? (location.cityGeonameId ?? undefined)
+         : undefined
    })
    const queryState = getQueryState(query, {
       isEmpty: response => response.data.length === 0,
       noResults:
          Boolean(search.trim()) ||
          status !== "ALL" ||
-         Boolean(location.countryName || location.cityGeonameId) ||
+         hasCompleteLocation ||
          (query.currentData?.data.length === 0 &&
             (query.currentData?.meta?.totalCount ?? 0) > 0)
    })
@@ -88,8 +92,8 @@ const UsersPage = () => {
          {/* Stats */}
          {isLoading ? (
             <AdminStatsSkeleton
-               count={3}
                className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3"
+               count={3}
             />
          ) : queryPresentation.category === "page_error" ||
            queryPresentation.category === "authentication_notice" ||
@@ -97,15 +101,15 @@ const UsersPage = () => {
            queryPresentation.category === "resource_not_found" ? (
             <Typography
                className="text-sm! text-red-500!"
-               role="alert"
-               aria-live="assertive">
+               aria-live="assertive"
+               role="alert">
                {queryPresentation.message}
             </Typography>
          ) : queryPresentation.category === "stale_error" ? (
             <Typography
                className="text-sm! text-amber-700!"
-               role="status"
-               aria-live="polite">
+               aria-live="polite"
+               role="status">
                {queryPresentation.message}
             </Typography>
          ) : response ? (
@@ -117,28 +121,28 @@ const UsersPage = () => {
             <FiltersBarSkeleton fields={["search", "control"]} />
          ) : (
             <UsersFilters
+               location={location}
                search={search}
                status={status}
-               location={location}
-               onSearchChange={setSearch}
-               onStatusChange={handleStatusChange}
                onLocationChange={value => {
                   setLocation(value)
                   setPage(1)
                }}
+               onSearchChange={setSearch}
+               onStatusChange={handleStatusChange}
             />
          )}
 
          {/* UsersPage Section */}
          <UsersTable
-            users={users}
-            onView={handleViewUser}
-            isLoading={isLoading}
             isFetching={queryPresentation.category === "refreshing"}
-            queryState={queryState}
-            onRetry={query.refetch}
+            isLoading={isLoading}
             pagination={pagination}
+            queryState={queryState}
+            users={users}
             onPageChange={setPage}
+            onRetry={query.refetch}
+            onView={handleViewUser}
          />
       </Box>
    )

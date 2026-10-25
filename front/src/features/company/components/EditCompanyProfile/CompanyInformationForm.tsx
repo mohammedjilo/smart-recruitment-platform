@@ -1,8 +1,12 @@
 import React from "react"
 
-import { LanguageOutlined, LocationOnOutlined, PhoneOutlined } from "@mui/icons-material"
+import {
+   LanguageOutlined,
+   PhoneOutlined
+} from "@mui/icons-material"
 
-import { InputAdornment, Paper, TextField } from "@mui/material"
+import { Box, InputAdornment, Paper, TextField, Typography } from "@mui/material"
+import CountryCitySelector from "@/components/common/CountryCitySelector"
 import type { CompanyProfileFormValues } from "./types"
 
 interface CompanyInformationFormProps {
@@ -12,132 +16,123 @@ interface CompanyInformationFormProps {
       field: K,
       value: CompanyProfileFormValues[K]
    ) => void
+   onLocationChange: (location: CompanyProfileFormValues["locationSelection"]) => void
 }
 
 const CompanyInformationForm: React.FC<CompanyInformationFormProps> = ({
    form,
-   onChange
+   onChange,
+   onLocationChange
 }) => {
    return (
       <Paper
-         elevation={0}
-         className="rounded-[10px]! border! p-5">
-         <h2 className="text-[15px] font-semibold text-[#172033]">Company Information</h2>
+         className="rounded-[10px]! border! p-5"
+         elevation={0}>
+         <Typography
+            className="text-[15px]! font-semibold!"
+            variant="h2">
+            Company Information
+         </Typography>
 
-         <div className="mt-5 grid grid-cols-1 gap-x-5 gap-y-5 md:grid-cols-2">
+         <Box className="mt-5 grid grid-cols-1 gap-x-5 gap-y-5 md:grid-cols-2">
             {/* Company Name */}
             <ProfileField
-               label="Company Name"
-               required>
+               required
+               label="Company Name">
                <TextField
+                  value={form.companyName}
                   fullWidth
                   size="small"
-                  value={form.companyName}
                   onChange={event => onChange("companyName", event.target.value)}
                />
             </ProfileField>
 
             {/* Email */}
             <ProfileField
-               label="Email Address"
-               required>
+               required
+               label="Email Address">
                <TextField
-                  fullWidth
-                  size="small"
                   type="email"
                   value={form.email}
+                  fullWidth
+                  size="small"
                   onChange={event => onChange("email", event.target.value)}
                />
             </ProfileField>
 
             {/* Phone */}
             <ProfileField
-               label="Phone Number"
-               required>
+               required
+               label="Phone Number">
                <TextField
+                  value={form.phone}
                   fullWidth
                   size="small"
-                  value={form.phone}
-                  onChange={event => onChange("phone", event.target.value)}
                   slotProps={{
                      input: {
                         startAdornment: (
                            <InputAdornment position="start">
-                              <PhoneOutlined
-                                 sx={{
-                                    fontSize: 18,
-                                    color: "#64748b"
-                                 }}
-                              />
+                              <PhoneOutlined className="text-lg! text-[#64748b]!" />
                            </InputAdornment>
                         )
                      }
                   }}
+                  onChange={event => onChange("phone", event.target.value)}
                />
             </ProfileField>
 
             {/* Website */}
             <ProfileField label="Website">
                <TextField
+                  placeholder="https://example.com"
+                  value={form.website}
                   fullWidth
                   size="small"
-                  value={form.website}
-                  placeholder="https://example.com"
-                  onChange={event => onChange("website", event.target.value)}
                   slotProps={{
                      input: {
                         startAdornment: (
                            <InputAdornment position="start">
-                              <LanguageOutlined
-                                 sx={{
-                                    fontSize: 18,
-                                    color: "#64748b"
-                                 }}
-                              />
+                              <LanguageOutlined className="text-lg! text-[#64748b]!" />
                            </InputAdornment>
                         )
                      }
                   }}
+                  onChange={event => onChange("website", event.target.value)}
                />
             </ProfileField>
 
             {/* Location */}
-            <ProfileField label="Location">
-               <TextField
-                  fullWidth
-                  size="small"
-                  value={form.location}
-                  onChange={event => onChange("location", event.target.value)}
-                  slotProps={{
-                     input: {
-                        startAdornment: (
-                           <InputAdornment position="start">
-                              <LocationOnOutlined
-                                 sx={{
-                                    fontSize: 18,
-                                    color: "#64748b"
-                                 }}
-                              />
-                           </InputAdornment>
-                        )
+            <Box className="md:col-span-2">
+               <ProfileField label="Location">
+                  <CountryCitySelector
+                     value={form.locationSelection}
+                     errors={
+                        form.locationSelection.countryCode &&
+                        !form.locationSelection.cityGeonameId
+                           ? { cityGeonameId: "Select a city from the suggestions." }
+                           : undefined
                      }
-                  }}
-               />
-            </ProfileField>
-
-         </div>
+                     onChange={onLocationChange}
+                  />
+                  {form.location && !form.locationSelection.countryCode && (
+                     <Typography className="mt-1! text-[11px]!" color="textSecondary">
+                        Current saved location: {form.location}
+                     </Typography>
+                  )}
+               </ProfileField>
+            </Box>
+         </Box>
 
          {/* Description */}
-         <div className="mt-5">
+         <Box className="mt-5">
             <ProfileField label="Company Description">
                <TextField
-                  fullWidth
-                  multiline
-                  minRows={5}
-                  value={form.description}
                   placeholder="Tell candidates about your company..."
-                  onChange={event => onChange("description", event.target.value)}
+                  value={form.description}
+                  fullWidth
                   helperText={`${form.description.length}/1000`}
+                  minRows={5}
+                  multiline
                   slotProps={{
                      htmlInput: {
                         maxLength: 1000
@@ -149,9 +144,10 @@ const CompanyInformationForm: React.FC<CompanyInformationFormProps> = ({
                         }
                      }
                   }}
+                  onChange={event => onChange("description", event.target.value)}
                />
             </ProfileField>
-         </div>
+         </Box>
       </Paper>
    )
 }
@@ -164,15 +160,15 @@ interface ProfileFieldProps {
 
 const ProfileField: React.FC<ProfileFieldProps> = ({ label, required, children }) => {
    return (
-      <div>
-         <p className="mb-2 text-[11px] font-semibold text-content">
+      <Box>
+         <Typography className="text-content! mb-2! text-[11px]! font-semibold!">
             {label}
 
             {required && <span className="ml-1 text-red-500">*</span>}
-         </p>
+         </Typography>
 
          {children}
-      </div>
+      </Box>
    )
 }
 

@@ -22,9 +22,9 @@ const CandidateInformation = ({ application }: CandidateInformationProps) => {
    return (
       <Box className="flex flex-col gap-5 sm:flex-row sm:items-start">
          <Avatar
-            src={user.profilePicUrl ?? undefined}
+            className="bg-primary/10 text-primary h-20 w-20 text-2xl font-bold"
             alt={fullName}
-            className="bg-primary/10 text-primary h-20 w-20 text-2xl font-bold">
+            src={user.profilePicUrl ?? undefined}>
             {initials}
          </Avatar>
 
@@ -37,18 +37,18 @@ const CandidateInformation = ({ application }: CandidateInformationProps) => {
 
             <Box className="mt-3 space-y-2">
                <ContactItem
-                  icon={<EmailOutlinedIcon />}
                   value={user.email}
+                  icon={<EmailOutlinedIcon />}
                />
 
                <ContactItem
-                  icon={<PhoneOutlinedIcon />}
                   value={user.phone}
+                  icon={<PhoneOutlinedIcon />}
                />
 
                <ContactItem
-                  icon={<LocationOnOutlinedIcon />}
                   value={user.country}
+                  icon={<LocationOnOutlinedIcon />}
                />
             </Box>
          </Box>

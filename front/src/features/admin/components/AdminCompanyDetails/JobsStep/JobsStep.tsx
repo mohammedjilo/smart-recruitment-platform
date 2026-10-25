@@ -66,18 +66,18 @@ const JobsStep = ({ companyId }: JobsStepProps) => {
            queryPresentation.category === "access_denied" ||
            queryPresentation.category === "authentication_notice" ||
            queryPresentation.category === "resource_not_found" ? (
-            <Typography className="text-sm! text-red-500" role="alert" aria-live="assertive">
+            <Typography className="text-sm! text-red-500" aria-live="assertive" role="alert">
                {queryPresentation.message}
             </Typography>
          ) : stats ? (
             <JobsStats stats={stats} />
          ) : null}
          {queryPresentation.category === "stale_error" && (
-            <Box className="flex items-center justify-between gap-3 rounded-lg border border-amber-200 bg-amber-50 px-4 py-3" role="status" aria-live="polite">
+            <Box className="flex items-center justify-between gap-3 rounded-lg border border-amber-200 bg-amber-50 px-4 py-3" aria-live="polite" role="status">
                <Typography className="text-sm! text-amber-900!">
                   {queryPresentation.message}
                </Typography>
-               <Button onClick={query.refetch} className="normal-case!">
+               <Button className="normal-case!" onClick={query.refetch}>
                   Retry
                </Button>
             </Box>
@@ -86,21 +86,21 @@ const JobsStep = ({ companyId }: JobsStepProps) => {
             <FiltersBarSkeleton fields={["search", "control", "control"]} />
          ) : (
             <JobsFilters
+               employmentType={employmentType}
                search={search}
                status={status}
-               employmentType={employmentType}
+               onEmploymentTypeChange={handleEmploymentTypeChange}
                onSearchChange={handleSearchChange}
                onStatusChange={handleStatusChange}
-               onEmploymentTypeChange={handleEmploymentTypeChange}
             />
          )}
          <JobsTable
-            jobs={jobs}
-            isLoading={isLoading}
             isFetching={queryPresentation.category === "refreshing"}
+            isLoading={isLoading}
+            jobs={jobs}
             pagination={pagination}
-            onPageChange={setPage}
             queryState={queryState}
+            onPageChange={setPage}
             onRetry={query.refetch}
          />
       </Box>

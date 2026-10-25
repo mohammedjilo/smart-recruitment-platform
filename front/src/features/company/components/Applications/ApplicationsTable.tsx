@@ -34,15 +34,15 @@ const ApplicationsTable: React.FC<ApplicationsTableProps> = ({
 
    return (
       <DataTable
-         rows={applications}
          columns={getCompanyApplicationsColumns({ onViewApplication })}
+         containerClassName="shadow-none!"
+         emptyState={emptyState}
          getRowKey={application => application.id}
+         minWidth={1000}
          queryState={queryState}
+         rows={applications}
          onRetry={onRetry}
          onRowClick={onViewApplication}
-         emptyState={emptyState}
-         minWidth={1000}
-         containerClassName="shadow-none!"
       />
    )
 }

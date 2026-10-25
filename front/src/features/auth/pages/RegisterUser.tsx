@@ -85,22 +85,6 @@ export default function RegisterUser() {
       }
    }
    const onSubmit = async (data: RegisterUserFormValues) => {
-      // const formData = new FormData()
-
-      // formData.append("firstName", data.firstName)
-      // formData.append("lastName", data.lastName)
-      // formData.append("email", data.email)
-      // formData.append("password", data.password)
-      // formData.append("phone", data.phone || "")
-      // formData.append("country", data.country)
-      // formData.append("role", "user")
-      // if (avatarPreview) {
-      //    const blob = dataURLtoBlob(avatarPreview)
-      //    formData.append("image", blob, "profile.jpg")
-      // }
-
-      // await registerUser(formData)
-
       try {
          await registerUser({ ...data, role: "user", image: avatarFile }).unwrap()
       } catch (error) {
@@ -124,14 +108,7 @@ export default function RegisterUser() {
 
                <Box className="flex justify-between">
                   <Box>
-                     <Avatar
-                        sx={{
-                           width: 70,
-                           height: 70,
-                           bgcolor: "#ffebff",
-                           color: "#6C3CF0",
-                           padding: 1
-                        }}>
+                     <Avatar className="h-17.5! w-17.5! bg-[#ffebff]! p-2! text-[#6C3CF0]!">
                         <PersonAddAlt1OutlinedIcon className="h-full! w-full!" />
                      </Avatar>
 
@@ -147,8 +124,8 @@ export default function RegisterUser() {
                   <Typography>
                      Already have account?
                      <Link
-                        to="/login"
-                        className="hover:text-mui-blue-800 text-mui-blue-600 underline">
+                        className="hover:text-mui-blue-800 text-mui-blue-600 underline"
+                        to="/login">
                         Login
                      </Link>
                   </Typography>
@@ -165,15 +142,15 @@ export default function RegisterUser() {
                      render={({ field }) => (
                         <TextField
                            {...field}
+                           error={Boolean(errors.firstName)}
                            fullWidth
+                           helperText={errors.firstName?.message}
                            label="First Name"
                            slotProps={{
                               input: {
                                  startAdornment: <Person2OutlinedIcon className="mr-2" />
                               }
                            }}
-                           error={Boolean(errors.firstName)}
-                           helperText={errors.firstName?.message}
                         />
                      )}
                   />
@@ -184,15 +161,15 @@ export default function RegisterUser() {
                      render={({ field }) => (
                         <TextField
                            {...field}
+                           error={Boolean(errors.lastName)}
                            fullWidth
+                           helperText={errors.lastName?.message}
                            label="Last Name"
                            slotProps={{
                               input: {
                                  startAdornment: <Person2OutlinedIcon className="mr-2" />
                               }
                            }}
-                           error={Boolean(errors.lastName)}
-                           helperText={errors.lastName?.message}
                         />
                      )}
                   />
@@ -205,15 +182,15 @@ export default function RegisterUser() {
                      render={({ field }) => (
                         <TextField
                            {...field}
+                           error={Boolean(errors.email)}
                            fullWidth
+                           helperText={errors.email?.message}
                            label="Email"
                            slotProps={{
                               input: {
                                  startAdornment: <EmailOutlined className="mr-2" />
                               }
                            }}
-                           error={Boolean(errors.email)}
-                           helperText={errors.email?.message}
                         />
                      )}
                   />
@@ -227,15 +204,15 @@ export default function RegisterUser() {
                         <TextField
                            {...field}
                            type="password"
+                           error={Boolean(errors.password)}
                            fullWidth
+                           helperText={errors.password?.message}
                            label="Password"
                            slotProps={{
                               input: {
                                  startAdornment: <LockOutlined className="mr-2" />
                               }
                            }}
-                           error={Boolean(errors.password)}
-                           helperText={errors.password?.message}
                         />
                      )}
                   />
@@ -247,15 +224,15 @@ export default function RegisterUser() {
                         <TextField
                            {...field}
                            type="password"
+                           error={Boolean(errors.confirmPassword)}
                            fullWidth
+                           helperText={errors.confirmPassword?.message}
                            label="Confirm Password"
                            slotProps={{
                               input: {
                                  startAdornment: <LockOutlined className="mr-2" />
                               }
                            }}
-                           error={Boolean(errors.confirmPassword)}
-                           helperText={errors.confirmPassword?.message}
                         />
                      )}
                   />
@@ -268,28 +245,28 @@ export default function RegisterUser() {
                      render={({ field }) => (
                         <TextField
                            {...field}
+                           error={Boolean(errors.phone)}
                            fullWidth
+                           helperText={errors.phone?.message}
                            label="Phone"
                            slotProps={{
                               input: {
                                  startAdornment: <PhoneOutlined className="mr-2" />
                               }
                            }}
-                           error={Boolean(errors.phone)}
-                           helperText={errors.phone?.message}
                         />
                      )}
                   />
 
                   <Box className="col-span-2">
                      <CountryCitySelector
-                        required
                         value={locationSelection}
                         errors={{
                            country: errors.country?.message,
                            state: errors.state?.message,
                            city: errors.city?.message
                         }}
+                        size="medium"
                         onChange={selection => {
                            setLocationSelection(selection)
                            setValue("country", selection.countryName, {
@@ -320,18 +297,18 @@ export default function RegisterUser() {
                         <TextField
                            className="col-span-2"
                            {...field}
-                           fullWidth
-                           label="Birth Date"
                            type="date"
-                           variant="outlined"
+                           error={Boolean(errors.birthdate)}
+                           fullWidth
+                           helperText={errors.birthdate?.message}
+                           label="Birth Date"
                            size="medium"
                            slotProps={{
                               inputLabel: {
                                  shrink: true
                               }
                            }}
-                           error={Boolean(errors.birthdate)}
-                           helperText={errors.birthdate?.message}
+                           variant="outlined"
                         />
                      )}
                   />
@@ -346,25 +323,20 @@ export default function RegisterUser() {
                         <Typography color="textSecondary">(Optinal)</Typography>
                      </Box>
                      <label className="hover:bg-mui-blue-100 flex h-48 cursor-pointer flex-col items-center justify-center rounded-xl border-2 border-dashed">
-                        <CloudUploadOutlined
-                           sx={{
-                              fontSize: 45,
-                              color: "#7c3aed"
-                           }}
-                        />
+                        <CloudUploadOutlined className="text-[45px]! text-[#7c3aed]!" />
 
                         <Typography>Click to upload</Typography>
 
                         <Typography
-                           variant="body2"
-                           color="textSecondary">
+                           color="textSecondary"
+                           variant="body2">
                            JPG PNG up to 5MB
                         </Typography>
 
                         <input
-                           hidden
-                           accept="image/*"
                            type="file"
+                           accept="image/*"
+                           hidden
                            onChange={handleFileChange}
                         />
                      </label>
@@ -372,11 +344,8 @@ export default function RegisterUser() {
 
                   <Box className="flex flex-col items-center justify-center">
                      <Avatar
+                        className="h-30! w-30!"
                         src={avatarPreview ?? undefined}
-                        sx={{
-                           width: 120,
-                           height: 120
-                        }}
                      />
 
                      {/* <Button
@@ -396,9 +365,7 @@ export default function RegisterUser() {
 
                <Button
                   className="capitalize!"
-                  fullWidth
                   type="submit"
-                  variant="contained"
                   //   sx={{
                   //      mt: 4,
                   //      height: 55,
@@ -406,7 +373,9 @@ export default function RegisterUser() {
                   //      background: "#6C3CF0",
                   //      fontSize: 18
                   //   }}
-                  disabled={isLoading}>
+                  disabled={isLoading}
+                  fullWidth
+                  variant="contained">
                   {isLoading ? "Loading..." : "Create Account"}
                </Button>
             </form>

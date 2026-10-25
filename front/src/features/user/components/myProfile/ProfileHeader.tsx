@@ -46,9 +46,9 @@ const ProfileHeader = ({ profile }: Props) => {
                {/* Left Side */}
                <Box className="flex items-start gap-2.5">
                   <Avatar
-                     src={profile.profilePicUrl ?? undefined}
+                     className="h-22! w-22! shrink-0 text-[2rem]!"
                      alt={`${profile.firstName} ${profile.lastName}`}
-                     className="h-22! w-22! shrink-0 text-[2rem]!">
+                     src={profile.profilePicUrl ?? undefined}>
                      {profile.firstName?.charAt(0)}
                   </Avatar>
 
@@ -59,13 +59,13 @@ const ProfileHeader = ({ profile }: Props) => {
                         </Typography>
 
                         <Chip
+                           className="h-5.5! text-[0.65rem]! font-semibold!"
                            label={
                               profile.accountStatus === "ACTIVE"
                                  ? "Active Account"
                                  : "Inactive Account"
                            }
                            size="small"
-                           className="h-5.5! text-[0.65rem]! font-semibold!"
                         />
                      </Box>
 
@@ -107,41 +107,39 @@ const ProfileHeader = ({ profile }: Props) => {
 
                {/* Divider */}
                <Divider
-                  orientation="vertical"
                   className="hidden md:block!"
+                  orientation="vertical"
                />
 
                {/* Right Side */}
                <Box className="flex flex-col justify-center gap-2">
-                  {profile.professionalProfile && (
-                     <Box className="flex justify-end">
-                        <ProfileCardMenu
-                           formType="professionalProfile"
-                           editData={profile.professionalProfile}
-                        />
-                     </Box>
-                  )}
+                  <Box className="flex justify-end">
+                     <ProfileCardMenu
+                        editData={profile}
+                        formType="personalInformation"
+                     />
+                  </Box>
 
                   <ProfileDetailRow
-                     label="Role"
                      value={String(profile.role)}
                      chip
+                     label="Role"
                   />
 
                   <ProfileDetailRow
-                     label="Account Status"
                      value={profile.accountStatus}
                      chip
+                     label="Account Status"
                   />
 
                   <ProfileDetailRow
-                     label="Member Since"
                      value={formatDate(profile.createdAt)}
+                     label="Member Since"
                   />
 
                   <ProfileDetailRow
-                     label="Last Updated"
                      value={formatDate(profile.updatedAt)}
+                     label="Last Updated"
                   />
                </Box>
             </Box>
@@ -187,9 +185,9 @@ const ProfileDetailRow = ({ label, value, chip = false }: ProfileDetailRowProps)
 
          {chip ? (
             <Chip
+               className="h-5.5! w-fit! text-[0.65rem]! font-bold!"
                label={value}
                size="small"
-               className="h-5.5! w-fit! text-[0.65rem]! font-bold!"
             />
          ) : (
             <Typography className="text-xs!">{value}</Typography>

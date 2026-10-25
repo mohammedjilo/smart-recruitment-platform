@@ -16,11 +16,11 @@ const CertificatesCard = ({ certificates }: Props) => {
             <Box className="mb-2.5 flex items-center justify-between">
                <Box className="flex items-center gap-1">
                   <WorkspacePremiumOutlinedIcon
-                     className="text-mui-purple"
+                     className="text-violet-600"
                      fontSize="small"
                   />
 
-                  <Typography className="text-content">Certificates</Typography>
+                  <Typography className="text-content text-sm!">Certificates</Typography>
                </Box>
 
                <ProfileCardMenu
@@ -30,26 +30,17 @@ const CertificatesCard = ({ certificates }: Props) => {
             </Box>
 
             {certificates.length === 0 ? (
-               <Typography className="text-sm!" color="textSecondary">
+               <Typography
+                  className="text-sm!"
+                  color="textSecondary">
                   No certificates added yet.
                </Typography>
             ) : (
                <Box>
                   {certificates.map((certificate, index) => (
                      <Box key={certificate.id}>
-                        <Box
-                           className={
-                              index === 0
-                                 ? "relative flex flex-col pl-3"
-                                 : "relative flex flex-col py-2.5 pl-3"
-                           }>
-                           <Box
-                              className={
-                                 index === 0
-                                    ? "absolute top-1 left-px h-2 w-2 rounded-full bg-violet-600"
-                                    : "absolute top-6 left-px h-2 w-2 rounded-full bg-violet-600"
-                              }
-                           />
+                        <Box className="relative pl-3">
+                           <Box className="absolute top-2.5 left-0 h-2 w-2 -translate-y-1/2 rounded-full bg-violet-600" />
 
                            <Box className="flex items-start justify-between gap-2">
                               <Typography className="text-sm!">
@@ -57,23 +48,27 @@ const CertificatesCard = ({ certificates }: Props) => {
                               </Typography>
 
                               <ProfileCardMenu
-                                 formType="certificate"
                                  editData={certificate}
+                                 formType="certificate"
                               />
                            </Box>
 
-                           <Typography className="text-xs!" color="textSecondary">
+                           <Typography
+                              className="text-xs!"
+                              color="textSecondary">
                               {certificate.organization}
                            </Typography>
 
-                           <Typography className="text-xs!" color="textSecondary">
+                           <Typography
+                              className="text-xs!"
+                              color="textSecondary">
                               Issued{" "}
                               {formatDate(certificate.createdAt, { format: "monthYear" })}
                            </Typography>
                         </Box>
 
                         {index !== certificates.length - 1 && (
-                           <Divider className="ml-3!" />
+                           <Divider className="my-2! ml-3!" />
                         )}
                      </Box>
                   ))}

@@ -22,12 +22,12 @@ type StatCardProps = {
 const StatCard = ({ title, value, subtitle, icon, iconClassName }: StatCardProps) => {
    return (
       <CommonStatCard
-         label={title}
+         className="min-h-26"
          value={value}
          description={subtitle}
          icon={icon}
          iconClassName={iconClassName}
-         className="min-h-26"
+         label={title}
       />
    )
 }
@@ -36,35 +36,35 @@ const CompanyRequestStats = ({ stats }: CompanyRequestStatsProps) => {
    return (
       <Box className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
          <StatCard
-            title="Pending Requests"
             value={stats.pending}
-            subtitle="Waiting for review"
+            icon={<AccessTimeOutlinedIcon className="text-[28px]!" />}
             iconClassName="bg-amber-50 text-amber-500"
-            icon={<AccessTimeOutlinedIcon sx={{ fontSize: 28 }} />}
+            subtitle="Waiting for review"
+            title="Pending Requests"
          />
 
          <StatCard
-            title="Approved Companies"
             value={stats.approved}
-            subtitle="Total approved"
+            icon={<CheckCircleOutlineOutlinedIcon className="text-[28px]!" />}
             iconClassName="bg-emerald-50 text-emerald-600"
-            icon={<CheckCircleOutlineOutlinedIcon sx={{ fontSize: 28 }} />}
+            subtitle="Total approved"
+            title="Approved Companies"
          />
 
          <StatCard
-            title="Rejected Companies"
             value={stats.rejected}
-            subtitle="Total rejected"
+            icon={<HighlightOffOutlinedIcon className="text-[28px]!" />}
             iconClassName="bg-red-50 text-red-600"
-            icon={<HighlightOffOutlinedIcon sx={{ fontSize: 28 }} />}
+            subtitle="Total rejected"
+            title="Rejected Companies"
          />
 
          <StatCard
-            title="Total Companies"
             value={stats.totalCompanies}
-            subtitle="All time"
+            icon={<ApartmentOutlinedIcon className="text-[28px]!" />}
             iconClassName="bg-violet-50 text-violet-600"
-            icon={<ApartmentOutlinedIcon sx={{ fontSize: 28 }} />}
+            subtitle="All time"
+            title="Total Companies"
          />
       </Box>
    )

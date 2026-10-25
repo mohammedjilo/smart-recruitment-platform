@@ -1,6 +1,6 @@
 // cloudinary.ts
 import { v2 as cloudinary } from "cloudinary";
-import { UploadApiResponse, DeleteApiResponse } from "cloudinary";
+import { UploadApiResponse } from "cloudinary";
 import "dotenv/config";
 import { AppError } from "./appError.js";
 cloudinary.config({
@@ -40,42 +40,6 @@ export const cloudinaryUploadImage = async (
     );
   }
 };
-export const cloudinaryRemoveImage = async (
-  imagePublicId: string
-): Promise<DeleteApiResponse> => {
-  try {
-    const result = await cloudinary.uploader.destroy(imagePublicId);
-    return result;
-  } catch (error) {
-    if (error instanceof AppError) throw error;
-    throw new AppError(
-      "Image removal failed",
-      502,
-      "SERVICE_UNAVAILABLE",
-      undefined,
-      { cause: error, source: "cloudinary", classification: "unexpected" }
-    );
-  }
-};
-
-export const cloudinaryRemoveMultiImage = async (
-  publicIds: string[]
-): Promise<any> => {
-  try {
-    const result = await cloudinary.api.delete_resources(publicIds);
-    return result;
-  } catch (error) {
-    if (error instanceof AppError) throw error;
-    throw new AppError(
-      "Image removal failed",
-      502,
-      "SERVICE_UNAVAILABLE",
-      undefined,
-      { cause: error, source: "cloudinary", classification: "unexpected" }
-    );
-  }
-};
-
 export const cloudinaryUploadCV = async (
   file: Buffer,
   mimetype: string

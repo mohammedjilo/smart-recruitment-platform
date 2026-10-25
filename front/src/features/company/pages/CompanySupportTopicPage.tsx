@@ -1,8 +1,8 @@
 import { useNavigate, useParams } from "react-router-dom"
-import { Box, Typography } from "@mui/material"
+import { Box, Button, Typography } from "@mui/material"
 
-import SupportTopicDetails from "@/features/support/components/SupportTopicDetails"
-import { getCategoryNameForTopic } from "@/features/support/supportCategoryMap"
+import SupportTopicDetails from "@/features/shared/support/components/SupportTopicDetails"
+import { getCategoryNameForTopic } from "@/features/shared/support/supportCategoryMap"
 import { companyTopicDetails } from "../config/support.config"
 
 export default function CompanySupportTopicPage() {
@@ -14,21 +14,21 @@ export default function CompanySupportTopicPage() {
    if (!topic) {
       return (
          <Box className="min-h-screen bg-[#f7fbff]">
-            <Box className="mx-auto max-w-190 rounded-2xl border border-border bg-surface p-8 shadow-[0_8px_35px_rgba(30,64,175,0.05)]">
-               <Typography className="text-2xl! font-bold! text-content!">
+            <Box className="border-border bg-surface mx-auto max-w-190 rounded-2xl border p-8 shadow-[0_8px_35px_rgba(30,64,175,0.05)]">
+               <Typography className="text-content! text-2xl! font-bold!">
                   Topic not found
                </Typography>
 
-               <Typography className="mt-3! text-sm! text-muted!">
+               <Typography className="mt-3! text-sm!" color="textSecondary">
                   The requested support topic could not be found.
                </Typography>
 
-               <button
-                  type="button"
-                  onClick={() => navigate("/company/support")}
-                  className="app-button-secondary mt-6 rounded-lg px-4 py-2 text-sm font-medium transition-colors">
+               <Button
+                  className="mt-6! rounded-lg! px-4! py-2! text-sm! font-medium! normal-case! transition-colors!"
+                  variant="outlined"
+                  onClick={() => navigate("/company/support")}>
                   Back to Support & Help
-               </button>
+               </Button>
             </Box>
          </Box>
       )
@@ -37,6 +37,9 @@ export default function CompanySupportTopicPage() {
    return (
       <SupportTopicDetails
          data={topic}
+         onArticleClick={(article: { id: string }) => {
+            navigate(`/company/support/${topicId}/${article.id}`)
+         }}
          onBack={() => navigate("/company/support")}
          onCreateRequest={() =>
             navigate("/company/support/requests/create", {
@@ -45,9 +48,6 @@ export default function CompanySupportTopicPage() {
                }
             })
          }
-         onArticleClick={(article: { id: string }) => {
-            navigate(`/company/support/${topicId}/${article.id}`)
-         }}
       />
    )
 }

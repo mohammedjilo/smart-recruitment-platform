@@ -9,16 +9,16 @@ const NotificationHeader = ({ onMarkAllAsRead, isMarkingAllAsRead }: Props) => {
    return (
       <Box className="flex items-center justify-between px-5 py-4">
          <Typography
-            variant="subtitle1"
-            className="text-base!">
+            className="text-base!"
+            variant="subtitle1">
             Notifications
          </Typography>
 
          <Button
-            size="small"
-            onClick={onMarkAllAsRead}
+            className="min-w-0! p-2! text-xs! normal-case!"
             disabled={isMarkingAllAsRead}
-            className="min-w-0! p-2! text-xs! normal-case!">
+            size="small"
+            onClick={onMarkAllAsRead}>
             Mark all as read
          </Button>
       </Box>

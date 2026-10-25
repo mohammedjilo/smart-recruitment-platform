@@ -11,6 +11,7 @@ import {
    LogoutOutlined as LogoutOutlinedIcon
 } from "@mui/icons-material"
 import {
+   Avatar,
    Box,
    List,
    ListItemButton,
@@ -23,12 +24,14 @@ import { useState } from "react"
 import { useSelector } from "react-redux"
 import { NavLink, useNavigate } from "react-router-dom"
 import { useAuthLogOutMutation } from "@/features/auth/services/authApiCalls"
+import { useGetCurrentAdminPermissionsQuery } from "@/features/admin/services/adminApiCalls"
 import { getMutationState } from "@/utils/mutationState"
 import { getMutationPresentation } from "@/utils/presentationPolicy"
 import { usePermissions } from "@/features/admin/authorization/usePermissions"
 import { ADMIN_PERMISSIONS, type AdminPermission } from "@/types/adminPermissions"
 import type { RootState } from "@/redux/store"
 import ResponsiveSidebarDrawer from "@/components/common/ResponsiveSidebarDrawer"
+import { getInitials } from "@/utils/string/getInitials"
 
 const managementLinks = [
    {
@@ -122,25 +125,20 @@ interface SidebarLinkProps {
 function SidebarLink({ label, path, icon: Icon, end, onNavigate }: SidebarLinkProps) {
    return (
       <NavLink
-         to={path}
+         className="block"
          end={end}
-         onClick={onNavigate}
-         className="block">
+         to={path}
+         onClick={onNavigate}>
          {({ isActive }) => (
             <ListItemButton
-               component="span"
                className={`group! min-h-8.5! rounded-lg! px-2! text-sm! transition-all! duration-200! ${
                   isActive
                      ? "bg-primary! hover:bg-primary-dark! text-white!"
                      : "text-muted hover:bg-primary-tint hover:text-primary"
-               }`}>
+               }`}
+               component="span">
                <ListItemIcon className="text-inherit!">
-                  <Icon
-                     className="text-inherit!"
-                     sx={{
-                        fontSize: 21
-                     }}
-                  />
+                  <Icon className="text-[21px]! text-inherit!" />
                </ListItemIcon>
                <ListItemText primary={label} />
             </ListItemButton>
@@ -163,6 +161,22 @@ export default function AdminSidebar({ open, onClose }: AdminSidebarProps) {
    const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false)
    const { hasPermission, hasAnyPermission } = usePermissions()
    const user = useSelector((state: RootState) => state.auth.user)
+   const adminName = `${user?.firstName ?? ""} ${user?.lastName ?? ""}`.trim() || "Admin"
+   const { currentData: currentAdminData } = useGetCurrentAdminPermissionsQuery(
+      user?.role === "ADMIN" ? user.id : "",
+      { skip: user?.role !== "ADMIN" }
+   )
+   const adminRoleNames = currentAdminData?.data.adminRoleNames
+   const roleLabel =
+      adminRoleNames
+         ?.map(roleName =>
+            roleName
+               .toLowerCase()
+               .split("_")
+               .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+               .join(" ")
+         )
+         .join(", ") || "Admin"
 
    const handleLogout = async () => {
       try {
@@ -175,138 +189,141 @@ export default function AdminSidebar({ open, onClose }: AdminSidebarProps) {
 
    return (
       <ResponsiveSidebarDrawer
-         width={250}
          open={open}
+         width={250}
          onClose={onClose}>
-      <Box className="border-border bg-surface text-content flex h-full min-h-0 w-62.5 flex-col border-r">
-         {/* Logo */}
-         <Box className="flex h-21.5 items-center border-b border-white/10 px-6">
-            <Box className="flex items-center gap-3">
-               <Box className="bg-primary flex h-11 w-11 items-center justify-center rounded-xl">
-                  <Box className="flex h-7 w-7 items-center justify-center rounded-full border-2 border-white">
-                     <span className="text-sm font-bold">✓</span>
+         <Box className="border-border bg-surface text-content flex h-full min-h-0 w-62.5 flex-col overflow-x-hidden border-r">
+            {/* Logo */}
+            <Box className="flex h-21.5 items-center border-b border-white/10 px-6">
+               <Box className="flex items-center gap-3">
+                  <Box className="bg-primary flex h-11 w-11 items-center justify-center rounded-xl">
+                     <Box className="flex h-7 w-7 items-center justify-center rounded-full border-2 border-white">
+                        <span className="text-sm font-bold">✓</span>
+                     </Box>
+                  </Box>
+
+                  <Box>
+                     <Typography className="text-lg! leading-tight! font-bold!">
+                        SRP
+                     </Typography>
+
+                     <Typography className="text-xs!" color="textSecondary">Admin Panel</Typography>
                   </Box>
                </Box>
+            </Box>
 
+            {/* Navigation */}
+            <Box
+               className="min-h-0 flex-1 overflow-x-hidden overflow-y-auto px-4 py-6"
+               id="admin-navigation"
+               aria-label="Admin navigation"
+               component="nav">
+               {/* Management */}
+               <Box className="mb-7">
+                  <Typography className="mb-3! px-2! text-[11px]! font-semibold! tracking-wide!" color="textSecondary">
+                     Management
+                  </Typography>
+
+                  <List className="space-y-1">
+                     {managementLinks
+                        .filter(
+                           link => !link.permission || hasPermission(link.permission)
+                        )
+                        .map(link => (
+                           <SidebarLink
+                              key={link.path}
+                              {...link}
+                              onNavigate={onClose}
+                           />
+                        ))}
+                  </List>
+               </Box>
+
+               {/* Communication */}
+               <Box className="mb-7">
+                  <Typography className="mb-3! px-2! text-[11px]! font-semibold! tracking-wide!" color="textSecondary">
+                     Communication
+                  </Typography>
+
+                  <List className="space-y-1">
+                     {communicationLinks
+                        .filter(
+                           link =>
+                              !link.requiresNotificationPermission ||
+                              hasAnyPermission([
+                                 ADMIN_PERMISSIONS.VIEW_SUPPORT,
+                                 ADMIN_PERMISSIONS.VIEW_SUPPORT_DASHBOARD,
+                                 ADMIN_PERMISSIONS.VIEW_COMPANIES
+                              ])
+                        )
+                        .map(link => (
+                           <SidebarLink
+                              key={link.path}
+                              {...link}
+                              onNavigate={onClose}
+                           />
+                        ))}
+                  </List>
+               </Box>
+
+               {/* System */}
                <Box>
-                  <Typography className="text-lg! leading-tight! font-bold!">
-                     SRP
+                  <Typography className="mb-3! px-2! text-[11px]! font-semibold! tracking-wide!" color="textSecondary">
+                     System
                   </Typography>
 
-                  <Typography className="text-muted! text-xs!">Admin Panel</Typography>
-               </Box>
-            </Box>
-         </Box>
-
-         {/* Navigation */}
-         <Box
-            id="admin-navigation"
-            component="nav"
-            aria-label="Admin navigation"
-            className="min-h-0 flex-1 overflow-y-auto px-4 py-6">
-            {/* Management */}
-            <Box className="mb-7">
-               <Typography className="text-muted! mb-3! px-2! text-[11px]! font-semibold! tracking-wide!">
-                  Management
-               </Typography>
-
-               <List className="space-y-1">
-                  {managementLinks
-                     .filter(link => !link.permission || hasPermission(link.permission))
-                     .map(link => (
+                  <List className="space-y-1">
+                     {systemLinks.map(link => (
                         <SidebarLink
                            key={link.path}
                            {...link}
                            onNavigate={onClose}
                         />
                      ))}
-               </List>
-            </Box>
-
-            {/* Communication */}
-            <Box className="mb-7">
-               <Typography className="text-muted! mb-3! px-2! text-[11px]! font-semibold! tracking-wide!">
-                  Communication
-               </Typography>
-
-               <List className="space-y-1">
-                  {communicationLinks
-                     .filter(
-                        link =>
-                           !link.requiresNotificationPermission ||
-                           hasAnyPermission([
-                              ADMIN_PERMISSIONS.VIEW_SUPPORT,
-                              ADMIN_PERMISSIONS.VIEW_SUPPORT_DASHBOARD,
-                              ADMIN_PERMISSIONS.VIEW_COMPANIES
-                           ])
-                     )
-                     .map(link => (
-                        <SidebarLink
-                           key={link.path}
-                           {...link}
-                           onNavigate={onClose}
-                        />
-                     ))}
-               </List>
-            </Box>
-
-            {/* System */}
-            <Box>
-               <Typography className="text-muted! mb-3! px-2! text-[11px]! font-semibold! tracking-wide!">
-                  System
-               </Typography>
-
-               <List className="space-y-1">
-                  {systemLinks.map(link => (
-                     <SidebarLink
-                        key={link.path}
-                        {...link}
-                        onNavigate={onClose}
-                     />
-                  ))}
-               </List>
-            </Box>
-         </Box>
-
-         {/* Admin Profile */}
-         <Box className="border-border border-t p-4">
-            <button
-               onClick={() => setIsProfileMenuOpen(prev => !prev)}
-               className="hover:bg-primary-tint flex w-full items-center gap-3 rounded-xl p-2 transition">
-               <img
-                  src="https://i.pravatar.cc/100?img=12"
-                  alt="Admin"
-                  className="h-10 w-10 rounded-full object-cover"
-               />
-
-               <Box className="min-w-0 flex-1 text-left">
-                  <Typography className="text-content! truncate! text-sm! font-semibold!">
-                     {user ? `${user.firstName} ${user.lastName}`.trim() : "Admin"}
-                  </Typography>
-
-                  <Typography className="text-muted! text-xs!">Administrator</Typography>
+                  </List>
                </Box>
+            </Box>
 
-               <KeyboardArrowDownIcon
-                  sx={{
-                     fontSize: 20,
-                     color: "text.secondary",
-                     transform: isProfileMenuOpen ? "rotate(180deg)" : "none"
-                  }}
-               />
-            </button>
-
-            {isProfileMenuOpen && (
+            {/* Admin Profile */}
+            <Box className="border-border border-t p-4">
                <button
-                  onClick={handleLogout}
-                  disabled={isLoggingOut}
-                  className="text-primary mt-2 flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition hover:bg-red-500/20 hover:text-white disabled:cursor-not-allowed disabled:opacity-60">
-                  <LogoutOutlinedIcon sx={{ fontSize: 21 }} />
-                  <span>{isLoggingOut ? "Logging out..." : "Log Out"}</span>
+                  className="hover:bg-primary-tint flex w-full items-center gap-3 rounded-xl p-2 transition"
+                  onClick={() => setIsProfileMenuOpen(prev => !prev)}>
+                  <Avatar
+                     className="h-10 w-10"
+                     alt={adminName}
+                     src={user?.profilePicUrl || undefined}>
+                     {getInitials(adminName)}
+                  </Avatar>
+
+                  <Box className="min-w-0 flex-1 text-left">
+                     <Typography className="text-content! truncate! text-sm! font-semibold!">
+                        {adminName}
+                     </Typography>
+
+                     <Typography className="text-xs!" color="textSecondary">{roleLabel}</Typography>
+                  </Box>
+
+                  <KeyboardArrowDownIcon
+                     className="text-xl!"
+                     sx={{
+                        color: "text.secondary",
+                        transform: isProfileMenuOpen ? "rotate(180deg)" : "none"
+                     }}
+                  />
                </button>
-            )}
+
+               {isProfileMenuOpen && (
+                  <button
+                     className="text-primary mt-2 flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition hover:bg-red-500/20 hover:text-white disabled:cursor-not-allowed disabled:opacity-60"
+                     disabled={isLoggingOut}
+                     onClick={handleLogout}>
+                     <LogoutOutlinedIcon className="text-[21px]!" />
+                     <span>{isLoggingOut ? "Logging out..." : "Log Out"}</span>
+                  </button>
+               )}
+            </Box>
          </Box>
-      </Box>
       </ResponsiveSidebarDrawer>
    )
 }

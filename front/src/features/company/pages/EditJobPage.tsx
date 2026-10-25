@@ -23,13 +23,17 @@ const EditJobPage: React.FC = () => {
    const queryState = getQueryState(query)
    const queryPresentation = getQueryPresentation(queryState, "page")
    const response = "data" in queryState ? queryState.data : undefined
+   const initialData = React.useMemo(
+      () => (response?.data ? mapCompanyJobToFormData(response.data) : undefined),
+      [response?.data]
+   )
    const isLoading = queryPresentation.category === "loading"
 
    if (!hasRouteParams) {
       return (
-         <div className="text-sm text-red-500">
+         <Box className="text-sm text-red-500">
             Unable to load this job. Please check the URL and try again.
-         </div>
+         </Box>
       )
    }
 
@@ -44,10 +48,10 @@ const EditJobPage: React.FC = () => {
    ) {
       return (
          <Box className="flex min-h-80 flex-col items-center justify-center gap-3">
-            <Typography className="text-sm! text-red-600!" role="alert" aria-live="assertive">
+            <Typography className="text-sm! text-red-600!" aria-live="assertive" role="alert">
                {queryPresentation.message}
             </Typography>
-            <Button onClick={query.refetch} className="normal-case!">
+            <Button className="normal-case!" onClick={query.refetch}>
                Retry
             </Button>
          </Box>
@@ -68,24 +72,24 @@ const EditJobPage: React.FC = () => {
    }
 
    return (
-      <>
+      <Box className="contents">
          {queryPresentation.category === "stale_error" && (
-            <Box className="mb-4 flex items-center justify-between gap-3 rounded-lg border border-amber-200 bg-amber-50 px-4 py-3" role="status" aria-live="polite">
+            <Box className="mb-4 flex items-center justify-between gap-3 rounded-lg border border-amber-200 bg-amber-50 px-4 py-3" aria-live="polite" role="status">
                <Typography className="text-sm! text-amber-900!">
                   {queryPresentation.message}
                </Typography>
-               <Button onClick={query.refetch} className="normal-case!">
+               <Button className="normal-case!" onClick={query.refetch}>
                   Retry
                </Button>
             </Box>
          )}
          <JobForm
-            mode="edit"
-            jobId={id}
+            initialData={initialData}
             initialStep={initialStep}
-            initialData={mapCompanyJobToFormData(response.data)}
+            jobId={id}
+            mode="edit"
          />
-      </>
+      </Box>
    )
 }
 

@@ -49,50 +49,56 @@ const JobInformation = ({ job }: JobInformationProps) => {
 
    return (
       <section className="bg-surface rounded-xl border p-5">
-         <h3 className="text-content mb-6 text-base font-semibold">Job Information</h3>
+         <Typography
+            className="text-content! mb-6! text-base! font-semibold!"
+            variant="h3">
+            Job Information
+         </Typography>
 
          <Box className="grid grid-cols-1 gap-x-10 gap-y-6 md:grid-cols-2">
             <InfoItem
-               icon={<BusinessCenterOutlinedIcon sx={{ fontSize: 18 }} />}
+               icon={<BusinessCenterOutlinedIcon className="text-lg!" />}
                label="Employment Type">
                <EmploymentTypeChip employmentType={job.employmentType} />
             </InfoItem>
 
             <InfoItem
-               icon={<FingerprintOutlinedIcon sx={{ fontSize: 18 }} />}
+               icon={<FingerprintOutlinedIcon className="text-lg!" />}
                label="Job ID">
                <Typography className="text-xs! break-all!">{job.id}</Typography>
             </InfoItem>
 
             <InfoItem
-               icon={<WorkspacePremiumOutlinedIcon sx={{ fontSize: 18 }} />}
+               icon={<WorkspacePremiumOutlinedIcon className="text-lg!" />}
                label="Experience Required">
                {job.experienceRequired} Years
             </InfoItem>
 
             <InfoItem
-               icon={<LinkOutlinedIcon sx={{ fontSize: 18 }} />}
+               icon={<LinkOutlinedIcon className="text-lg!" />}
                label="Slug">
                {job.slug}
             </InfoItem>
 
             <InfoItem
-               icon={<AttachMoneyOutlinedIcon sx={{ fontSize: 18 }} />}
+               icon={<AttachMoneyOutlinedIcon className="text-lg!" />}
                label="Salary">
                {formatSalary(job.salary)}
             </InfoItem>
 
             <InfoItem
-               icon={<CalendarTodayOutlinedIcon sx={{ fontSize: 18 }} />}
+               icon={<CalendarTodayOutlinedIcon className="text-lg!" />}
                label="Created At">
                {formatDate(job.createdAt, true)}
             </InfoItem>
 
             <InfoItem
-               icon={<CalendarTodayOutlinedIcon sx={{ fontSize: 18 }} />}
+               icon={<CalendarTodayOutlinedIcon className="text-lg!" />}
                label="Application Deadline">
                <Box>
-                  <p>{formatJobDeadline(job.deadline)}</p>
+                  <Typography>
+                     {formatJobDeadline(job.deadline)}
+                  </Typography>
 
                   <Typography
                      className={`mt-1! text-xs! font-medium! ${deadlineInfo.color} `}>
@@ -102,13 +108,13 @@ const JobInformation = ({ job }: JobInformationProps) => {
             </InfoItem>
 
             <InfoItem
-               icon={<AccessTimeOutlinedIcon sx={{ fontSize: 18 }} />}
+               icon={<AccessTimeOutlinedIcon className="text-lg!" />}
                label="Last Updated">
                {formatDate(job.updatedAt, true)}
             </InfoItem>
 
             <InfoItem
-               icon={<AccessTimeOutlinedIcon sx={{ fontSize: 18 }} />}
+               icon={<AccessTimeOutlinedIcon className="text-lg!" />}
                label="Job Status">
                <Typography
                   className={`rounded-md! px-2! py-1! text-xs! font-bold! ${getStatusStyle(job.status)} `}>

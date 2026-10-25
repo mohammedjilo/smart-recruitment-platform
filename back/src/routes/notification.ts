@@ -1,7 +1,6 @@
 import Express from "express";
 import { authMiddleware } from "../middlewares/auth";
 import {
-  deleteNotificationController,
   getNotificationsController,
   markAllNotificationsAsReadController,
   markNotificationAsReadController,
@@ -20,10 +19,4 @@ notificationRouter.patch(
   authMiddleware,
   markNotificationAsReadController
 );
-notificationRouter.delete(
-  "/:notificationId",
-  authMiddleware,
-  deleteNotificationController
-);
-
 export default notificationRouter;

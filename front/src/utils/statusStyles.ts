@@ -1,9 +1,5 @@
 import type {
-   ApplicationStatus,
-   CompanyApprovalStatus,
-   CompanyStatus,
    JobStatus,
-   UserStatus
 } from "@/types/common/enums"
 import { statusToneStyles, type StatusTone } from "@/types/common/status"
 import type { SupportTicketStatus } from "@/types/entities/support"
@@ -16,32 +12,6 @@ export const JOB_STATUS_TONE_MAP = {
    DRAFT: "warning",
    EXPIRED: "error"
 } as const satisfies Record<JobStatus, StatusTone>
-
-export const APPLICATION_STATUS_TONE_MAP = {
-   PENDING: "warning",
-   REVIEWING: "info",
-   SHORTLISTED: "cyan",
-   INTERVIEW: "indigo",
-   ACCEPTED: "success",
-   REJECTED: "error",
-   WITHDRAWN: "neutral"
-} as const satisfies Record<ApplicationStatus, StatusTone>
-
-export const USER_STATUS_TONE_MAP = {
-   ACTIVE: "success",
-   DEACTIVATED: "neutral"
-} as const satisfies Record<UserStatus, StatusTone>
-
-export const COMPANY_STATUS_TONE_MAP = {
-   ACTIVE: "success",
-   DEACTIVATED: "neutral"
-} as const satisfies Record<CompanyStatus, StatusTone>
-
-export const COMPANY_APPROVAL_STATUS_TONE_MAP = {
-   PENDING: "warning",
-   APPROVED: "success",
-   REJECTED: "error"
-} as const satisfies Record<CompanyApprovalStatus, StatusTone>
 
 export const SUPPORT_TICKET_STATUS_TONE_MAP = {
    OPEN: "success",

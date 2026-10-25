@@ -9,6 +9,7 @@ import {
    notificationColors,
    notificationIcons
 } from "@/features/user/utils/notificationItem.utils"
+import { getAdminCompanyDetailsPath } from "@/utils/companyRoutes"
 
 type Props = {
    notification: Notification
@@ -39,7 +40,11 @@ const NotificationItem = ({ notification, onClose, onMarkAsRead }: Props) => {
          notification.type === "COMPANY_REQUEST" &&
          location.pathname.startsWith("/admin")
       ) {
-         navigate("/admin/company-requests")
+         navigate(
+            notification.companyRequestId
+               ? getAdminCompanyDetailsPath(notification.companyRequestId)
+               : "/admin/company-requests"
+         )
          return
       }
 
@@ -67,9 +72,9 @@ const NotificationItem = ({ notification, onClose, onMarkAsRead }: Props) => {
 
    return (
       <Box
+         className={`border-border hover:bg-bg relative flex w-full cursor-pointer gap-3 border-0 border-b px-5 py-3.5 text-left transition-colors duration-200 ${notification.isRead ? "bg-surface" : "bg-[rgba(37,99,235,0.035)]"}`}
          component="button"
-         onClick={handleClick}
-         className={`relative flex w-full cursor-pointer gap-3 border-0 border-b border-border px-5 py-3.5 text-left transition-colors duration-200 hover:bg-bg ${notification.isRead ? "bg-surface" : "bg-[rgba(37,99,235,0.035)]"}`}>
+         onClick={handleClick}>
          {/* Unread dot */}
          {!notification.isRead && (
             <Box className="absolute top-7 left-2 h-1.75 w-1.75 rounded-full bg-blue-600" />
@@ -84,28 +89,30 @@ const NotificationItem = ({ notification, onClose, onMarkAsRead }: Props) => {
          {/* Content */}
          <Box className="min-w-0 flex-1">
             <Typography
-               variant="body2"
-               className="leading-[1.4]! text-content!">
+               className="text-content! leading-[1.4]!"
+               variant="body2">
                {getNotificationTitle(notification.type)}
             </Typography>
 
             <Typography
-               variant="caption"
-               className="mt-0.5! line-clamp-2! leading-normal!" color="textSecondary">
+               className="mt-0.5! line-clamp-2! leading-normal!"
+               color="textSecondary"
+               variant="caption">
                {notification.message}
             </Typography>
 
             <Typography
-               variant="caption"
-               className="mt-0.5! block text-[11px]!" color="textSecondary">
+               className="mt-0.5! block text-[11px]!"
+               color="textSecondary"
+               variant="caption">
                {formatNotificationDate(notification.createdAt)}
             </Typography>
          </Box>
 
          {/* Arrow */}
          <IconButton
-            size="small"
-            className="self-center text-muted!">
+            className="text-muted! self-center"
+            size="small">
             <ChevronRightIcon fontSize="small" />
          </IconButton>
       </Box>

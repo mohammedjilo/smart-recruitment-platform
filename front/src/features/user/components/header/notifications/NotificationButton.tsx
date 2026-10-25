@@ -9,15 +9,15 @@ type Props = {
 const NotificationButton = ({ unreadCount, onClick }: Props) => {
    return (
       <IconButton
-         onClick={onClick}
+         className="h-10.5! w-10.5! text-white!"
          size="small"
-         className="h-10.5! w-10.5! text-white!">
+         onClick={onClick}>
          <Badge
-            badgeContent={unreadCount}
-            color="error"
-
-            max={99}
             className="[&_.MuiBadge-badge]:h-4! [&_.MuiBadge-badge]:min-w-4! [&_.MuiBadge-badge]:p-0! [&_.MuiBadge-badge]:text-[9px]! [&_.MuiBadge-badge]:font-semibold!"
+            badgeContent={unreadCount}
+
+            color="error"
+            max={99}
             overlap="circular">
             <NotificationsNoneIcon />
          </Badge>

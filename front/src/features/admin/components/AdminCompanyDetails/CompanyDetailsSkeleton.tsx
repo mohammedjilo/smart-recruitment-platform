@@ -5,46 +5,46 @@ const CompanyDetailsSkeleton = () => {
       <Box className="p-5 lg:p-6">
          <Box className="mb-3 flex justify-end">
             <Skeleton
+               height={40}
                variant="rounded"
                width={220}
-               height={40}
             />
          </Box>
 
          <Skeleton
-            variant="rounded"
-            height={220}
             className="rounded-xl"
+            height={220}
+            variant="rounded"
          />
 
          <Box className="mt-3">
             <Skeleton
-               width={240}
                height={45}
+               width={240}
             />
          </Box>
 
          <Box className="mt-3 grid grid-cols-1 gap-3 xl:grid-cols-[1.55fr_1fr]">
             <Box className="space-y-3">
                <Skeleton
-                  variant="rounded"
                   height={180}
+                  variant="rounded"
                />
 
                <Skeleton
-                  variant="rounded"
                   height={230}
+                  variant="rounded"
                />
 
                <Skeleton
-                  variant="rounded"
                   height={260}
+                  variant="rounded"
                />
             </Box>
 
             <Skeleton
-               variant="rounded"
                height={380}
+               variant="rounded"
             />
          </Box>
       </Box>

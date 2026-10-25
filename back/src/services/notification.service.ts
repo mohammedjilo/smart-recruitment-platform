@@ -23,6 +23,7 @@ type CreateNotificationInput = NotificationRecipient & {
   applicationId?: string;
   supportTicketId?: string;
   conversationId?: string;
+  companyRequestId?: string;
 };
 
 const supportPermissionCodes = [
@@ -126,6 +127,7 @@ const notificationSelect = {
   createdAt: true,
   jobId: true,
   applicationId: true,
+  companyRequestId: true,
   supportTicketId: true,
   conversationId: true,
   job: { select: { slug: true } },
@@ -160,6 +162,7 @@ export const createNotification = async (data: CreateNotificationInput) => {
       companyId: data.companyId,
       jobId: data.jobId,
       applicationId: data.applicationId,
+      companyRequestId: data.companyRequestId,
       supportTicketId: data.supportTicketId,
       conversationId: data.conversationId,
       message: data.message,
@@ -328,21 +331,4 @@ export const markAllNotificationsAsRead = async (
   });
 
   return { message: "All notifications marked as read" };
-};
-
-export const deleteNotification = async (
-  recipient: NotificationRecipient,
-  notificationId: string
-) => {
-  const notification = await prisma.notification.findFirst({
-    where: { id: notificationId, ...recipient },
-  });
-
-  if (!notification) {
-    throw new AppError("Notification not found", 404);
-  }
-
-  await prisma.notification.delete({ where: { id: notificationId } });
-
-  return { message: "Notification deleted successfully" };
 };

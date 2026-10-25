@@ -182,17 +182,3 @@ export const updateUserStatusByAdmin = async (
     },
   });
 };
-
-export const deleteUserByAdmin = async (userId: string) => {
-  const user = await prisma.user.findUnique({
-    where: { id: userId },
-    select: { id: true, role: true },
-  });
-  if (!user) throw new AppError("User not found", 404);
-  if (user.role === "ADMIN") {
-    throw new AppError("Manage admin accounts through Admin Management", 403);
-  }
-
-  await prisma.user.delete({ where: { id: userId } });
-  return { message: "User deleted successfully" };
-};

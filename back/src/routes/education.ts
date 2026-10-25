@@ -4,7 +4,6 @@ import { validate } from "../middlewares/validate";
 import {
   createEducationController,
   updateEducationController,
-  deleteEducationController,
 } from "../controllers/educationControllers";
 import {
   educationSchema,
@@ -25,10 +24,4 @@ educationRouter.put(
   validate(updateEducationSchema),
   updateEducationController
 );
-educationRouter.delete(
-  "/:educationId",
-  authMiddleware,
-  deleteEducationController
-);
-
 export default educationRouter;

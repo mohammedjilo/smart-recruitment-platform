@@ -19,16 +19,16 @@ const RecentApplicationItem: React.FC<ApplicationListProps> = ({ application }) 
    return (
       <Box className="border-border bg-surface w-full overflow-hidden rounded-xl border">
          <Box
+            className={`group hover:bg-primary-tint flex min-h-20.5 cursor-pointer items-center gap-6 px-5 py-3 transition-all duration-200`}
             key={application.id}
-            onClick={() => navigate("/applications")}
-            className={`group hover:bg-primary-tint flex min-h-20.5 cursor-pointer items-center gap-6 px-5 py-3 transition-all duration-200`}>
+            onClick={() => navigate("/applications")}>
             {/* ================= COMPANY LOGO ================= */}
             <Box className="border-border bg-surface flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-xl border">
                {application.job.company.logoUrl ? (
                   <img
-                     src={application.job.company.logoUrl}
-                     alt={application.job.company.companyName}
                      className="h-full w-full object-cover"
+                     alt={application.job.company.companyName}
+                     src={application.job.company.logoUrl}
                   />
                ) : (
                   <Typography className="text-lg! font-bold!">

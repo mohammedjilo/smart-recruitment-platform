@@ -20,12 +20,12 @@ const CompanyNotificationList = ({
          <Box className="space-y-3 px-3 py-4">
             {[0, 1, 2].map(item => (
                <Box
-                  key={item}
-                  className="flex items-start gap-3">
+                  className="flex items-start gap-3"
+                  key={item}>
                   <Skeleton
+                     height={30}
                      variant="circular"
                      width={30}
-                     height={30}
                   />
                   <Box className="flex-1 space-y-1">
                      <Skeleton
@@ -47,14 +47,14 @@ const CompanyNotificationList = ({
       return (
          <Box className="px-3 py-6 text-center">
             <Typography
-               variant="body2"
-               className="text-content! font-medium!">
+               className="text-content! font-medium!"
+               variant="body2">
                No notifications
             </Typography>
 
             <Typography
-               variant="caption"
-               className="text-muted!">
+               color="textSecondary"
+               variant="caption">
                You&apos;re all caught up.
             </Typography>
          </Box>

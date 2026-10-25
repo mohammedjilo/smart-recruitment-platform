@@ -1,7 +1,5 @@
 import Express from "express";
 import {
-  createJobController,
-  deleteJobController,
   getDashboardCompanyController,
   getCompanyJobsController,
   getCompanyJobByIdController,
@@ -9,11 +7,9 @@ import {
   getCompanyUsersController,
   updateCompanyProfileController,
   updateJobController,
-  uploadCompanyLogoController,
 } from "../controllers/companyControllers";
 import { validate } from "../middlewares/validate";
 import {
-  createJobSchema,
   updateCompanyProfileSchema,
   updateJobSchema,
 } from "../validation/company.validation";
@@ -21,7 +17,6 @@ import { authMiddleware, requireApprovedCompany } from "../middlewares/auth";
 import {
   handleUploadError,
   imageUpload,
-  upload,
   validateUploadedFile,
 } from "../utils/upload";
 
@@ -53,14 +48,6 @@ companyRouter.get(
   requireApprovedCompany,
   getCompanyUsersController
 );
-companyRouter.post(
-  "/logo",
-  authMiddleware,
-  requireApprovedCompany,
-  handleUploadError(imageUpload.single("logo")),
-  validateUploadedFile("image"),
-  uploadCompanyLogoController
-);
 companyRouter.get(
   "/jobs",
   authMiddleware,
@@ -73,19 +60,6 @@ companyRouter.get(
   requireApprovedCompany,
   getCompanyJobByIdController
 );
-companyRouter.get(
-  "/jobs/:id",
-  authMiddleware,
-  requireApprovedCompany,
-  getCompanyJobByIdController
-);
-companyRouter.post(
-  "/jobs",
-  authMiddleware,
-  requireApprovedCompany,
-  validate(createJobSchema),
-  createJobController
-);
 companyRouter.put(
   "/jobs/:id",
   authMiddleware,
@@ -93,11 +67,4 @@ companyRouter.put(
   validate(updateJobSchema),
   updateJobController
 );
-companyRouter.delete(
-  "/jobs/:id",
-  authMiddleware,
-  requireApprovedCompany,
-  deleteJobController
-);
-
 export default companyRouter;

@@ -27,6 +27,7 @@ const reliableQuery = options =>
    createReliableBaseQuery({
       execute: options.execute,
       refresh: options.refresh ?? (async () => ({ kind: "success", token: "token-b" })),
+      shouldRefresh: options.shouldRefresh,
       getToken: options.getToken ?? (() => "token-a"),
       setToken: options.setToken ?? (() => {}),
       invalidateSession: options.invalidateSession ?? (() => {}),
@@ -208,6 +209,28 @@ test("definitive refresh authentication failure invalidates the session once", a
 
    assert.deepEqual(result, errorResult(401))
    assert.equal(invalidations, 1)
+})
+
+test("login 401 is returned without refreshing or invalidating the session", async () => {
+   let refreshCalls = 0
+   let invalidations = 0
+   const query = reliableQuery({
+      execute: async () => errorResult(401),
+      shouldRefresh: args => args !== "/api/auth/login",
+      refresh: async () => {
+         refreshCalls += 1
+         return { kind: "authentication_failure" }
+      },
+      invalidateSession: () => {
+         invalidations += 1
+      }
+   })
+
+   const result = await query("/api/auth/login", apiFor({ type: "mutation" }), {})
+
+   assert.deepEqual(result, errorResult(401))
+   assert.equal(refreshCalls, 0)
+   assert.equal(invalidations, 0)
 })
 
 test("refresh timeout preserves the session and remains a normalized timeout", async () => {

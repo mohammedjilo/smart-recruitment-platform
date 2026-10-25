@@ -2,7 +2,7 @@ import React from "react"
 
 import { SaveOutlined } from "@mui/icons-material"
 
-import { Button } from "@mui/material"
+import { Box, Button } from "@mui/material"
 
 interface EditProfileActionsProps {
    isLoading: boolean
@@ -19,44 +19,25 @@ const EditProfileActions: React.FC<EditProfileActionsProps> = ({
    onSave
 }) => {
    return (
-      <div className="flex items-center gap-3">
+      <Box className="flex items-center gap-3">
          <Button
-            variant="outlined"
-            onClick={onCancel}
+            className="h-9.5! min-w-20.5! border-[#e2e8f0]! text-[11px]! normal-case!"
             disabled={isLoading}
-            className="app-button-secondary"
-            sx={{
-               textTransform: "none",
-               borderColor: "#e2e8f0",
-               minWidth: 82,
-               height: 38,
-               fontSize: "11px"
-            }}>
+            variant="outlined"
+            onClick={onCancel}>
             Cancel
          </Button>
 
          <Button
-            variant="contained"
-            onClick={onSave}
+            className="h-9.5! min-w-32.5! text-[11px]! normal-case! shadow-none!"
             disabled={disabled || isLoading}
             startIcon={<SaveOutlined />}
-            className="app-button-primary"
-            sx={{
-               textTransform: "none",
-               minWidth: 130,
-               height: 38,
-               fontSize: "11px",
-               backgroundColor: "#5b35d5",
-               boxShadow: "none",
-
-               "&:hover": {
-                  backgroundColor: "#4c2bb8",
-                  boxShadow: "none"
-               }
-            }}>
+            sx={{ "&:hover": { boxShadow: "none" } }}
+            variant="contained"
+            onClick={onSave}>
             {isLoading ? "Saving..." : "Save Changes"}
          </Button>
-      </div>
+      </Box>
    )
 }
 

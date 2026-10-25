@@ -54,26 +54,26 @@ const ApplicationAnswers = ({ answers, expanded, onToggle }: ApplicationAnswersP
          </Box>
          {answers.length > 0 && (
             <Button
+               className="normal-case!"
+               aria-controls="user-application-answers"
+               aria-expanded={expanded}
+               endIcon={expanded ? <ExpandLessIcon /> : <ExpandMoreIcon />}
                size="small"
                variant="outlined"
-               aria-expanded={expanded}
-               aria-controls="user-application-answers"
-               endIcon={expanded ? <ExpandLessIcon /> : <ExpandMoreIcon />}
-               onClick={onToggle}
-               className="normal-case!">
+               onClick={onToggle}>
                {expanded ? "Hide Answers" : "View Answers"}
             </Button>
          )}
       </Box>
       {expanded && answers.length > 0 && (
          <Box
-            id="user-application-answers"
             className="mt-4 space-y-3"
+            id="user-application-answers"
             aria-label="Submitted application answers">
             {answers.map((item, index) => (
                <Box
-                  key={item.id}
-                  className="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
+                  className="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm"
+                  key={item.id}>
                   <Box className="flex items-start gap-3 p-4">
                      <Box className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-violet-100 text-xs font-bold text-violet-700">
                         {index + 1}
@@ -97,7 +97,7 @@ const ApplicationAnswers = ({ answers, expanded, onToggle }: ApplicationAnswersP
                         </Box>
                      </Box>
                   </Box>
-                  <Box className="border-t border-slate-100 bg-slate-50/80 px-4 py-3 pl-[60px]">
+                  <Box className="border-t border-slate-100 bg-slate-50/80 px-4 py-3 pl-15">
                      <Typography className="mb-1! text-[11px]! font-semibold! text-slate-500!">
                         Submitted answer
                      </Typography>
@@ -106,10 +106,10 @@ const ApplicationAnswers = ({ answers, expanded, onToggle }: ApplicationAnswersP
                            <Box className="flex flex-wrap gap-2">
                               {item.answer.map((answer, answerIndex) => (
                                  <Chip
-                                    key={`${item.id}-${answerIndex}`}
-                                    size="small"
-                                    label={formatAnswerValue(answer)}
                                     className="border! border-slate-200! bg-white! text-slate-700!"
+                                    key={`${item.id}-${answerIndex}`}
+                                    label={formatAnswerValue(answer)}
+                                    size="small"
                                  />
                               ))}
                            </Box>
@@ -120,8 +120,8 @@ const ApplicationAnswers = ({ answers, expanded, onToggle }: ApplicationAnswersP
                         )
                      ) : (
                         <Typography
-                           component="div"
-                           className="text-sm! leading-6! whitespace-pre-wrap! text-slate-700!">
+                           className="text-sm! leading-6! whitespace-pre-wrap! text-slate-700!"
+                           component="div">
                            {formatAnswerValue(item.answer)}
                         </Typography>
                      )}

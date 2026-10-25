@@ -42,43 +42,43 @@ const CompanyDetailsCard = ({ company }: CompanyDetailsCardProps) => {
 
          <Box className="mt-4">
             <DetailItem
-               label="Company Name"
                value={company.companyName}
+               label="Company Name"
             />
 
             <DetailItem
-               label="Email"
                value={company.email}
+               label="Email"
             />
 
             <DetailItem
-               label="Phone"
                value={company.phone}
+               label="Phone"
             />
 
             <DetailItem
-               label="Website"
                value={company.website || "Not provided"}
+               label="Website"
             />
 
             <DetailItem
-               label="Location"
                value={company.location || "Not provided"}
+               label="Location"
             />
 
             <DetailItem
-               label="Status"
                value={<CompanyStatusChip status={company.status} />}
+               label="Status"
             />
 
             <DetailItem
-               label="Created At"
                value={formatCreatedAt(company.createdAt)}
+               label="Created At"
             />
 
             <DetailItem
-               label="Updated At"
                value={formatCreatedAt(company.updatedAt)}
+               label="Updated At"
             />
          </Box>
       </Box>

@@ -72,8 +72,8 @@ describe("Support-only flow", () => {
          <MemoryRouter initialEntries={["/support-access/verify"]}>
             <Routes>
                <Route
-                  path="/support-access/verify"
                   element={<SupportOnlyAccessPage />}
+                  path="/support-access/verify"
                />
             </Routes>
          </MemoryRouter>
@@ -98,16 +98,16 @@ describe("Support-only flow", () => {
          <MemoryRouter initialEntries={["/support-access/verify"]}>
             <Routes>
                <Route
-                  path="/support-access/verify"
                   element={<SupportOnlyAccessPage />}
+                  path="/support-access/verify"
                />
                <Route
-                  path="/login"
                   element={<div>Normal login</div>}
+                  path="/login"
                />
                <Route
-                  path="/support-only"
                   element={<div>Restricted Support</div>}
+                  path="/support-only"
                />
             </Routes>
          </MemoryRouter>
@@ -135,8 +135,8 @@ describe("Support-only flow", () => {
          <MemoryRouter initialEntries={["/support-only/requests/ticket-1"]}>
             <Routes>
                <Route
-                  path="/support-only/requests/:ticketId"
                   element={<SupportOnlyDetailsPage />}
+                  path="/support-only/requests/:ticketId"
                />
             </Routes>
          </MemoryRouter>

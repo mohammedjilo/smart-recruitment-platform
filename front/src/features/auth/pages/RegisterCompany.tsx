@@ -151,14 +151,7 @@ export default function RegisterCompany() {
 
                <Box className="flex justify-between">
                   <Box>
-                     <Avatar
-                        sx={{
-                           width: 70,
-                           height: 70,
-                           bgcolor: "#eff6ff",
-                           color: "#2563EB",
-                           padding: 1
-                        }}>
+                     <Avatar className="h-17.5! w-17.5! bg-[#eff6ff]! p-2! text-[#2563EB]!">
                         <Apartment className="h-full! w-full!" />
                      </Avatar>
 
@@ -176,8 +169,8 @@ export default function RegisterCompany() {
                   <Typography>
                      Already have an account?
                      <Link
-                        to="/login"
-                        className="hover:text-mui-blue-800 text-mui-blue-600 underline">
+                        className="hover:text-mui-blue-800 text-mui-blue-600 underline"
+                        to="/login">
                         Login
                      </Link>
                   </Typography>
@@ -186,10 +179,10 @@ export default function RegisterCompany() {
                <FormErrorAlert message={submitError} />
                {showLoginAction && (
                   <Button
+                     className="mt-2!"
                      component={Link}
                      to="/login"
-                     variant="outlined"
-                     className="mt-2!">
+                     variant="outlined">
                      Back to Login
                   </Button>
                )}
@@ -204,15 +197,15 @@ export default function RegisterCompany() {
                         <TextField
                            className="my-5!"
                            {...field}
+                           error={Boolean(errors.companyName)}
                            fullWidth
+                           helperText={errors.companyName?.message}
                            label="Company Name"
                            slotProps={{
                               input: {
                                  startAdornment: <Business className="mr-2" />
                               }
                            }}
-                           error={Boolean(errors.companyName)}
-                           helperText={errors.companyName?.message}
                         />
                      )}
                   />
@@ -226,11 +219,11 @@ export default function RegisterCompany() {
                         <TextField
                            className="my-5!"
                            {...field}
-                           fullWidth
-                           label="Company Slug"
                            placeholder="acme-technology"
                            error={Boolean(errors.slug)}
+                           fullWidth
                            helperText={errors.slug?.message}
+                           label="Company Slug"
                         />
                      )}
                   />
@@ -245,18 +238,18 @@ export default function RegisterCompany() {
                      render={({ field }) => (
                         <TextField
                            {...field}
+                           placeholder="Tell us about your company, what you do, and your mission..."
+                           error={Boolean(errors.description)}
+                           fullWidth
+                           helperText={errors.description?.message}
+                           label="Description (Optional)"
                            multiline
                            rows={4}
-                           fullWidth
-                           label="Description (Optional)"
-                           placeholder="Tell us about your company, what you do, and your mission..."
                            slotProps={{
                               inputLabel: {
                                  shrink: true
                               }
                            }}
-                           error={Boolean(errors.description)}
-                           helperText={errors.description?.message}
                         />
                      )}
                   />
@@ -266,36 +259,28 @@ export default function RegisterCompany() {
 
                <Box className="mt-6 grid grid-cols-3 gap-6">
                   <label className="hover:bg-mui-blue-100 col-span-2 flex h-44 cursor-pointer flex-col items-center justify-center rounded-xl border-2 border-dashed">
-                     <CloudUploadOutlined
-                        sx={{
-                           fontSize: 45,
-                           color: "#2563EB"
-                        }}
-                     />
+                     <CloudUploadOutlined className="text-[45px]! text-[#2563EB]!" />
 
                      <Typography>Upload company logo</Typography>
 
                      <Typography
-                        variant="body2"
-                        color="textSecondary">
+                        color="textSecondary"
+                        variant="body2">
                         JPG, PNG up to 5MB
                      </Typography>
 
                      <input
-                        hidden
-                        accept="image/*"
                         type="file"
+                        accept="image/*"
+                        hidden
                         onChange={handleFileChange}
                      />
                   </label>
 
                   <Box className="flex flex-col items-center justify-center rounded-xl">
                      <Avatar
+                        className="h-25! w-25!"
                         src={avatarPreview ?? undefined}
-                        sx={{
-                           width: 100,
-                           height: 100
-                        }}
                      />
                   </Box>
                </Box>
@@ -309,7 +294,9 @@ export default function RegisterCompany() {
                      render={({ field }) => (
                         <TextField
                            {...field}
+                           error={Boolean(errors.email)}
                            fullWidth
+                           helperText={errors.email?.message}
                            label="Email"
                            slotProps={{
                               input: {
@@ -317,8 +304,6 @@ export default function RegisterCompany() {
                                  readOnly: isResubmission
                               }
                            }}
-                           error={Boolean(errors.email)}
-                           helperText={errors.email?.message}
                         />
                      )}
                   />
@@ -329,15 +314,15 @@ export default function RegisterCompany() {
                      render={({ field }) => (
                         <TextField
                            {...field}
+                           error={Boolean(errors.phone)}
                            fullWidth
+                           helperText={errors.phone?.message}
                            label="Phone"
                            slotProps={{
                               input: {
                                  startAdornment: <PhoneOutlined className="mr-2" />
                               }
                            }}
-                           error={Boolean(errors.phone)}
-                           helperText={errors.phone?.message}
                         />
                      )}
                   />
@@ -352,16 +337,16 @@ export default function RegisterCompany() {
                      render={({ field }) => (
                         <TextField
                            {...field}
-                           fullWidth
                            type="password"
+                           error={Boolean(errors.password)}
+                           fullWidth
+                           helperText={errors.password?.message}
                            label={isResubmission ? "Current password" : "Password"}
                            slotProps={{
                               input: {
                                  startAdornment: <LockOutlined className="mr-2" />
                               }
                            }}
-                           error={Boolean(errors.password)}
-                           helperText={errors.password?.message}
                         />
                      )}
                   />
@@ -372,8 +357,10 @@ export default function RegisterCompany() {
                      render={({ field }) => (
                         <TextField
                            {...field}
-                           fullWidth
                            type="password"
+                           error={Boolean(errors.confirmPassword)}
+                           fullWidth
+                           helperText={errors.confirmPassword?.message}
                            label={
                               isResubmission
                                  ? "Confirm current password"
@@ -384,8 +371,6 @@ export default function RegisterCompany() {
                                  startAdornment: <LockOutlined className="mr-2" />
                               }
                            }}
-                           error={Boolean(errors.confirmPassword)}
-                           helperText={errors.confirmPassword?.message}
                         />
                      )}
                   />
@@ -400,15 +385,15 @@ export default function RegisterCompany() {
                      render={({ field }) => (
                         <TextField
                            {...field}
+                           error={Boolean(errors.website)}
                            fullWidth
+                           helperText={errors.website?.message}
                            label="Website (Optional)"
                            slotProps={{
                               input: {
                                  startAdornment: <Language className="mr-2" />
                               }
                            }}
-                           error={Boolean(errors.website)}
-                           helperText={errors.website?.message}
                         />
                      )}
                   />
@@ -427,11 +412,10 @@ export default function RegisterCompany() {
                                     errors.country?.message,
                                  state:
                                     errors.stateCode?.message ?? errors.state?.message,
-                                 city:
-                                    errors.city?.message ??
-                                    errors.location?.message,
+                                 city: errors.city?.message ?? errors.location?.message,
                                  cityGeonameId: errors.cityGeonameId?.message
                               }}
+                              size="medium"
                               onChange={selection => {
                                  setLocationSelection(selection)
                                  const location = selection.cityName
@@ -462,11 +446,9 @@ export default function RegisterCompany() {
                                  setValue("city", selection.cityName, {
                                     shouldValidate: true
                                  })
-                                 setValue(
-                                    "cityGeonameId",
-                                    selection.cityGeonameId ?? 0,
-                                    { shouldValidate: true }
-                                 )
+                                 setValue("cityGeonameId", selection.cityGeonameId ?? 0, {
+                                    shouldValidate: true
+                                 })
                               }}
                            />
                         )}
@@ -484,12 +466,7 @@ export default function RegisterCompany() {
                {/* Security Card */}
 
                <Box className="mt-6 flex gap-4 rounded-xl border bg-blue-50 p-5">
-                  <Avatar
-                     sx={{
-                        bgcolor: "#2563EB"
-                     }}>
-                     ✓
-                  </Avatar>
+                  <Avatar className="bg-[#2563EB]!">✓</Avatar>
 
                   <Box>
                      <Typography>Secure & Verified</Typography>
@@ -507,10 +484,10 @@ export default function RegisterCompany() {
 
                <Button
                   className="mt-2! capitalize!"
-                  fullWidth
                   type="submit"
-                  variant="contained"
-                  disabled={isLoading}>
+                  disabled={isLoading}
+                  fullWidth
+                  variant="contained">
                   {isLoading
                      ? "Loading..."
                      : isResubmission

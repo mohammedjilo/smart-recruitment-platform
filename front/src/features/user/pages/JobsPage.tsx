@@ -100,29 +100,29 @@ const JobsPage: React.FC = () => {
       <Box className="min-h-screen font-sans">
          <Box className="mx-auto max-w-7xl">
             <PageHeader
-               title="Browse Jobs"
                description="Find the right opportunity for your career"
+               title="Browse Jobs"
             />
 
             <JobsFilters
-               search={searchInput}
                employmentType={employmentType}
+               search={searchInput}
+               onEmploymentTypeChange={handleEmploymentTypeChange}
                onSearchChange={setSearchInput}
                onSearchSubmit={handleSearch}
-               onEmploymentTypeChange={handleEmploymentTypeChange}
             />
             {/* JobsPage */}
             <Box className="bg-surface mt-6 overflow-hidden rounded-xl border border-[#edf0f5] shadow-[0_3px_14px_rgba(30,40,70,0.05)]">
                {queryPresentation.category === "stale_error" && (
                   <Box
                      className="border-b border-amber-200 bg-amber-50 p-4 text-sm text-amber-900"
-                     role="status"
-                     aria-live="polite">
+                     aria-live="polite"
+                     role="status">
                      {queryPresentation.message}
                      <button
+                        className="ml-3 font-semibold"
                         type="button"
-                        onClick={query.refetch}
-                        className="ml-3 font-semibold">
+                        onClick={query.refetch}>
                         Try again
                      </button>
                   </Box>
@@ -135,13 +135,13 @@ const JobsPage: React.FC = () => {
                  queryPresentation.category === "resource_not_found" ? (
                   <Box
                      className="p-8 text-center text-[#d14343]"
-                     role="alert"
-                     aria-live="assertive">
+                     aria-live="assertive"
+                     role="alert">
                      {queryPresentation.message}
                      <button
+                        className="mt-3 block w-full font-semibold"
                         type="button"
-                        onClick={query.refetch}
-                        className="mt-3 block w-full font-semibold">
+                        onClick={query.refetch}>
                         Try again
                      </button>
                   </Box>
@@ -155,13 +155,13 @@ const JobsPage: React.FC = () => {
                ) : queryPresentation.category === "section_error" ? (
                   <Box
                      className="p-8 text-center text-[#687189]"
-                     role="alert"
-                     aria-live="assertive">
+                     aria-live="assertive"
+                     role="alert">
                      {queryPresentation.message}
                      <button
+                        className="mt-3 block w-full font-semibold"
                         type="button"
-                        onClick={query.refetch}
-                        className="mt-3 block w-full font-semibold">
+                        onClick={query.refetch}>
                         Try again
                      </button>
                   </Box>
@@ -171,9 +171,9 @@ const JobsPage: React.FC = () => {
                   jobs.map((job, index) => (
                      <JobListItem
                         key={job.id}
-                        job={job}
                         isLast={index === jobs.length - 1}
                         isSaving={isSavingJob}
+                        job={job}
                         onToggleSave={jobId => void handleToggleSave(jobId)}
                      />
                   ))
@@ -181,13 +181,13 @@ const JobsPage: React.FC = () => {
             </Box>
             {response && (
                <PaginationFooter
-                  page={page}
-                  totalCount={totalCount}
-                  pageSize={pageSize}
-                  setPage={setPage}
-                  itemLabel="jobs"
                   isFetching={queryPresentation.category === "refreshing"}
+                  itemLabel="jobs"
+                  page={page}
+                  pageSize={pageSize}
                   queryState={queryState}
+                  setPage={setPage}
+                  totalCount={totalCount}
                />
             )}
          </Box>

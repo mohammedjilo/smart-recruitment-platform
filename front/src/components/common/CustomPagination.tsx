@@ -21,15 +21,15 @@ const CustomPagination = ({
    return (
       <Pagination
          {...rest}
+         disabled={isFetching}
+         color="primary"
          count={totalPages}
          page={page}
-         onChange={(_, value) => setPage(value)}
-         color="primary"
          shape="circular"
-         size="large"
          showFirstButton
          showLastButton
-         disabled={isFetching}
+         size="large"
+         onChange={(_, value) => setPage(value)}
       />
    )
 }

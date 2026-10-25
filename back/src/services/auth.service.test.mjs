@@ -151,7 +151,26 @@ test("new company registration creates one pending company request", async (t) =
       updatedAt: new Date("2026-10-01T10:00:00.000Z"),
     }),
   );
-  stubMethod(t, prisma.user, "findMany", async () => []);
+  stubMethod(t, prisma.user, "findMany", async () => [
+    {
+      id: "admin-1",
+      adminRoleAssignments: [
+        {
+          adminRole: {
+            permissions: [
+              {
+                permission: { code: "VIEW_COMPANIES" },
+              },
+            ],
+          },
+        },
+      ],
+    },
+  ]);
+  const createNotification = { calls: [] };
+  stubMethod(t, prisma.notification, "create", async (args) => {
+    createNotification.calls.push(args);
+  });
 
   const result = await registerAccount(registrationInput);
 
@@ -166,6 +185,11 @@ test("new company registration creates one pending company request", async (t) =
   assert.equal(
     createCompany.calls[0][0].data.location,
     "Los Angeles, California, United States",
+  );
+  assert.equal(createNotification.calls.length, 1);
+  assert.equal(
+    createNotification.calls[0].data.companyRequestId,
+    "company-1",
   );
 });
 

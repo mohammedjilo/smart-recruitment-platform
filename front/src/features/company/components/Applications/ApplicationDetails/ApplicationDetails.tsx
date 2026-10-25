@@ -39,19 +39,21 @@ const normalizeArray = (value: unknown): string[] => {
 interface ApplicationDetailsProps {
    application: CompanyApplication | null
    onClose: () => void
+   onStatusUpdated: (applicationId: string, status: CompanyApplication["status"]) => void
 }
 
 const ApplicationDetails: React.FC<ApplicationDetailsProps> = ({
    application,
-   onClose
+   onClose,
+   onStatusUpdated
 }) => {
    const [areAnswersVisible, setAreAnswersVisible] = useState(false)
 
    if (!application) {
       return (
          <Paper
-            elevation={0}
-            className="flex min-h-150 items-center justify-center rounded-xl! border! bg-surface! p-6">
+            className="flex min-h-150 items-center justify-center rounded-xl! border! bg-surface! p-6"
+            elevation={0}>
             <Box className="text-center">
                <Box className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-bg">
                   <PersonOutlined className="text-muted!" />
@@ -73,15 +75,15 @@ const ApplicationDetails: React.FC<ApplicationDetailsProps> = ({
 
    return (
       <Paper
-         elevation={0}
-         className="h-fit overflow-hidden rounded-xl! border! border-[#E7EAF0]! bg-surface!">
+         className="h-fit overflow-hidden rounded-xl! border! border-[#E7EAF0]! bg-surface!"
+         elevation={0}>
          <ApplicationDetailsHeader application={application} onClose={onClose} />
          <ApplicationStatusAndDate application={application} />
          <ApplicationMatchScore score={Math.round(application.matchScore ?? 0)} />
          <ApplicationInsights
+            missingSkills={missingSkills}
             recommendation={application.recommendation}
             strengths={strengths}
-            missingSkills={missingSkills}
          />
          <ApplicationResume application={application} />
          <CandidateInformation application={application} fullName={fullName} />
@@ -90,7 +92,10 @@ const ApplicationDetails: React.FC<ApplicationDetailsProps> = ({
             expanded={areAnswersVisible}
             onToggle={() => setAreAnswersVisible(visible => !visible)}
          />
-         <ApplicationDetailsActions application={application} />
+         <ApplicationDetailsActions
+            application={application}
+            onStatusUpdated={status => onStatusUpdated(application.id, status)}
+         />
       </Paper>
    )
 }

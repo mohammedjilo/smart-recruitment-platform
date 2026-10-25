@@ -30,13 +30,11 @@ const UsersFilters = ({
    return (
       <FiltersBar>
          <TextField
-            size="small"
-            fullWidth
-            value={searchInput.value}
-            placeholder="Search by name, email or phone..."
-            onChange={searchInput.onChange}
-            onKeyDown={searchInput.onKeyDown}
             className="bg-surface md:max-w-90"
+            placeholder="Search by name, email or phone..."
+            value={searchInput.value}
+            fullWidth
+            size="small"
             slotProps={{
                input: {
                   startAdornment: (
@@ -44,16 +42,22 @@ const UsersFilters = ({
                   )
                }
             }}
+            onChange={searchInput.onChange}
+            onKeyDown={searchInput.onKeyDown}
          />
 
-         <CountryCitySelector value={location} onChange={onLocationChange} />
+         <CountryCitySelector
+            value={location}
+            size="small"
+            onChange={onLocationChange}
+         />
 
          <TextField
+            className="bg-surface w-full md:w-55"
+            value={status}
             select
             size="small"
-            value={status}
-            onChange={event => onStatusChange(event.target.value as UserStatus | "ALL")}
-            className="bg-surface w-full md:w-55">
+            onChange={event => onStatusChange(event.target.value as UserStatus | "ALL")}>
             <MenuItem value="ALL">All Status</MenuItem>
 
             <MenuItem value="ACTIVE">Active</MenuItem>

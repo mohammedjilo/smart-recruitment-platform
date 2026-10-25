@@ -76,11 +76,9 @@ const SupportFilters = ({
    return (
       <FiltersBar layout="grid">
          <TextField
-            size="small"
-            label="Search"
             value={searchInput.value}
-            onChange={searchInput.onChange}
-            onKeyDown={searchInput.onKeyDown}
+            label="Search"
+            size="small"
             slotProps={{
                input: {
                   startAdornment: (
@@ -88,12 +86,14 @@ const SupportFilters = ({
                   )
                }
             }}
+            onChange={searchInput.onChange}
+            onKeyDown={searchInput.onKeyDown}
          />
       <FormControl size="small">
          <InputLabel>Status</InputLabel>
          <Select
-            label="Status"
             value={status}
+            label="Status"
             onChange={event =>
                onStatusChange(event.target.value as SupportTicketStatus | "ALL")
             }>
@@ -109,8 +109,8 @@ const SupportFilters = ({
       <FormControl size="small">
          <InputLabel>Audience</InputLabel>
          <Select
-            label="Audience"
             value={audience}
+            label="Audience"
             onChange={event => onAudienceChange(event.target.value as SupportAudience)}>
             <MenuItem value="ALL">All</MenuItem>
             <MenuItem value="USER">User</MenuItem>
@@ -120,8 +120,8 @@ const SupportFilters = ({
       <FormControl size="small">
          <InputLabel>Priority</InputLabel>
          <Select
-            label="Priority"
             value={priority}
+            label="Priority"
             onChange={event =>
                onPriorityChange(event.target.value as SupportPriority | "ALL")
             }>
@@ -137,15 +137,15 @@ const SupportFilters = ({
       <FormControl size="small">
          <InputLabel>Category</InputLabel>
          <Select
-            label="Category"
-            value={categoryId}
             disabled={isLoadingCategories}
+            value={categoryId}
+            label="Category"
             onChange={event => onCategoryChange(event.target.value)}>
             <MenuItem value="ALL">All</MenuItem>
             {isLoadingCategories ? (
                <MenuItem
-                  value="LOADING"
-                  disabled>
+                  disabled
+                  value="LOADING">
                   <Skeleton
                      variant="text"
                      width={120}
@@ -165,21 +165,21 @@ const SupportFilters = ({
       <FormControl size="small">
          <InputLabel>Assigned Admin</InputLabel>
          <Select
-            label="Assigned Admin"
-            value={assignedAdminId}
             disabled={isLoadingAdmins}
+            value={assignedAdminId}
+            label="Assigned Admin"
             onChange={event => onAssignedAdminChange(event.target.value)}>
             <MenuItem value="ALL">All</MenuItem>
             <MenuItem
-               value={currentAdminId ?? "MY_ASSIGNED"}
-               disabled={!currentAdminId}>
+               disabled={!currentAdminId}
+               value={currentAdminId ?? "MY_ASSIGNED"}>
                My Assigned
             </MenuItem>
             <MenuItem value="UNASSIGNED">Unassigned</MenuItem>
             {isLoadingAdmins ? (
                <MenuItem
-                  value="LOADING"
-                  disabled>
+                  disabled
+                  value="LOADING">
                   <Skeleton
                      variant="text"
                      width={120}

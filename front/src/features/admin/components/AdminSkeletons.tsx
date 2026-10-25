@@ -13,12 +13,12 @@ const StatsSkeleton = ({
    <Box className={className}>
       {Array.from({ length: count }).map((_, index) => (
          <Box
-            key={index}
-            className="bg-surface rounded-xl border p-5">
+            className="bg-surface border-border rounded-xl border p-5"
+            key={index}>
             <Skeleton
+               height={48}
                variant="circular"
                width={48}
-               height={48}
             />
             <Skeleton
                className="mt-3"
@@ -26,8 +26,8 @@ const StatsSkeleton = ({
             />
             <Skeleton
                className="mt-1"
-               width="30%"
                height={32}
+               width="30%"
             />
          </Box>
       ))}
@@ -42,8 +42,8 @@ export const AdminStatsSkeleton = ({
    className?: string
 }) => (
    <StatsSkeleton
-      count={count}
       className={className}
+      count={count}
    />
 )
 
@@ -54,7 +54,7 @@ const TableSkeleton = ({
    rows?: number
    columns?: number
 }) => (
-   <Box className="bg-surface overflow-hidden rounded-xl border p-5">
+   <Box className="bg-surface border-border overflow-hidden rounded-xl border p-5">
       <Skeleton
          height={28}
          width="25%"
@@ -62,12 +62,12 @@ const TableSkeleton = ({
       <Box className="mt-4 space-y-3">
          {Array.from({ length: rows }).map((_, rowIndex) => (
             <Box
-               key={rowIndex}
-               className="flex gap-4">
+               className="flex gap-4"
+               key={rowIndex}>
                {Array.from({ length: columns }).map((_, columnIndex) => (
                   <Skeleton
-                     key={columnIndex}
                      className="flex-1"
+                     key={columnIndex}
                      height={38}
                   />
                ))}
@@ -82,22 +82,22 @@ export const AdminDashboardSkeleton = () => (
       <StatsSkeleton />
       <Box className="grid grid-cols-1 gap-5 xl:grid-cols-2">
          <TableSkeleton
-            rows={5}
             columns={2}
+            rows={5}
          />
          <TableSkeleton
-            rows={5}
             columns={2}
+            rows={5}
          />
       </Box>
       <Box className="grid grid-cols-1 gap-5 xl:grid-cols-2">
          <TableSkeleton
-            rows={5}
             columns={2}
+            rows={5}
          />
          <TableSkeleton
-            rows={5}
             columns={2}
+            rows={5}
          />
       </Box>
    </Box>
@@ -120,22 +120,22 @@ export const AdminListSkeleton = ({
 export const AdminDetailsSkeleton = () => (
    <Box className="space-y-5">
       <Skeleton
-         variant="rounded"
          height={34}
+         variant="rounded"
          width="22%"
       />
       <Skeleton
-         variant="rounded"
          height={210}
+         variant="rounded"
       />
       <Box className="grid grid-cols-1 gap-5 xl:grid-cols-2">
          <Skeleton
-            variant="rounded"
             height={280}
+            variant="rounded"
          />
          <Skeleton
-            variant="rounded"
             height={280}
+            variant="rounded"
          />
       </Box>
    </Box>
@@ -144,15 +144,15 @@ export const AdminDetailsSkeleton = () => (
 export const AdminAuthorizationDetailsSkeleton = () => (
    <Box className="max-w-3xl space-y-5">
       <Skeleton
+         height={38}
          variant="rounded"
          width={190}
-         height={38}
       />
       <Box className="border-border bg-surface rounded-xl border p-6">
          <Skeleton
+            height={36}
             variant="text"
             width="38%"
-            height={36}
          />
          <Skeleton
             variant="text"
@@ -161,8 +161,8 @@ export const AdminAuthorizationDetailsSkeleton = () => (
          <Box className="mt-5 grid grid-cols-1 gap-4 md:grid-cols-3">
             {[0, 1, 2].map(item => (
                <Box
-                  key={item}
-                  className="space-y-2">
+                  className="space-y-2"
+                  key={item}>
                   <Skeleton
                      variant="text"
                      width="45%"
@@ -175,9 +175,9 @@ export const AdminAuthorizationDetailsSkeleton = () => (
             ))}
          </Box>
          <Skeleton
-            variant="rounded"
-            height={92}
             className="mt-6"
+            height={92}
+            variant="rounded"
          />
       </Box>
    </Box>
@@ -187,15 +187,15 @@ export const AdminUserDetailsSkeleton = () => (
    <Box className="w-full space-y-6">
       <Box className="border-border bg-surface flex min-h-32 items-center gap-4 rounded-xl border p-5">
          <Skeleton
+            height={76}
             variant="circular"
             width={76}
-            height={76}
          />
          <Box className="flex-1 space-y-2">
             <Skeleton
+               height={32}
                variant="text"
                width="32%"
-               height={32}
             />
             <Skeleton
                variant="text"
@@ -207,28 +207,28 @@ export const AdminUserDetailsSkeleton = () => (
          {[0, 1, 2, 3].map(item => (
             <Skeleton
                key={item}
+               height={34}
                variant="rounded"
                width={88}
-               height={34}
             />
          ))}
       </Box>
       <Box className="grid grid-cols-1 gap-5 xl:grid-cols-2">
          <Skeleton
-            variant="rounded"
             height={250}
+            variant="rounded"
          />
          <Skeleton
-            variant="rounded"
             height={250}
+            variant="rounded"
          />
          <Skeleton
-            variant="rounded"
             height={210}
+            variant="rounded"
          />
          <Skeleton
-            variant="rounded"
             height={210}
+            variant="rounded"
          />
       </Box>
    </Box>
@@ -238,9 +238,9 @@ export const AdminSupportDashboardSkeleton = () => (
    <Box className="space-y-5">
       <Box>
          <Skeleton
+            height={34}
             variant="text"
             width={230}
-            height={34}
          />
          <Skeleton
             variant="text"
@@ -251,14 +251,14 @@ export const AdminSupportDashboardSkeleton = () => (
          {Array.from({ length: 5 }).map((_, index) => (
             <Skeleton
                key={index}
-               variant="rounded"
                height={92}
+               variant="rounded"
             />
          ))}
       </Box>
       <Skeleton
-         variant="rounded"
          height={350}
+         variant="rounded"
       />
    </Box>
 )
@@ -266,9 +266,9 @@ export const AdminSupportDashboardSkeleton = () => (
 export const AdminSupportTicketSkeleton = () => (
    <Box className="space-y-5">
       <Skeleton
+         height={38}
          variant="rounded"
          width={150}
-         height={38}
       />
       <Box className="border-border bg-surface rounded-xl border p-6">
          <Box className="border-border flex items-start justify-between gap-4 border-b pb-5">
@@ -278,73 +278,35 @@ export const AdminSupportTicketSkeleton = () => (
                   width="25%"
                />
                <Skeleton
+                  height={34}
                   variant="text"
                   width="58%"
-                  height={34}
                />
             </Box>
             <Skeleton
+               height={32}
                variant="rounded"
                width={150}
-               height={32}
             />
          </Box>
          <Box className="mt-5 grid grid-cols-2 gap-4 lg:grid-cols-4">
             {Array.from({ length: 4 }).map((_, index) => (
                <Skeleton
                   key={index}
-                  variant="rounded"
                   height={68}
+                  variant="rounded"
                />
             ))}
          </Box>
          <Skeleton
-            variant="rounded"
+            className="mt-5"
             height={110}
-            className="mt-5"
+            variant="rounded"
          />
          <Skeleton
-            variant="rounded"
+            className="mt-5"
             height={280}
-            className="mt-5"
-         />
-      </Box>
-   </Box>
-)
-
-export const AdminProfileSnapshotSkeleton = () => (
-   <Box className="space-y-4">
-      <Skeleton
-         variant="rounded"
-         height={120}
-      />
-      <Box className="grid grid-cols-2 gap-3 md:grid-cols-4">
-         {Array.from({ length: 4 }).map((_, index) => (
-            <Skeleton
-               key={index}
-               variant="rounded"
-               height={82}
-            />
-         ))}
-      </Box>
-      <Box className="border-border flex gap-3 border-b py-2">
-         {Array.from({ length: 5 }).map((_, index) => (
-            <Skeleton
-               key={index}
-               variant="rounded"
-               width={84}
-               height={32}
-            />
-         ))}
-      </Box>
-      <Box className="grid grid-cols-1 gap-4 xl:grid-cols-2">
-         <Skeleton
             variant="rounded"
-            height={240}
-         />
-         <Skeleton
-            variant="rounded"
-            height={240}
          />
       </Box>
    </Box>

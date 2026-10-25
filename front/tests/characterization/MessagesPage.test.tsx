@@ -72,20 +72,20 @@ const renderAt = (path: string, page: ReactNode) =>
       <MemoryRouter initialEntries={[path]}>
          <Routes>
             <Route
+               element={page}
                path="/messages"
-               element={page}
             />
             <Route
+               element={page}
                path="/messages/:conversationId"
-               element={page}
             />
             <Route
+               element={page}
                path="/company/messages"
-               element={page}
             />
             <Route
-               path="/company/messages/:conversationId"
                element={page}
+               path="/company/messages/:conversationId"
             />
          </Routes>
          <RouterControls />

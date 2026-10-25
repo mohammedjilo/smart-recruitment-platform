@@ -16,45 +16,49 @@ const ProfessionalProfileCard = ({ professionalProfile }: Props) => {
             <Box className="mb-2.5 flex items-center justify-between">
                <Box className="flex items-center gap-1">
                   <WorkOutlineOutlinedIcon
-                     className="text-mui-purple"
+                     className="text-violet-600"
                      fontSize="small"
                   />
 
-                  <Typography className="text-sm! text-content">
+                  <Typography className="text-content text-sm!">
                      Professional Profile
                   </Typography>
                </Box>
 
-               <ProfileCardMenu
-                  createLabel="Create Professional Profile"
-                  formType="professionalProfile"
-               />
+               {professionalProfile && (
+                  <ProfileCardMenu
+                     editData={professionalProfile}
+                     formType="professionalProfile"
+                  />
+               )}
             </Box>
 
             {!professionalProfile ? (
-               <Typography className="text-sm!" color="textSecondary">
+               <Typography
+                  className="text-sm!"
+                  color="textSecondary">
                   No professional profile information added yet.
                </Typography>
             ) : (
                <Box className="flex flex-col gap-2">
                   <InfoRow
-                     label="Job Title"
                      value={professionalProfile.jobTitle}
+                     label="Job Title"
                   />
 
                   <InfoRow
-                     label="Summary"
                      value={professionalProfile.summary}
+                     label="Summary"
                      multiline
                   />
 
                   <InfoRow
-                     label="Years of Experience"
                      value={
                         professionalProfile.yearsOfExperience !== null
                            ? `${professionalProfile.yearsOfExperience} years`
                            : null
                      }
+                     label="Years of Experience"
                   />
 
                   <Box className="grid items-center gap-2 sm:grid-cols-[220px_1fr]">
@@ -63,8 +67,8 @@ const ProfessionalProfileCard = ({ professionalProfile }: Props) => {
                      {professionalProfile.cvPath ? (
                         <Box className="flex items-center gap-1.5 rounded-md border px-1.5 py-1">
                            <DescriptionOutlinedIcon
-                              fontSize="small"
                               color="primary"
+                              fontSize="small"
                            />
 
                            <Typography
@@ -74,7 +78,9 @@ const ProfessionalProfileCard = ({ professionalProfile }: Props) => {
                            </Typography>
                         </Box>
                      ) : (
-                        <Typography className="text-xs!" color="textSecondary">
+                        <Typography
+                           className="text-xs!"
+                           color="textSecondary">
                            No CV uploaded
                         </Typography>
                      )}

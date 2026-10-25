@@ -39,10 +39,11 @@ const JobDetailsHeader = ({
    }
 
    return (
-      <>
+      <Box className="contents">
          <Button
-            className="app-button-secondary my-2! normal-case!"
+            className="my-2! normal-case!"
             startIcon={<ArrowBack />}
+            variant="outlined"
             onClick={() => navigate("/company/jobs")}>
             Back to My Jobs
          </Button>
@@ -78,42 +79,41 @@ const JobDetailsHeader = ({
 
             <Box className="flex flex-wrap items-center gap-2">
                <Button
-                  onClick={onEdit}
-                  className="border-border! bg-surface! text-content! hover:bg-bg! flex! items-center! gap-2! rounded-lg! border! px-4! py-2.5! text-sm! font-medium! capitalize! transition!">
-                  <EditOutlinedIcon sx={{ fontSize: 18 }} />
+                  className="border-border! bg-surface! text-content! hover:bg-bg! flex! items-center! gap-2! rounded-lg! border! px-4! py-2.5! text-sm! font-medium! capitalize! transition!"
+                  onClick={onEdit}>
+                  <EditOutlinedIcon className="text-lg!" />
                   Edit Job
                </Button>
 
                <Button
-                  onClick={handleMenuOpen}
-                  className="border-border! bg-surface! text-muted! hover:bg-bg! flex! h-10! w-10! items-center! justify-center! rounded-lg! border! capitalize! transition!">
+                  className="border-border! bg-surface! text-muted! hover:bg-bg! flex! h-10! w-10! items-center! justify-center! rounded-lg! border! capitalize! transition!"
+                  onClick={handleMenuOpen}>
                   <MoreHorizIcon />
                </Button>
 
                <Menu
                   anchorEl={menuAnchor}
-                  open={Boolean(menuAnchor)}
-                  onClose={handleMenuClose}
                   anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
-                  transformOrigin={{ vertical: "top", horizontal: "right" }}
+                  open={Boolean(menuAnchor)}
                   slotProps={{
                      paper: {
                         className: "!rounded-xl !border !border-border !shadow-lg"
                      }
-                  }}>
+                  }}
+                  transformOrigin={{ vertical: "top", horizontal: "right" }}
+                  onClose={handleMenuClose}>
                   {canToggleStatus && (
                      <MenuItem
+                        className={`${isJobOpen ? "text-red-600!" : "text-green-600!"} flex! items-center! gap-2!`}
                         disabled={isUpdating}
                         onClick={() => {
                            job.status === "EXPIRED" ? onReopenJob() : onCloseJob()
                            handleMenuClose()
-                        }}
-                        className={isJobOpen ? "text-red-600!" : "text-green-600!"}
-                        sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+                        }}>
                         {isJobOpen ? (
-                           <CloseOutlinedIcon sx={{ fontSize: 18 }} />
+                           <CloseOutlinedIcon className="text-lg!" />
                         ) : (
-                           <LockOpenOutlinedIcon sx={{ fontSize: 18 }} />
+                           <LockOpenOutlinedIcon className="text-lg!" />
                         )}
                         <span className="text-sm font-medium">
                            {isJobOpen
@@ -127,7 +127,7 @@ const JobDetailsHeader = ({
                </Menu>
             </Box>
          </Box>
-      </>
+      </Box>
    )
 }
 

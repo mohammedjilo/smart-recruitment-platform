@@ -89,6 +89,7 @@ export const getCompanyJobsByAdmin = async (
   const pageSize = 6;
   const statsWhere: Prisma.JobWhereInput = {
     companyId,
+    status: { not: "DRAFT" },
     ...(options.search
       ? { title: { contains: options.search, mode: "insensitive" } }
       : {}),
@@ -139,8 +140,8 @@ export const getCompanyJobsByAdmin = async (
 };
 
 export const getJobByAdmin = async (jobId: string) => {
-  const job = await prisma.job.findUnique({
-    where: { id: jobId },
+  const job = await prisma.job.findFirst({
+    where: { id: jobId, status: { not: "DRAFT" } },
     select: {
       id: true,
       title: true,
@@ -178,8 +179,8 @@ export const getJobByAdmin = async (jobId: string) => {
 };
 
 export const getQuestionsByAdmin = async (jobId: string) => {
-  const job = await prisma.job.findUnique({
-    where: { id: jobId },
+  const job = await prisma.job.findFirst({
+    where: { id: jobId, status: { not: "DRAFT" } },
     select: {
       applicationQuestions: {
         orderBy: [{ order: "asc" }, { createdAt: "asc" }],
@@ -210,14 +211,6 @@ export const updateJobStatusByAdmin = async (
   input: UpdateJobStatusInput
 ) => {
   return changeJobStatusByAdmin(jobId, input.status, input.deadline);
-};
-
-export const deleteJobByAdmin = async (jobId: string) => {
-  const job = await prisma.job.findUnique({ where: { id: jobId } });
-  if (!job) throw new AppError("Job not found", 404);
-
-  await prisma.job.delete({ where: { id: jobId } });
-  return { message: "Job deleted successfully" };
 };
 
 export const getJobApplicationsByAdmin = async (
@@ -266,6 +259,7 @@ export const getJobApplicationsByAdmin = async (
             firstName: true,
             lastName: true,
             email: true,
+             profilePicUrl: true,
           },
         },
       },
@@ -298,6 +292,32 @@ export const getJobApplicationsByAdmin = async (
   );
 
   const filteredApplications = applications.filter((application) => {
+    const score = application.matchScore;
+    if (
+      options.matchScore === "HIGH" &&
+      (score === null || score < 85)
+    ) {
+      return false;
+    }
+    if (
+      options.matchScore === "GOOD" &&
+      (score === null || score < 70 || score >= 85)
+    ) {
+      return false;
+    }
+    if (
+      options.matchScore === "FAIR" &&
+      (score === null || score < 50 || score >= 70)
+    ) {
+      return false;
+    }
+    if (
+      options.matchScore === "LOW" &&
+      (score === null || score >= 50)
+    ) {
+      return false;
+    }
+
     if (options.experience === "ALL") return true;
 
     const snapshot = application.profileSnapshot;

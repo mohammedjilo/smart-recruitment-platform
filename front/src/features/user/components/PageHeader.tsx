@@ -20,16 +20,16 @@ const PageHeader = ({
             <Box className="flex items-center gap-3">
                {titleAdornment}
                <Typography
-                  component="h1"
-                  className="text-content text-[26px]! leading-[1.2]! font-bold! tracking-[-0.02em]!">
+                  className="text-content text-[26px]! leading-[1.2]! font-bold! tracking-[-0.02em]!"
+                  component="h1">
                   {title}
                </Typography>
             </Box>
             {description && (
                <Typography
-                  component="p"
                   className="mt-1.5! text-sm!"
-                  color="textSecondary">
+                  color="textSecondary"
+                  component="p">
                   {description}
                </Typography>
             )}

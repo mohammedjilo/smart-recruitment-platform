@@ -69,9 +69,9 @@ describe("ConversationMessageList characterization", () => {
       }
       render(
          <ConversationMessageList
+            color="violet"
             conversationId="conversation-1"
             participant="user"
-            color="violet"
          />
       )
 
@@ -94,9 +94,9 @@ describe("ConversationMessageList characterization", () => {
       }
       const { container } = render(
          <ConversationMessageList
+            color="indigo"
             conversationId="conversation-1"
             participant="company"
-            color="indigo"
          />
       )
       const scrollContainer = container.querySelector(".overflow-y-auto")
@@ -117,9 +117,9 @@ describe("ConversationMessageList characterization", () => {
       page.isError = true
       render(
          <ConversationMessageList
+            color="violet"
             conversationId="conversation-1"
             participant="user"
-            color="violet"
          />
       )
 

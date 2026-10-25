@@ -11,9 +11,7 @@ import {
 } from "../validation/application.validation";
 import {
   applyToJob,
-  deleteApplication,
   getCompanyApplications,
-  getJobApplications,
   getUserApplicationDetails,
   getUserApplications,
   updateApplicationStatus,
@@ -27,6 +25,12 @@ import { sendSuccess } from "../utils/apiResponse";
  * It must not query Prisma directly or implement domain policy.
  */
 
+/**
+ * @desc Submit an application for a job
+ * @route /api/application/:jobId
+ * @method POST
+ * @access private
+ */
 export const applyToJobController = asyncHandler(
   async (req: Request, res: Response) => {
     const userId = req.user?.id;
@@ -56,6 +60,13 @@ export const applyToJobController = asyncHandler(
     });
   }
 );
+
+/**
+ * @desc Get applications submitted by the authenticated user
+ * @route /api/application/me
+ * @method GET
+ * @access private
+ */
 export const getUserApplicationsController = asyncHandler(
   async (req: Request, res: Response) => {
     const userId = req.user?.id;
@@ -85,6 +96,12 @@ export const getUserApplicationsController = asyncHandler(
   }
 );
 
+/**
+ * @desc Get details of one application belonging to the authenticated user
+ * @route /api/application/me/:applicationId
+ * @method GET
+ * @access private
+ */
 export const getUserApplicationDetailsController = asyncHandler(
   async (req: Request, res: Response) => {
     const userId = req.user?.id;
@@ -100,37 +117,12 @@ export const getUserApplicationDetailsController = asyncHandler(
   }
 );
 
-export const getJobApplicationsController = asyncHandler(
-  async (req: Request, res: Response) => {
-    const companyId = req.company?.id;
-    const { jobId } = req.params as { jobId?: string };
-
-    if (!companyId) {
-      throw new AppError("Company authentication required", 401);
-    }
-
-    if (!jobId) {
-      throw new AppError("Job id is required", 400);
-    }
-
-    const page = Number(req.query.page ?? 1);
-    const pageSize = Number(req.query.pageSize ?? 6);
-    const applications = await getJobApplications(
-      companyId,
-      jobId,
-      page,
-      pageSize
-    );
-    const meta = {
-      page: applications.page,
-      pageSize: applications.pageSize,
-      totalCount: applications.totalCount,
-    };
-
-    sendSuccess(res, 200, applications.data, { meta });
-  }
-);
-
+/**
+ * @desc Get applications received by the authenticated company
+ * @route /api/application/company
+ * @method GET
+ * @access private
+ */
 export const getCompanyApplicationsController = asyncHandler(
   async (req: Request, res: Response) => {
     const companyId = req.company?.id;
@@ -143,6 +135,10 @@ export const getCompanyApplicationsController = asyncHandler(
     const pageSize = Number(req.query.pageSize ?? 6);
     const status =
       typeof req.query.status === "string" ? req.query.status : undefined;
+    const matchScore =
+      typeof req.query.matchScore === "string"
+        ? req.query.matchScore
+        : undefined;
     const search =
       typeof req.query.search === "string" ? req.query.search : undefined;
     const sortBy =
@@ -162,6 +158,7 @@ export const getCompanyApplicationsController = asyncHandler(
         | "WITHDRAWN"
         | undefined,
       search,
+      matchScore: matchScore as "HIGH" | "GOOD" | "FAIR" | "LOW" | undefined,
       pageSize,
       sortBy: sortBy === "updatedAt" ? "updatedAt" : "createdAt",
       sortOrder: sortOrder === "asc" ? "asc" : "desc",
@@ -177,6 +174,12 @@ export const getCompanyApplicationsController = asyncHandler(
   }
 );
 
+/**
+ * @desc Update the status of an application received by the company
+ * @route /api/application/:applicationId/status
+ * @method PATCH
+ * @access private
+ */
 export const updateApplicationStatusController = asyncHandler(
   async (req: Request, res: Response) => {
     const companyId = req.company?.id;
@@ -203,25 +206,12 @@ export const updateApplicationStatusController = asyncHandler(
   }
 );
 
-export const deleteApplicationController = asyncHandler(
-  async (req: Request, res: Response) => {
-    const userId = req.user?.id;
-    const { applicationId } = req.params as { applicationId?: string };
-
-    if (!userId) {
-      throw new AppError("User authentication required", 401);
-    }
-
-    if (!applicationId) {
-      throw new AppError("Application id is required", 400);
-    }
-
-    const result = await deleteApplication(userId, applicationId);
-
-    sendSuccess(res, 200, undefined, { message: result.message });
-  }
-);
-
+/**
+ * @desc Withdraw an application submitted by the authenticated user
+ * @route /api/application/:applicationId/withdraw
+ * @method PATCH
+ * @access private
+ */
 export const withdrawApplicationController = asyncHandler(
   async (req: Request, res: Response) => {
     const userId = req.user?.id;

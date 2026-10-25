@@ -52,6 +52,10 @@ const isAccountDeactivatedError = (error: unknown) =>
 
 const baseQueryWithReauthAndRetry = createReliableBaseQuery({
    execute: (args, api, extraOptions) => baseQuery(args, api, extraOptions),
+   shouldRefresh: args => {
+      const url = typeof args === "string" ? args : args.url
+      return url !== "/api/auth/login"
+   },
    refresh: async (api, extraOptions) => {
       const refreshApi: BaseQueryApi = {
          ...api,
