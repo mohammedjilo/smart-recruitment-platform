@@ -8,7 +8,6 @@ import type { ApplicationSubmissionInput } from "../validation/application.valid
 import {
   assertJobAcceptsApplications,
   buildQuestionSnapshot,
-  validateAnswerForQuestion,
   validateApplicationAnswers,
 } from "./application.policy";
 import {

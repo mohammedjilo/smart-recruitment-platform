@@ -54,7 +54,7 @@ function InputField({ label, value, onChange }: InputFieldProps) {
                "& .MuiOutlinedInput-root": {
                   borderRadius: "8px",
                   fontSize: "13px",
-                  color: "#64b5f6"
+                  color: "#64748B"
                }
             }}
             onChange={e => onChange(e.target.value)}
@@ -158,7 +158,9 @@ const BasicInformationStep: React.FC<BasicInformationStepProps> = ({
 
    return (
       <Box>
-         <Typography className="mb-5! text-[13px]! font-semibold!" variant="h3">
+         <Typography
+            className="mb-5! text-[13px]! font-semibold!"
+            variant="h3">
             Your Information
          </Typography>
 

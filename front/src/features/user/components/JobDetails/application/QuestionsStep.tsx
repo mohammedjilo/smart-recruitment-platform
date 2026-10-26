@@ -180,7 +180,7 @@ const renderQuestionInput = (
             <Box className="flex flex-wrap gap-x-6 gap-y-3">
                {(question.options ?? []).map((option: string) => (
                   <label
-                     className="text-mui-blue-300 flex cursor-pointer items-center gap-2 text-sm"
+                     className="text-muted! flex cursor-pointer items-center gap-2 text-sm"
 
                      key={option}>
                      <Checkbox
@@ -220,8 +220,7 @@ const renderQuestionInput = (
          return (
             <Box>
                <textarea
-                  className={`text-mui-blue-300 min-h-23.75 w-full resize-none rounded-lg border p-3 text-sm outline-none focus:border-[#5421e8] ${invalid ? "border-red-500" : "border-[#dfe3eb]"}`}
-
+                  className={`text-muted min-h-23.75 w-full resize-none rounded-lg border p-3 text-sm outline-none focus:border-[#5421e8] ${invalid ? "border-red-500" : "border-[#dfe3eb]"}`}
                   value={typeof value === "string" ? value : ""}
 
                   onChange={e => onChange(e.target.value)}
@@ -247,7 +246,7 @@ const renderQuestionInput = (
                sx={{
                   "& .MuiOutlinedInput-root": {
                      borderRadius: "8px",
-                     color: "#64b5f6",
+                     color: "#64748B",
                      ...(invalid && {
                         "& fieldset": { borderColor: "#ef4444" }
                      })
@@ -322,7 +321,7 @@ const RadioOption = ({
 }) => {
    return (
       <label
-         className="text-mui-blue-300 flex cursor-pointer items-center gap-2 text-sm"
+         className="text-muted flex cursor-pointer items-center gap-2 text-sm"
 
          onClick={onClick}>
          <Box className="relative h-4 w-4">

@@ -1,15 +1,17 @@
 {
   "name": "@smart-recruitment/eslint-config",
   "version": "0.1.0",
-  "description": "Reusable ESLint flat config for logically sorting JSX props.",
+  "description": "Reusable ESLint flat configs for JSX prop sorting and unused-import removal.",
   "type": "module",
   "exports": {
     ".": "./index.js",
-    "./jsx-props": "./jsx-props.js"
+    "./jsx-props": "./jsx-props.js",
+    "./unused-imports": "./unused-imports.js"
   },
   "files": [
     "index.js",
     "jsx-props.js",
+    "unused-imports.js",
     "README.md"
   ],
   "engines": {
@@ -19,6 +21,7 @@
     "eslint": "^8.45.0 || ^9.0.0 || ^10.0.0"
   },
   "dependencies": {
-    "eslint-plugin-perfectionist": "^5.13.0"
+    "eslint-plugin-perfectionist": "^5.13.0",
+    "eslint-plugin-unused-imports": "^4.4.1"
   }
 }

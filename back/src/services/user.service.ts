@@ -3,7 +3,6 @@ import { prisma } from "../config/db.js";
 import { AppError } from "../utils/appError.js";
 import { z } from "zod";
 import { updateProfessionalProfileSchema } from "../validation/professionalProfile.validation";
-import { calculateMatch } from "./ai.service.js";
 import { getRecommendedJobs } from "./recommendation.service.js"; // Import the recommendation service.
 import { getCompaniesQuerySchema } from "../validation/user.validation";
 import {

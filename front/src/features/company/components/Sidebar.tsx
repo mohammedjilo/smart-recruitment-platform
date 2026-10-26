@@ -68,7 +68,10 @@ const SideBar = ({ onNavigate, open, onClose }: SidebarProps) => {
          await authLogOut(undefined).unwrap()
       } finally {
          onClose()
-         navigate("/login", { replace: true })
+         navigate("/login", {
+            replace: true,
+            state: { explicitLogout: true }
+         })
       }
    }
 

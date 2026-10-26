@@ -68,6 +68,44 @@ Do not commit real `.env` files or credentials. Supply secrets through a
 protected local environment or deployment secrets manager. Development JWT
 fallback behavior is not suitable for production.
 
+## Live Demo Access
+
+The deployed frontend URL is not currently documented in this repository.
+Confirm the live URL with the project owner before sharing this section with
+recruiters.
+
+Demo access details below are intended for public demo use. The account
+credentials have not been verified against the live deployment; confirm that
+the accounts and shared password are valid before distributing them.
+
+### Candidate accounts
+
+Candidates can explore the job search and application experience, manage their
+professional profiles, and review their applications.
+
+- [candidate.01@demo.example.test](mailto:candidate.01@demo.example.test)
+- [candidate.02@demo.example.test](mailto:candidate.02@demo.example.test)
+- [candidate.03@demo.example.test](mailto:candidate.03@demo.example.test)
+- [candidate.04@demo.example.test](mailto:candidate.04@demo.example.test)
+
+### Company accounts
+
+Company users can explore recruiter workflows, including managing job
+listings and reviewing candidate applications.
+
+- [company.bluebird@demo.example.test](mailto:company.bluebird@demo.example.test)
+- [company.cedar@demo.example.test](mailto:company.cedar@demo.example.test)
+- [company.northstar@demo.example.test](mailto:company.northstar@demo.example.test)
+
+### Shared demo password
+
+**Public demo-only password:** `DemoAccess!2026`
+
+This password is for the shared demo accounts only and is not suitable for
+personal or production accounts. These accounts are shared among visitors, so
+their data may be changed by others. Do not enter personal, confidential, or
+otherwise sensitive information.
+
 ## Validation and API behavior
 
 Frontend forms use React Hook Form and Zod where appropriate. Shared request

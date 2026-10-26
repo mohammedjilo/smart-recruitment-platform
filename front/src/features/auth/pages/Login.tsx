@@ -72,7 +72,8 @@ const Login: React.FC = () => {
         : null
 
    const location = useLocation()
-   const from = location.state?.from?.pathname
+   const isExplicitLogout = location.state?.explicitLogout === true
+   const from = isExplicitLogout ? undefined : location.state?.from?.pathname
 
    const onSubmit = async (data: LoginFormValues) => {
       try {
@@ -100,7 +101,9 @@ const Login: React.FC = () => {
          }
 
          if ("user" in result.data) {
-            navigate("/profile/complete", { replace: true })
+            navigate(isExplicitLogout ? "/dashboard" : "/profile/complete", {
+               replace: true
+            })
             return
          }
 

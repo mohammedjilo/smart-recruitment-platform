@@ -62,7 +62,7 @@ export const userSupportConfig: SupportPortalConfig = {
       }
    ],
 
-   contactEmail: "support@nexora.com",
+   contactEmail: "SRP@gmail.com",
    supportHours: "Sun - Thu, 9:00 AM - 6:00 PM",
    responseTime: "Within 24 hours"
 }

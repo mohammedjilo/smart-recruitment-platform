@@ -137,9 +137,16 @@ export default function SideBar({
       return true
    })
    useEffect(() => {
-      if (logoutPresentation.category === "contextual_success")
-         navigate("/login", { replace: true })
-   }, [logoutPresentation.category, navigate])
+      if (
+         logoutState.status === "success" ||
+         logoutState.status === "error" ||
+         logoutState.status === "aborted"
+      )
+         navigate("/login", {
+            replace: true,
+            state: { explicitLogout: true }
+         })
+   }, [logoutState.status, navigate])
    const handleLogout = () => {
       if (logoutPresentation.category === "loading") return
       void authLogOut(undefined)

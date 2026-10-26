@@ -26,15 +26,15 @@ export default function SupportArticleDetails({
       <Box className="min-h-screen bg-[#f7fbff] px-4 py-8 sm:px-6 lg:px-8">
          <Box className="mx-auto max-w-245">
             <button
-               className="mb-5 flex items-center gap-2 text-sm font-medium text-muted transition-colors hover:text-blue-600"
+               className="text-muted mb-5 flex items-center gap-2 text-sm font-medium transition-colors hover:text-blue-600"
                type="button"
                onClick={onBack}>
                <ArrowBackRoundedIcon className="text-[19px]" />
                Back to {topicTitle}
             </button>
 
-            <Box className="overflow-hidden rounded-2xl border border-border bg-surface shadow-[0_8px_35px_rgba(30,64,175,0.05)]">
-               <Box className="border-b border-border bg-[#f8fbff] p-6 sm:p-8">
+            <Box className="border-border bg-surface overflow-hidden rounded-2xl border shadow-[0_8px_35px_rgba(30,64,175,0.05)]">
+               <Box className="border-border border-b bg-[#f8fbff] p-6 sm:p-8">
                   <Box className="flex items-start gap-4">
                      <Box className="flex h-14 w-14 shrink-0 items-center justify-center rounded-xl bg-blue-100 text-blue-600">
                         <Icon className="text-[30px]" />
@@ -49,7 +49,9 @@ export default function SupportArticleDetails({
                            component="h1">
                            {article.title}
                         </Typography>
-                        <Typography className="mt-3! max-w-3xl! text-sm! leading-6!" color="textSecondary">
+                        <Typography
+                           className="mt-3! max-w-3xl! text-sm! leading-6!"
+                           color="textSecondary">
                            {article.description}
                         </Typography>
                      </Box>
@@ -60,22 +62,24 @@ export default function SupportArticleDetails({
                   <Box className="space-y-6">
                      {article.content.map((section, sectionIndex) => (
                         <section
-                           className="rounded-2xl border border-border bg-bg/60 p-5 sm:p-6"
+                           className="border-border bg-bg/60 rounded-2xl border p-5 sm:p-6"
                            key={section.id}>
                            {section.title && (
-                              <Typography className="text-lg! font-bold! text-content!">
+                              <Typography className="text-content! text-lg! font-bold!">
                                  {sectionIndex + 1}. {section.title}
                               </Typography>
                            )}
 
                            {section.description && (
-                              <Typography className="mt-3! text-sm! leading-6!" color="textSecondary">
+                              <Typography
+                                 className="mt-3! text-sm! leading-6!"
+                                 color="textSecondary">
                                  {section.description}
                               </Typography>
                            )}
 
                            {section.steps && section.steps.length > 0 && (
-                              <ol className="mt-4 list-decimal space-y-2 pl-5 text-sm leading-6 text-muted">
+                              <ol className="text-muted mt-4 list-decimal space-y-2 pl-5 text-sm leading-6">
                                  {section.steps.map((step, index) => (
                                     <li key={`${section.id}-step-${index}`}>{step}</li>
                                  ))}
@@ -83,7 +87,7 @@ export default function SupportArticleDetails({
                            )}
 
                            {section.note && (
-                              <Box className="mt-4 rounded-xl border border-border bg-blue-50/60 px-4 py-3 text-sm text-blue-700">
+                              <Box className="border-border mt-4 rounded-xl border bg-blue-50/60 px-4 py-3 text-sm text-blue-700">
                                  <Typography className="font-semibold!">Note:</Typography>{" "}
                                  {section.note}
                               </Box>
@@ -108,8 +112,8 @@ export default function SupportArticleDetails({
                      ))}
                   </Box>
 
-                  <Box className="mt-8 rounded-2xl border border-border bg-[#f8fbff] p-5">
-                     <Typography className="text-sm! font-bold! text-content!">
+                  <Box className="border-border mt-8 rounded-2xl border bg-[#f8fbff] p-5">
+                     <Typography className="text-content! text-sm! font-bold!">
                         Was this article helpful?
                      </Typography>
 
@@ -129,7 +133,9 @@ export default function SupportArticleDetails({
                         </Button>
                      </Box>
 
-                     <Typography className="mt-4! text-xs!" color="textSecondary">
+                     <Typography
+                        className="mt-4! text-xs!"
+                        color="textSecondary">
                         {helpfulState === "yes"
                            ? "Thanks for letting us know this article was helpful."
                            : helpfulState === "no"
@@ -138,18 +144,20 @@ export default function SupportArticleDetails({
                      </Typography>
                   </Box>
 
-                  <Box className="mt-8 rounded-2xl border border-border bg-bg p-5">
-                     <Typography className="text-sm! font-bold! text-content!">
+                  <Box className="border-border bg-bg mt-8 rounded-2xl border p-5">
+                     <Typography className="text-content! text-sm! font-bold!">
                         Still need help?
                      </Typography>
 
-                     <Typography className="mt-2! text-sm! leading-6!" color="textSecondary">
+                     <Typography
+                        className="mt-2! text-sm! leading-6!"
+                        color="textSecondary">
                         If this article did not answer your question, you can create a
                         support request and the team will follow up with you.
                      </Typography>
 
                      <Button
-                        className="mt-3! rounded-[10px]! py-2.4! font-bold! normal-case! shadow-none!"
+                        className="py-2.4! mt-3! rounded-[10px]! font-bold! normal-case! shadow-none!"
                         fullWidth
                         variant="contained"
                         onClick={onCreateRequest}>

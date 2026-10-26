@@ -14,6 +14,7 @@ import { useGetQuestionsQuery } from "@/services/shared/jobApiCalls"
 import { showAlert } from "@/utils/swal"
 import { getMutationErrorState, getMutationState } from "@/utils/mutationState"
 import { getMutationPresentation } from "@/utils/presentationPolicy"
+import { neutrals } from "@/theme/tokens"
 
 export type CreateApllicationPayload = {
    fullName: string
@@ -264,7 +265,8 @@ const ApplyModal: React.FC<ApplyModalProps> = ({
          open={open}
          slotProps={{
             paper: {
-               className: "w-177.5 lg:w-190 rounded-2xl overflow-hidden"
+               className: "w-177.5 lg:w-190 rounded-2xl overflow-hidden",
+               sx: { "--muted": neutrals.muted }
             }
          }}
          onClose={handleClose}>

@@ -4,7 +4,6 @@ import { AppError } from "../utils/appError.js";
 import {
   assertAnyPermission,
   assertPermission,
-  createAuditLog,
   getUserPermissions,
 } from "../authorization/permission.service.js";
 import { PERMISSIONS } from "../authorization/permissions.js";

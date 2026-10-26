@@ -54,3 +54,6 @@ Desktop.ini
 /front/FRONTEND-AUDIT-VERIFICATION.md
 /front/SUPPORT-ARCHITECTURE-REPORT.md
 /front/responsive-audit/RESPONSIVE_BASELINE.md
+
+# Local VS Code settings
+.vscode/

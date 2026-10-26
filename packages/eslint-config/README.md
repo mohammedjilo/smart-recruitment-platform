@@ -3,6 +3,10 @@
 Reusable ESLint flat configuration for sorting JSX attributes with
 `eslint-plugin-perfectionist`.
 
+It also provides a shared unused-import rule set backed by
+`eslint-plugin-unused-imports`. The config autofixes unused imports and keeps
+unused-variable warnings enabled, ignoring names that begin with `_`.
+
 ## Use in this monorepo
 
 Add the workspace package to a React project's development dependencies, then
@@ -11,7 +15,7 @@ include its config in the project's `eslint.config.js`:
 ```js
 import eslint from "@eslint/js";
 import tsParser from "@typescript-eslint/parser";
-import { jsxProps } from "@smart-recruitment/eslint-config";
+import { jsxProps, unusedImports } from "@smart-recruitment/eslint-config";
 
 export default [
   eslint.configs.recommended,
@@ -26,6 +30,7 @@ export default [
       },
     },
   },
+  unusedImports,
   jsxProps,
 ];
 ```
@@ -34,6 +39,15 @@ The exported flat config applies only to `.jsx` and `.tsx` files. It does not
 sort properties in JavaScript or TypeScript objects. Keep the consuming
 project's existing parser and ESLint configs; the example shows the minimum
 parser setup for TypeScript JSX.
+
+`unusedImports` applies to JavaScript, JSX, TypeScript, and TSX files. It
+replaces the core and TypeScript `no-unused-vars` rules with the plugin's
+composed equivalent so import warnings are not duplicated while the existing
+unused-variable warning behavior remains active.
+
+From the monorepo root, run `npm run lint` to check both frontend and backend,
+or `npm run lint:fix` to apply ESLint fixes. Each workspace also exposes its
+own `lint:fix` script.
 
 ## Sorting order
 

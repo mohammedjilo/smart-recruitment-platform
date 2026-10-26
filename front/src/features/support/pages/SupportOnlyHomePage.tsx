@@ -75,7 +75,7 @@ export default function SupportOnlyHomePage() {
                   No support requests yet.
                </Typography>
                <Button
-                  className="mt-4 normal-case"
+                  className="mt-4! normal-case!"
                   component={Link}
                   to="/support-only/requests/create"
                   variant="contained">
@@ -124,7 +124,7 @@ export default function SupportOnlyHomePage() {
                            </td>
                            <td className="px-4 py-4 text-right">
                               <Button
-                                 className="normal-case"
+                                 className="normal-case!"
                                  component={Link}
                                  size="small"
                                  to={`/support-only/requests/${ticket.id}`}
@@ -138,7 +138,9 @@ export default function SupportOnlyHomePage() {
                </table>
                {meta && meta.totalCount > meta.pageSize && (
                   <Box className="border-border flex items-center justify-between border-t px-4 py-3">
-                     <Typography className="text-muted text-xs">
+                     <Typography
+                        className="text-xs!"
+                        color="textSecondary">
                         Page {meta.page} of {Math.ceil(meta.totalCount / meta.pageSize)}
                      </Typography>
                      <Box className="flex gap-2">

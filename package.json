@@ -13,6 +13,7 @@
     "test:validation": "npm run test --workspace @smart-recruitment/validation",
     "typecheck:front": "tsc -p front/tsconfig.app.json --noEmit",
     "typecheck:back": "tsc -p back/tsconfig.json --noEmit",
-    "lint": "npm run lint --workspace front"
+    "lint": "npm run lint --workspaces --if-present",
+    "lint:fix": "npm run lint:fix --workspaces --if-present"
   }
 }
