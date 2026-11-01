@@ -10,9 +10,9 @@ import {
    TextField,
    Typography
 } from "@mui/material"
-import { experienceOptions } from "@/constants/createJob.constants"
 import { currentDateOnlyKey } from "@smart-recruitment/validation"
 import type { JobFormInput } from "../../types"
+const experienceOptions = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10+"]
 
 const JobRequirementsFields = () => {
    const { control } = useFormContext<JobFormInput>()

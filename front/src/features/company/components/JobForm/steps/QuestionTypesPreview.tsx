@@ -1,9 +1,41 @@
 import React from "react"
 
-import { HelpOutlined } from "@mui/icons-material"
+import {
+   Groups,
+   HelpOutlined,
+   Numbers,
+   QuestionAnswer,
+   RadioButtonChecked
+} from "@mui/icons-material"
 
 import { Box, Paper, Typography } from "@mui/material"
-import { questionTypes } from "@/constants/createJob.constants"
+export const questionTypes = [
+   {
+      title: "Yes/No",
+      description: "Simple yes or no questions",
+      icon: RadioButtonChecked
+   },
+   {
+      title: "Text",
+      description: "Open-ended text answers",
+      icon: QuestionAnswer
+   },
+   {
+      title: "Number",
+      description: "Numeric answers",
+      icon: Numbers
+   },
+   {
+      title: "Single Choice",
+      description: "Choose one option",
+      icon: RadioButtonChecked
+   },
+   {
+      title: "Multiple Choice",
+      description: "Choose multiple options",
+      icon: Groups
+   }
+]
 
 const QuestionTypesPreview: React.FC = () => {
    return (
@@ -18,7 +50,9 @@ const QuestionTypesPreview: React.FC = () => {
             </Typography>
          </Box>
 
-         <Typography className="mt-2! text-xs! leading-4!" color="textSecondary">
+         <Typography
+            className="mt-2! text-xs! leading-4!"
+            color="textSecondary">
             Add custom questions to better screen candidates.
          </Typography>
 

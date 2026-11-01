@@ -8,9 +8,37 @@ import {
    TextField,
    Typography
 } from "@mui/material"
-import { employmentTypes } from "@/constants/createJob.constants"
 import type { JobFormInput } from "../../types"
-
+import type { EmploymentType } from "@/types/createJob.types"
+const employmentTypes: {
+   value: EmploymentType
+   label: string
+}[] = [
+   {
+      value: "FULL_TIME",
+      label: "Full Time"
+   },
+   {
+      value: "PART_TIME",
+      label: "Part Time"
+   },
+   {
+      value: "CONTRACT",
+      label: "Contract"
+   },
+   {
+      value: "INTERNSHIP",
+      label: "Internship"
+   },
+   {
+      value: "FREELANCE",
+      label: "Freelance"
+   },
+   {
+      value: "REMOTE",
+      label: "Remote"
+   }
+]
 const JobInformationFields = () => {
    const { control, watch } = useFormContext<JobFormInput>()
    const description = watch("description")

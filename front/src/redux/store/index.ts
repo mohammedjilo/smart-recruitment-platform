@@ -10,6 +10,7 @@ export const store = configureStore({
       [supportOnlyApi.reducerPath]: supportOnlyApi.reducer,
       auth: authReducer
    },
+   devTools: import.meta.env.DEV,
    middleware: getDefaultMiddleware =>
       getDefaultMiddleware().concat(smartApi.middleware, supportOnlyApi.middleware)
 })

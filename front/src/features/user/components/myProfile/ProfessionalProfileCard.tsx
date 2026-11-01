@@ -2,6 +2,7 @@ import { Box, Card, CardContent, Typography } from "@mui/material"
 
 import WorkOutlineOutlinedIcon from "@mui/icons-material/WorkOutlineOutlined"
 import DescriptionOutlinedIcon from "@mui/icons-material/DescriptionOutlined"
+import CvDownloadButton from "@/components/common/CvDownloadButton"
 import type { ProfessionalProfile } from "@/types/user"
 import ProfileCardMenu from "./ProfileCardMenu"
 
@@ -65,7 +66,7 @@ const ProfessionalProfileCard = ({ professionalProfile }: Props) => {
                      <Typography>Resume / CV</Typography>
 
                      {professionalProfile.hasCv ? (
-                        <Box className="flex items-center gap-1.5 rounded-md border px-1.5 py-1">
+                        <Box className="flex flex-wrap items-center gap-2">
                            <DescriptionOutlinedIcon
                               color="primary"
                               fontSize="small"
@@ -76,6 +77,13 @@ const ProfessionalProfileCard = ({ professionalProfile }: Props) => {
                               noWrap>
                               CV uploaded
                            </Typography>
+                           <CvDownloadButton
+                              label="Open my CV"
+                              target={{
+                                 scope: "candidate-profile",
+                                 id: professionalProfile.userId
+                              }}
+                           />
                         </Box>
                      ) : (
                         <Typography
