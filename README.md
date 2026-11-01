@@ -97,6 +97,12 @@ listings and reviewing candidate applications.
 - [company.cedar@demo.example.test](mailto:company.cedar@demo.example.test)
 - [company.northstar@demo.example.test](mailto:company.northstar@demo.example.test)
 
+### Admin demo account
+
+This account has the restricted DEMO_ADMIN role for read-only exploration of
+
+- [demoadmin@example.com](mailto:demoadmin@example.com)
+
 ### Shared demo password
 
 **Public demo-only password:** `DemoAccess!2026`
