@@ -11,7 +11,7 @@ type LanguagesSectionProps = {
 
 const LanguagesSection = ({ languages = [] }: LanguagesSectionProps) => {
    return (
-      <Box className="rounded-xl border bg-surface p-5">
+      <Box className="bg-surface rounded-xl border p-5">
          <SectionTitle
             count={languages?.length ?? 0}
             icon={<LanguageOutlinedIcon />}
@@ -22,26 +22,33 @@ const LanguagesSection = ({ languages = [] }: LanguagesSectionProps) => {
             <EmptyText text="No languages available." />
          ) : (
             <Box className="mt-5 space-y-3">
-               {languages.map((item, index) => (
-                  <Box
-                     className="flex items-center justify-between rounded-lg border px-4 py-3"
-                     key={`${item.language}-${index}`}>
-                     <Box className="flex items-center gap-3">
-                        <Box className="flex h-9 w-9 items-center justify-center rounded-lg bg-violet-50 text-violet-600">
-                           <LanguageOutlinedIcon />
-                        </Box>
+               {languages.map((item, index) => {
+                  const languageName =
+                     typeof item.language === "string"
+                        ? item.language
+                        : (item.language?.languageName ?? "Unknown language")
 
-                        <Typography className="text-xs! font-semibold!">
-                           {item.language}
-                        </Typography>
+                  return (
+                     <Box
+                        className="flex items-center justify-between rounded-lg border px-4 py-3"
+                        key={`${languageName}-${index}`}>
+                        <Box className="flex items-center gap-3">
+                           <Box className="flex h-9 w-9 items-center justify-center rounded-lg bg-violet-50 text-violet-600">
+                              <LanguageOutlinedIcon />
+                           </Box>
+
+                           <Typography className="text-xs! font-semibold!">
+                              {languageName}
+                           </Typography>
+                        </Box>
+                        {item.level && (
+                           <Typography className="text-muted text-xs!">
+                              {item.level.charAt(0) + item.level.slice(1).toLowerCase()}
+                           </Typography>
+                        )}
                      </Box>
-                     {item.level && (
-                        <Typography className="text-muted text-xs!">
-                           {item.level.charAt(0) + item.level.slice(1).toLowerCase()}
-                        </Typography>
-                     )}
-                  </Box>
-               ))}
+                  )
+               })}
             </Box>
          )}
       </Box>

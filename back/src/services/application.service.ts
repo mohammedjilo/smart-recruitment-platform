@@ -61,7 +61,12 @@ const applicationContextSelect = {
       projects: { select: { title: true, description: true } },
     },
   },
-  languages: { select: { language: true } },
+  languages: {
+    select: {
+      level: true,
+      language: { select: { languageName: true } },
+    },
+  },
 } as const;
 
 const applicationJobSelect = {
@@ -129,7 +134,10 @@ const buildProfileSnapshot = (
   jobTitle: input.jobTitle,
   yearsOfExperience: user.profile?.yearsOfExperience ?? null,
   educations: user.profile?.educations ?? [],
-  languages: user.languages ?? [],
+  languages: (user.languages ?? []).map(({ language, level }) => ({
+    language: language.languageName,
+    level,
+  })),
   experiences: user.profile?.experiences ?? [],
   projects: user.profile?.projects ?? [],
   certificates: user.profile?.certificates ?? [],
@@ -308,13 +316,13 @@ export const applyToJob = async (
   };
 
   let cvPublicId = input.useProfessionalProfile
-    ? user.profile?.cvPublicId ?? null
+    ? (user.profile?.cvPublicId ?? null)
     : null;
   let cvResourceType = input.useProfessionalProfile
-    ? user.profile?.cvResourceType ?? "raw"
+    ? (user.profile?.cvResourceType ?? "raw")
     : "raw";
   let cvDeliveryType = input.useProfessionalProfile
-    ? user.profile?.cvDeliveryType ?? "upload"
+    ? (user.profile?.cvDeliveryType ?? "upload")
     : "authenticated";
   if (!input.useProfessionalProfile && cvFile) {
     const uploadResult = await cloudinaryUploadCV(

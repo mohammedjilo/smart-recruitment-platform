@@ -17,7 +17,7 @@ export type ProfileSnapshot = {
    }[]
 
    languages: {
-      language: string
+      language: string | { languageName?: string }
       level?: LanguageLevel
    }[]
 
