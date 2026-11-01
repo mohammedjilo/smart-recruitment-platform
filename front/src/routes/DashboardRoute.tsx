@@ -25,7 +25,7 @@ const DashboardRoute = () => {
    const permissionsPresentation = getQueryPresentation(permissionsState, "page")
    if (user?.role === "ADMIN") {
       if (permissionsPresentation.category === "loading") {
-         return <Box className="text-muted p-6 text-sm">Loading permissions...</Box>
+         return null
       }
       if (
          permissionsPresentation.category === "page_error" ||

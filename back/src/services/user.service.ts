@@ -114,9 +114,18 @@ export const getCompleteUserProfile = async (
     requester.type === "user" &&
     (requester.id === userId || requesterUser?.role === "ADMIN");
 
+  const {
+    cvPath: _cvPath,
+    cvPublicId,
+    cvResourceType: _cvResourceType,
+    cvDeliveryType: _cvDeliveryType,
+    ...safeProfile
+  } = profile ?? {};
   const profileData = {
     ...userData,
-    professionalProfile: profile,
+    professionalProfile: profile
+      ? { ...safeProfile, hasCv: Boolean(cvPublicId) }
+      : null,
     skills: user.skills.map(({ skill, id: userSkillId }) => ({
       ...skill,
       userSkillId,
@@ -424,9 +433,18 @@ export const updateProfessionalProfile = async (
   if (input.yearsOfExperience !== undefined) {
     data.yearsOfExperience = input.yearsOfExperience;
   }
-  if (input.cvPath !== undefined) data.cvPath = input.cvPath;
+  if (input.cvPath !== undefined) {
+    if (input.cvPath) {
+      throw new AppError(
+        "Upload CV files through the secure CV upload endpoint",
+        400,
+        "CV_UPLOAD_REQUIRED"
+      );
+    }
+    data.cvPath = null;
+  }
 
-  return prisma.professionalProfile.update({
+  const profile = await prisma.professionalProfile.update({
     where: { userId },
     data,
     include: {
@@ -436,6 +454,14 @@ export const updateProfessionalProfile = async (
       certificates: true,
     },
   });
+  const {
+    cvPath: _cvPath,
+    cvPublicId,
+    cvResourceType: _cvResourceType,
+    cvDeliveryType: _cvDeliveryType,
+    ...safeProfile
+  } = profile;
+  return { ...safeProfile, hasCv: Boolean(cvPublicId) };
 };
 
 export const getDashboardData = async (userId: string, requestId?: string) => {

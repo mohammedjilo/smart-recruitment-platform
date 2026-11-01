@@ -141,7 +141,10 @@ export const getCompanyJobsByAdmin = async (
 
 export const getJobByAdmin = async (jobId: string) => {
   const job = await prisma.job.findFirst({
-    where: { id: jobId, status: { not: "DRAFT" } },
+    where: {
+      id: jobId,
+      status: { not: "DRAFT" },
+    },
     select: {
       id: true,
       title: true,
@@ -167,11 +170,7 @@ export const getJobByAdmin = async (jobId: string) => {
       skills: {
         select: { skill: { select: { skillName: true } } },
       },
-      _count: {
-        select: {
-          applications: true,
-        },
-      },
+      _count: { select: { applications: true } },
     },
   });
   if (!job) throw new AppError("Job not found", 404);
@@ -180,7 +179,10 @@ export const getJobByAdmin = async (jobId: string) => {
 
 export const getQuestionsByAdmin = async (jobId: string) => {
   const job = await prisma.job.findFirst({
-    where: { id: jobId, status: { not: "DRAFT" } },
+    where: {
+      id: jobId,
+      status: { not: "DRAFT" },
+    },
     select: {
       applicationQuestions: {
         orderBy: [{ order: "asc" }, { createdAt: "asc" }],
@@ -217,36 +219,38 @@ export const getJobApplicationsByAdmin = async (
   jobId: string,
   options: JobApplicationsQuery
 ) => {
+  const applicationWhere: Prisma.ApplicationWhereInput = {
+    jobId,
+    ...(options.status !== "ALL" ? { status: options.status } : {}),
+    ...(options.search
+      ? {
+          OR: [
+            {
+              user: {
+                firstName: {
+                  contains: options.search,
+                  mode: "insensitive",
+                },
+              },
+            },
+            {
+              user: {
+                lastName: { contains: options.search, mode: "insensitive" },
+              },
+            },
+            {
+              user: {
+                email: { contains: options.search, mode: "insensitive" },
+              },
+            },
+          ],
+        }
+      : {}),
+  };
+
   const [applications, groupedStatusCounts] = await Promise.all([
     prisma.application.findMany({
-      where: {
-        jobId,
-        ...(options.status !== "ALL" ? { status: options.status } : {}),
-        ...(options.search
-          ? {
-              OR: [
-                {
-                  user: {
-                    firstName: {
-                      contains: options.search,
-                      mode: "insensitive",
-                    },
-                  },
-                },
-                {
-                  user: {
-                    lastName: { contains: options.search, mode: "insensitive" },
-                  },
-                },
-                {
-                  user: {
-                    email: { contains: options.search, mode: "insensitive" },
-                  },
-                },
-              ],
-            }
-          : {}),
-      },
+      where: applicationWhere,
       select: {
         id: true,
         status: true,
@@ -267,7 +271,9 @@ export const getJobApplicationsByAdmin = async (
     }),
     prisma.application.groupBy({
       by: ["status"],
-      where: { jobId },
+      where: {
+        jobId,
+      },
       _count: { _all: true },
     }),
   ]);

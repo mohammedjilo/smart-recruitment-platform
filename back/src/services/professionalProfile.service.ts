@@ -17,6 +17,9 @@ export const getProfessionalProfile = async (userId: string) => {
       summary: true,
       yearsOfExperience: true,
       cvPath: true,
+      cvPublicId: true,
+      cvResourceType: true,
+      cvDeliveryType: true,
       createdAt: true,
       updatedAt: true,
       educations: {
@@ -80,6 +83,14 @@ export const getProfessionalProfile = async (userId: string) => {
     throw new AppError("Professional profile not found", 404);
   }
 
+  const {
+    cvPath: _cvPath,
+    cvPublicId,
+    cvResourceType: _cvResourceType,
+    cvDeliveryType: _cvDeliveryType,
+    ...safeProfile
+  } = profile;
+
   // Calculate completion
   const basicInformation = !!profile.jobTitle && !!profile.yearsOfExperience;
 
@@ -114,7 +125,7 @@ export const getProfessionalProfile = async (userId: string) => {
     certificates;
 
   return {
-    profile,
+    profile: { ...safeProfile, hasCv: Boolean(cvPublicId) },
     completion: {
       percentage,
       basicInformation,

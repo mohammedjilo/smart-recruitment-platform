@@ -225,6 +225,34 @@ describe("Admin workspace routing", () => {
       expect(router.state.location.pathname).toBe("/admin/operations")
    })
 
+   it("allows a Demo Admin to use the scoped dashboard route", async () => {
+      const permissions = [
+         ADMIN_PERMISSIONS.DEMO_ADMIN_READ_ONLY,
+         ADMIN_PERMISSIONS.VIEW_ADMIN_DASHBOARD
+      ]
+      setPermissionsQuery(permissions)
+      const router = renderAt("/admin/dashboard", { permissions })
+
+      expect(
+         await screen.findByText("General dashboard page", {}, { timeout: 10000 })
+      ).toBeInTheDocument()
+      expect(router.state.location.pathname).toBe("/admin/dashboard")
+   })
+
+   it("allows direct navigation to support for a Demo Admin", async () => {
+      const permissions = [
+         ADMIN_PERMISSIONS.DEMO_ADMIN_READ_ONLY,
+         ADMIN_PERMISSIONS.VIEW_ADMIN_DASHBOARD,
+         ADMIN_PERMISSIONS.VIEW_COMPANIES,
+         ADMIN_PERMISSIONS.VIEW_SUPPORT_DASHBOARD
+      ]
+      setPermissionsQuery(permissions)
+      const router = renderAt("/admin/support", { permissions })
+
+      expect(await screen.findByText("Support dashboard page")).toBeInTheDocument()
+      expect(router.state.location.pathname).toBe("/admin/support")
+   })
+
    it("renders Operations directly without redirecting to the general dashboard", async () => {
       const permissions = [ADMIN_PERMISSIONS.VIEW_OPERATIONS_DASHBOARD]
       setPermissionsQuery(permissions)
@@ -318,11 +346,20 @@ describe("Admin workspace routing", () => {
       expect(screen.queryByRole("progressbar")).not.toBeInTheDocument()
    })
 
-   it("keeps the existing loading state while permissions are loading", async () => {
+   it("renders no placeholder while permissions are loading", async () => {
       setPermissionsQuery([], "loading")
       renderAt("/admin")
 
-      expect(await screen.findByText("Loading permissions...")).toBeInTheDocument()
+      expect(screen.queryByText("Loading permissions...")).not.toBeInTheDocument()
+      expect(screen.queryByText("General dashboard page")).not.toBeInTheDocument()
+   })
+
+   it("renders no placeholder on the dashboard while admin permissions are loading", async () => {
+      setPermissionsQuery([], "loading")
+      renderAt("/dashboard")
+
+      expect(screen.queryByText("Loading permissions...")).not.toBeInTheDocument()
+      expect(screen.queryByText("General dashboard page")).not.toBeInTheDocument()
    })
 
    it("keeps the existing retry state when permissions fail to load", async () => {

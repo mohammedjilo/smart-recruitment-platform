@@ -1,6 +1,7 @@
 import { CircularProgress } from "@mui/material"
 import { Navigate } from "react-router-dom"
 import { ADMIN_PERMISSIONS } from "@/types/adminPermissions"
+import { isDemoAdminPermissions } from "@/features/admin/authorization/demoAdmin"
 import { useGetCurrentAdminPermissionsQuery } from "@/features/admin/services/adminApiCalls"
 import { useSelector } from "react-redux"
 import type { RootState } from "@/redux/store"
@@ -27,6 +28,15 @@ export default function AdminWorkspaceRedirect() {
       "data" in permissionsState
          ? permissionsState.data?.data.permissions ?? []
          : []
+
+   if (isDemoAdminPermissions(permissions)) {
+      return (
+         <Navigate
+            replace
+            to="/admin/dashboard"
+         />
+      )
+   }
 
    if (permissions.includes(ADMIN_PERMISSIONS.VIEW_ADMIN_DASHBOARD)) {
       return (

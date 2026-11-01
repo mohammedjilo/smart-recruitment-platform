@@ -9,8 +9,9 @@
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "start": "node dist/index.js",
+    "prisma:seed:admin-authorization": "tsx src/authorization/seedAdminAuthorization.ts",
     "update:geonames": "node scripts/update-geonames-dataset.mjs",
-    "test": "node --import tsx --test src/middlewares/error.integration.test.ts src/middlewares/message.authorization.integration.test.ts src/middlewares/support.authorization.integration.test.ts src/middlewares/supportOnly.integration.test.ts src/services/auth.service.test.mjs src/services/application.state.test.ts src/services/application.withdrawal.service.test.mjs src/services/user.profile.authorization.test.mjs src/services/job.visibility.service.test.mjs src/services/application.closed-job.api.integration.test.ts"
+    "test": "node --import tsx --test src/middlewares/error.integration.test.ts src/middlewares/message.authorization.integration.test.ts src/middlewares/support.authorization.integration.test.ts src/middlewares/supportOnly.integration.test.ts src/middlewares/authCookie.integration.test.ts src/middlewares/demoAdminAccess.integration.test.ts src/middlewares/demoAdminResponse.test.ts src/services/cvAccess.service.test.ts src/controllers/cvAccess.integration.test.ts src/services/auth.service.test.mjs src/services/application.state.test.ts src/services/application.withdrawal.service.test.mjs src/services/user.profile.authorization.test.mjs src/services/job.visibility.service.test.mjs src/services/application.closed-job.api.integration.test.ts"
   },
   "keywords": [],
   "author": "",

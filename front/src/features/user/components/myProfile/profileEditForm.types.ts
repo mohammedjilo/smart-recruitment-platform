@@ -72,7 +72,6 @@ export type ProfileEditFormValues = {
    jobTitle?: string | null
    summary?: string | null
    yearsOfExperience?: number | string | null
-   cvPath?: string | null
 }
 
 export type ProfileEditField = Exclude<

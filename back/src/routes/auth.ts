@@ -9,6 +9,7 @@ import {
   supportAccessLogoutController,
 } from "../controllers/authControllers";
 import { validate } from "../middlewares/validate";
+import { requireTrustedOrigin } from "../utils/trustedOrigin";
 import {
   handleUploadError,
   imageUpload,
@@ -44,8 +45,12 @@ authRouter.post(
   validate(loginSchema),
   supportAccessController
 );
-authRouter.post("/support-access/logout", supportAccessLogoutController);
-authRouter.post("/refresh", refreshController);
-authRouter.post("/logout", logoutController);
+authRouter.post(
+  "/support-access/logout",
+  requireTrustedOrigin,
+  supportAccessLogoutController
+);
+authRouter.post("/refresh", requireTrustedOrigin, refreshController);
+authRouter.post("/logout", requireTrustedOrigin, logoutController);
 
 export default authRouter;

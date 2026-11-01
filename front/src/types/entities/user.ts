@@ -45,7 +45,7 @@ export type ProfessionalProfile = {
    jobTitle: string | null
    summary: string | null
    yearsOfExperience: number | null
-   cvPath: string | null
+   hasCv: boolean
    userId: string
    createdAt: string
    updatedAt: string

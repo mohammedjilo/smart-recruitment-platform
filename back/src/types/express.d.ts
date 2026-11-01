@@ -17,6 +17,7 @@ declare global {
     interface Request {
       user?: AuthUser;
       company?: AuthCompany;
+      isDemoAdmin?: boolean;
       supportOnlyAccountType?: "user" | "company";
       requestId?: string;
     }

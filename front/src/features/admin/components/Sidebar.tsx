@@ -22,7 +22,7 @@ import {
 
 import { useState } from "react"
 import { useSelector } from "react-redux"
-import { NavLink, useNavigate } from "react-router-dom"
+import { NavLink, useLocation, useNavigate } from "react-router-dom"
 import { useAuthLogOutMutation } from "@/features/auth/services/authApiCalls"
 import { useGetCurrentAdminPermissionsQuery } from "@/features/admin/services/adminApiCalls"
 import { getMutationState } from "@/utils/mutationState"
@@ -32,6 +32,7 @@ import { ADMIN_PERMISSIONS, type AdminPermission } from "@/types/adminPermission
 import type { RootState } from "@/redux/store"
 import ResponsiveSidebarDrawer from "@/components/common/ResponsiveSidebarDrawer"
 import { getInitials } from "@/utils/string/getInitials"
+import { isDemoAdminPermissions } from "@/features/admin/authorization/demoAdmin"
 
 const managementLinks = [
    {
@@ -81,7 +82,8 @@ const managementLinks = [
       label: "Support",
       path: "/admin/support/tickets",
       icon: MessageIcon,
-      permission: ADMIN_PERMISSIONS.VIEW_SUPPORT
+      permission: ADMIN_PERMISSIONS.VIEW_SUPPORT,
+      activePathPrefix: "/admin/support/"
    },
    {
       label: "Admin Management",
@@ -119,20 +121,36 @@ interface SidebarLinkProps {
    icon: React.ElementType
    permission?: AdminPermission
    end?: boolean
+   activePathPrefix?: string
    onNavigate?: () => void
 }
 
-function SidebarLink({ label, path, icon: Icon, end, onNavigate }: SidebarLinkProps) {
+function SidebarLink({
+   label,
+   path,
+   icon: Icon,
+   end,
+   activePathPrefix,
+   onNavigate
+}: SidebarLinkProps) {
+   const location = useLocation()
+
    return (
       <NavLink
          className="block"
          end={end}
          to={path}
          onClick={onNavigate}>
-         {({ isActive }) => (
+         {({ isActive }) => {
+            const isLinkActive =
+               isActive ||
+               (activePathPrefix !== undefined &&
+                  location.pathname.startsWith(activePathPrefix))
+
+            return (
             <ListItemButton
                className={`group! min-h-8.5! rounded-lg! px-2! text-sm! transition-all! duration-200! ${
-                  isActive
+                  isLinkActive
                      ? "bg-primary! hover:bg-primary-dark! text-white!"
                      : "text-muted hover:bg-primary-tint hover:text-primary"
                }`}
@@ -142,7 +160,8 @@ function SidebarLink({ label, path, icon: Icon, end, onNavigate }: SidebarLinkPr
                </ListItemIcon>
                <ListItemText primary={label} />
             </ListItemButton>
-         )}
+            )
+         }}
       </NavLink>
    )
 }
@@ -159,7 +178,7 @@ export default function AdminSidebar({ open, onClose }: AdminSidebarProps) {
    const logoutPresentation = getMutationPresentation(logoutState, { surface: "action" })
    const isLoggingOut = logoutPresentation.category === "loading"
    const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false)
-   const { hasPermission, hasAnyPermission } = usePermissions()
+   const { hasPermission, hasAnyPermission, permissions } = usePermissions()
    const user = useSelector((state: RootState) => state.auth.user)
    const adminName = `${user?.firstName ?? ""} ${user?.lastName ?? ""}`.trim() || "Admin"
    const { currentData: currentAdminData } = useGetCurrentAdminPermissionsQuery(
@@ -167,6 +186,9 @@ export default function AdminSidebar({ open, onClose }: AdminSidebarProps) {
       { skip: user?.role !== "ADMIN" }
    )
    const adminRoleNames = currentAdminData?.data.adminRoleNames
+   const isDemoAdmin =
+      isDemoAdminPermissions(permissions) ||
+      adminRoleNames?.includes("DEMO_ADMIN") === true
    const roleLabel =
       adminRoleNames
          ?.map(roleName =>
@@ -230,7 +252,9 @@ export default function AdminSidebar({ open, onClose }: AdminSidebarProps) {
                   <List className="space-y-1">
                      {managementLinks
                         .filter(
-                           link => !link.permission || hasPermission(link.permission)
+                           link =>
+                              (!isDemoAdmin || link.path !== "/admin/admins") &&
+                              (!link.permission || hasPermission(link.permission))
                         )
                         .map(link => (
                            <SidebarLink

@@ -28,7 +28,7 @@ export const getCompanyApplicationsByAdminController = asyncHandler(
       search: query.search,
       status: query.status === "ALL" ? undefined : query.status,
       matchScore: query.matchScore,
-    });
+    }, req.isDemoAdmin);
 
     sendSuccess(res, 200, result.data, {
       meta: {
@@ -50,7 +50,8 @@ export const getCompanyApplicationsByAdminController = asyncHandler(
 export const getApplicationByAdminController = asyncHandler(
   async (req: Request, res: Response) => {
     const application = await getApplicationByAdmin(
-      req.params.applicationId as string
+      req.params.applicationId as string,
+      req.isDemoAdmin
     );
 
     sendSuccess(res, 200, application);

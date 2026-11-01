@@ -3,12 +3,17 @@ import { Response } from "express";
 const defaultRefreshMs =
   Number(process.env.JWT_REFRESH_EXPIRES_MS) || 14 * 24 * 3600 * 1000;
 
-const refreshCookieOptions = (ms: number) => ({
+const refreshCookieBaseOptions = () => ({
   httpOnly: true,
   secure: process.env.NODE_ENV === "production",
-  sameSite: "lax" as const,
-  maxAge: ms,
+  sameSite:
+    process.env.NODE_ENV === "production" ? ("none" as const) : ("lax" as const),
   path: "/",
+});
+
+const refreshCookieOptions = (ms: number) => ({
+  ...refreshCookieBaseOptions(),
+  maxAge: ms,
 });
 
 const supportAccessCookieOptions = () => ({
@@ -28,7 +33,7 @@ export function setRefreshCookie(res: Response, refreshToken: string) {
 }
 
 export function clearRefreshCookie(res: Response) {
-  res.clearCookie("refreshToken", { path: "/" });
+  res.clearCookie("refreshToken", refreshCookieBaseOptions());
 }
 
 export function setSupportAccessCookie(res: Response, token: string) {

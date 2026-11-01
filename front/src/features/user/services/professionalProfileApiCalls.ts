@@ -23,11 +23,29 @@ const extendedSmartApi = smartApi.injectEndpoints({
          invalidatesTags: (_result, _error, { userId }) => [
             { type: "ProfessionalProfile", id: userId }
          ]
+      }),
+      uploadProfessionalProfileCv: builder.mutation<
+         ApiSuccessResponse<{ hasCv: boolean }>,
+         { userId: string; file: File }
+      >({
+         query: ({ file }) => {
+            const body = new FormData()
+            body.append("cv", file)
+            return {
+               url: "/api/user/professional-profile/cv",
+               method: "PUT",
+               body
+            }
+         },
+         invalidatesTags: (_result, _error, { userId }) => [
+            { type: "ProfessionalProfile", id: userId }
+         ]
       })
    })
 })
 export const {
    useGetProfessionalProfileQuery,
-   useUpdateProfessionalProfileMutation
+   useUpdateProfessionalProfileMutation,
+   useUploadProfessionalProfileCvMutation
 } = extendedSmartApi
 export { extendedSmartApi as smartApi }

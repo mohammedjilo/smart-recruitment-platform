@@ -95,8 +95,7 @@ export type UserApplicationDetails = UserApplicationListItem & {
    strengths: unknown
    missingSkills: unknown
    resumeType: ResumeType
-   cvId: string | null
-   cvUrl: string | null
+   hasCv: boolean
    answers: Array<{
       id: string
       answer: unknown

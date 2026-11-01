@@ -3,7 +3,6 @@ import { useParams, useSearchParams } from "react-router-dom"
 import { Box, Button, Typography } from "@mui/material"
 import { useGetJobDetailsByAdminQuery } from "@/features/admin/services/adminApiCalls"
 import { AdminDetailsSkeleton } from "@/features/admin/components/AdminSkeletons"
-import JobDetailsHeader from "@/features/admin/components/jobDetails/JobDetailsHeader"
 import JobHero from "@/features/admin/components/jobDetails/JobHero"
 import JobTabs from "@/features/admin/components/jobDetails/JobTabs"
 import OverviewStep from "@/features/admin/components/jobDetails/OverviewStep/OverviewStep"
@@ -66,7 +65,9 @@ const JobDetailsPage = () => {
    if (!response?.data) {
       return (
          <Box className="flex min-h-100 items-center justify-center">
-            <Typography className="text-sm!" color="textSecondary">
+            <Typography
+               className="text-sm!"
+               color="textSecondary">
                Job details could not be determined.
             </Typography>
          </Box>
@@ -92,7 +93,6 @@ const JobDetailsPage = () => {
                </Button>
             </Box>
          )}
-         <JobDetailsHeader />
 
          <JobHero job={job} />
 

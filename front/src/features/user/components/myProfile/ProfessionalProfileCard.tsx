@@ -64,7 +64,7 @@ const ProfessionalProfileCard = ({ professionalProfile }: Props) => {
                   <Box className="grid items-center gap-2 sm:grid-cols-[220px_1fr]">
                      <Typography>Resume / CV</Typography>
 
-                     {professionalProfile.cvPath ? (
+                     {professionalProfile.hasCv ? (
                         <Box className="flex items-center gap-1.5 rounded-md border px-1.5 py-1">
                            <DescriptionOutlinedIcon
                               color="primary"

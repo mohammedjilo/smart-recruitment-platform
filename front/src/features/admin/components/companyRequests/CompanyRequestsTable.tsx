@@ -9,6 +9,7 @@ type CompanyRequestsTableProps = {
    onView: (company: CompanyRequests) => void
    onApprove: (company: CompanyRequests) => void
    onReject: (company: CompanyRequests) => void
+   canReview?: boolean
    isUpdating?: boolean
    isFetching?: boolean
    queryState?: SemanticQueryState<unknown>
@@ -20,12 +21,19 @@ const CompanyRequestsTable = ({
    onView,
    onApprove,
    onReject,
+   canReview = true,
    isUpdating = false,
    isFetching = false,
    queryState,
    onRetry
 }: CompanyRequestsTableProps) => {
-   const columns = getCompanyRequestsColumns({ onView, onApprove, onReject, isUpdating })
+   const columns = getCompanyRequestsColumns({
+      onView,
+      onApprove,
+      onReject,
+      isUpdating,
+      canReview
+   })
 
    return (
       <DataTable

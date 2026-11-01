@@ -19,6 +19,7 @@ export const jobFormSchema = createJobSchema
       experience: z
          .string()
          .min(1, "Experience is required")
+         .regex(/^(?:[0-9]|10\+?)$/, "Select a valid number of years")
          .transform(value => Number.parseInt(value, 10))
          .pipe(createJobSchema.shape.experienceRequired),
       salary: z

@@ -29,6 +29,7 @@ import { getMutationPresentation } from "@/utils/presentationPolicy"
 import ApplicationAnswers from "./ApplicationAnswers"
 import ApplicationMatchScore from "./ApplicationMatchScore"
 import { canWithdrawApplication } from "@/utils/applicationWithdrawal"
+import CvDownloadButton from "@/components/common/CvDownloadButton"
 
 const normalizeArray = (value: unknown): string[] => {
    if (!value) return []
@@ -355,17 +356,14 @@ export const ApplicationDetails: React.FC<ApplicationDetailsProps> = ({
                   </Box>
                </Box>
 
-               {application.cvUrl && (
-                  <Button
-                     className="normal-case!"
-                     href={application.cvUrl}
-                     component="a"
-                     rel="noopener noreferrer"
-                     size="small"
-                     target="_blank"
-                     variant="outlined">
-                     View Resume
-                  </Button>
+               {application.hasCv && (
+                  <CvDownloadButton
+                     label="View Resume"
+                     target={{
+                        scope: "candidate-application",
+                        id: application.id
+                     }}
+                  />
                )}
             </Box>
          </Box>

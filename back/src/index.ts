@@ -26,6 +26,9 @@ import supportOnlyRouter from "./routes/supportOnly.js";
 import jobRouter from "./routes/job";
 import locationRouter from "./routes/location";
 import { startJobExpirationScheduler } from "./infrastructure/jobExpirationScheduler.js";
+import { getTrustedFrontendOrigins } from "./utils/trustedOrigin.js";
+import { enforceDemoAdminBoundary } from "./middlewares/demoAdminAccess.js";
+import { redactDemoAdminResponse } from "./middlewares/demoAdminResponse.js";
 import {
   getErrorDiagnostics,
   writeStructuredLog,
@@ -42,25 +45,18 @@ export const createApp = (testRoutes?: Router) => {
     req.requestId = req.header("x-request-id") || crypto.randomUUID();
     next();
   });
-  const getAllowedOrigins = (): string[] => {
-    const configured = (process.env.FRONTEND_URL ?? "")
-      .split(",")
-      .map((origin) => origin.trim().replace(/\/+$/, ""))
-      .filter(Boolean);
-
-    return configured.length > 0 ? configured : ["http://localhost:5173"];
-  };
-
   app.use(Express.json());
   app.use(Express.urlencoded());
   app.use(cookieParser());
   app.use(apiContract);
   app.use(
     cors({
-      origin: getAllowedOrigins(),
+      origin: getTrustedFrontendOrigins(),
       credentials: true,
     })
   );
+  app.use(enforceDemoAdminBoundary);
+  app.use(redactDemoAdminResponse);
 
   app.use("/api/user-languages", userLanguageRouter);
   app.use("/api/auth", authRouter);

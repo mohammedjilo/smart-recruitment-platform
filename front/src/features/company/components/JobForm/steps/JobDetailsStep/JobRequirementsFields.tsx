@@ -63,13 +63,14 @@ const JobRequirementsFields = () => {
                   <TextField
                      {...field}
                      placeholder="e.g. 80000"
-                     type="number"
+                     type="text"
                      value={field.value}
                      error={Boolean(fieldState.error)}
                      fullWidth
                      helperText={fieldState.error?.message}
                      size="small"
                      slotProps={{
+                        htmlInput: { inputMode: "numeric", pattern: "[0-9]*" },
                         input: {
                            endAdornment: (
                               <InputAdornment position="end">
@@ -80,11 +81,12 @@ const JobRequirementsFields = () => {
                            )
                         }
                      }}
-                     onChange={event =>
-                        field.onChange(
-                           event.target.value === "" ? 0 : Number(event.target.value)
-                        )
-                     }
+                     onChange={event => {
+                        const value = event.target.value
+                        if (/^\d*$/.test(value)) {
+                           field.onChange(value === "" ? 0 : Number(value))
+                        }
+                     }}
                   />
                )}
             />

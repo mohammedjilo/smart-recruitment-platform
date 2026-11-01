@@ -15,6 +15,7 @@ import FiltersBarSkeleton from "@/components/common/FiltersBarSkeleton"
 import { getMutationErrorState, getMutationState } from "@/utils/mutationState"
 import { getMutationPresentation } from "@/utils/presentationPolicy"
 import { showAlert } from "@/utils/swal"
+import { isDemoAdminPermissions } from "@/features/admin/authorization/demoAdmin"
 
 const ITEMS_PER_PAGE = 10
 
@@ -22,6 +23,7 @@ const NotificationsPage = () => {
    const [page, setPage] = useState(1)
    const [filter, setFilter] = useState<"ALL" | NotificationType>("ALL")
    const { permissions } = usePermissions()
+   const isDemoAdmin = isDemoAdminPermissions(permissions)
    const [markNotificationAsRead, markResult] = useMarkNotificationAsReadMutation()
    const markState = getMutationState(markResult)
    const markPresentation = getMutationPresentation(markState, {
@@ -107,14 +109,16 @@ const NotificationsPage = () => {
             <Typography className="mt-1! text-sm! text-muted">
                {notificationDescription}
             </Typography>
-            <Button
-               className="mt-3! normal-case!"
-               disabled={isMarkingAllAsRead}
-               size="small"
-               variant="outlined"
-               onClick={() => void handleMarkAllAsRead()}>
-               {isMarkingAllAsRead ? "Marking..." : "Mark all as read"}
-            </Button>
+            {!isDemoAdmin && (
+               <Button
+                  className="mt-3! normal-case!"
+                  disabled={isMarkingAllAsRead}
+                  size="small"
+                  variant="outlined"
+                  onClick={() => void handleMarkAllAsRead()}>
+                  {isMarkingAllAsRead ? "Marking..." : "Mark all as read"}
+               </Button>
+            )}
          </Box>
 
          {isLoading ? (
@@ -133,7 +137,7 @@ const NotificationsPage = () => {
                isLoading={isLoading}
                notifications={notifications}
                portal="admin"
-               onMarkAsRead={handleMarkAsRead}
+               onMarkAsRead={isDemoAdmin ? undefined : handleMarkAsRead}
             />
          </Box>
 

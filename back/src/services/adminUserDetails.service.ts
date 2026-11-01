@@ -1,9 +1,14 @@
 import { prisma } from "../config/db.js";
 import { AppError } from "../utils/appError.js";
 
-export const getAdminUserProfessionalProfile = async (userId: string) => {
-  const user = await prisma.user.findUnique({
-    where: { id: userId },
+export const getAdminUserProfessionalProfile = async (
+  userId: string,
+  isDemoAdmin = false
+) => {
+  const user = await prisma.user.findFirst({
+    where: {
+      id: userId,
+    },
     select: {
       id: true,
       languages: {
@@ -31,6 +36,9 @@ export const getAdminUserProfessionalProfile = async (userId: string) => {
           summary: true,
           yearsOfExperience: true,
           cvPath: true,
+          cvPublicId: true,
+          cvResourceType: true,
+          cvDeliveryType: true,
           createdAt: true,
           updatedAt: true,
           educations: {
@@ -97,8 +105,16 @@ export const getAdminUserProfessionalProfile = async (userId: string) => {
 
   if (!user.profile) return null;
 
+  const {
+    cvPath: _cvPath,
+    cvPublicId,
+    cvResourceType: _cvResourceType,
+    cvDeliveryType: _cvDeliveryType,
+    ...safeProfile
+  } = user.profile;
   return {
-    ...user.profile,
+    ...safeProfile,
+    hasCv: isDemoAdmin ? false : Boolean(cvPublicId),
     skills: user.skills.map(({ skill }) => skill),
     languages: user.languages.map(({ language, ...userLanguage }) => ({
       ...language,

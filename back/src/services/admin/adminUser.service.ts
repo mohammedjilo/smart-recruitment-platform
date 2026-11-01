@@ -11,7 +11,9 @@ type AdminUsersQuery = z.infer<
   typeof import("../../validation/admin.validation").getAdminUsersQuerySchema
 >;
 
-export const getUsersByAdmin = async (options: AdminUsersQuery) => {
+export const getUsersByAdmin = async (
+  options: AdminUsersQuery
+) => {
   const pageSize = 6;
   const search = options.search?.trim();
   const locationFilters: Prisma.UserWhereInput[] = [];
@@ -148,10 +150,10 @@ export const getUserByAdmin = async (userId: string) => {
     stats: {
       applications: _count.applications,
       savedJobs: _count.savedJobs,
-      messages: _count.messagesSent + _count.messagesReceived,
+      messages: (_count.messagesSent ?? 0) + (_count.messagesReceived ?? 0),
       languages: _count.languages,
       skills: _count.skills,
-      notifications: _count.notifications,
+      notifications: _count.notifications ?? 0,
     },
   };
 };

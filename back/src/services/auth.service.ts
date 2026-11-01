@@ -580,7 +580,7 @@ export const refreshAccessToken = async (refreshToken: string) => {
   if (payload.role === "user") {
     const user = await prisma.user.findUnique({
       where: { id: payload.id },
-      select: { accountStatus: true },
+      select: { accountStatus: true, role: true },
     });
     if (!user) {
       throw new AppError("User account not found", 403, "FORBIDDEN");

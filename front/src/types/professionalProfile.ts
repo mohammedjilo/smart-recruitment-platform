@@ -7,7 +7,7 @@ export type GetProfessionalProfileBody = {
          jobTitle: string | null
          summary: string | null
          yearsOfExperience: number | null
-         cvPath: string | null
+         hasCv: boolean
       }
       completion: {
          basicInformation: boolean

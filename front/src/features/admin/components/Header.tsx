@@ -6,6 +6,8 @@ import { useSelector } from "react-redux"
 import type { RootState } from "@/redux/store"
 import { getInitials } from "@/utils/string/getInitials"
 import UserNotifications from "@/features/user/components/header/notifications/UserNotifications"
+import { isDemoAdminPermissions } from "@/features/admin/authorization/demoAdmin"
+import { useGetCurrentAdminPermissionsQuery } from "@/features/admin/services/adminApiCalls"
 
 const pageTitles: Record<string, string> = {
    "/admin": "Dashboard",
@@ -68,6 +70,15 @@ interface AdminHeaderProps {
 export default function AdminHeader({ sidebarOpen, onMenuClick }: AdminHeaderProps) {
    const location = useLocation()
    const user = useSelector((state: RootState) => state.auth.user)
+   const permissions = useSelector((state: RootState) => state.auth.permissions)
+   const permissionsQuery = useGetCurrentAdminPermissionsQuery(
+      user?.role === "ADMIN" ? user.id : "",
+      { skip: user?.role !== "ADMIN" }
+   )
+   const currentPermissions = permissionsQuery.currentData?.data
+   const isDemoAdmin =
+      isDemoAdminPermissions(permissions) ||
+      currentPermissions?.adminRoleNames.includes("DEMO_ADMIN") === true
    const dynamicPage = dynamicPages.find(({ pattern }) => pattern.test(location.pathname))
    const isSupportTicketPage =
       location.pathname.startsWith("/admin/support/") &&
@@ -112,7 +123,7 @@ export default function AdminHeader({ sidebarOpen, onMenuClick }: AdminHeaderPro
                </Box>
             </Box>
             <Box className="flex shrink-0 items-center">
-               <UserNotifications />
+               {!isDemoAdmin && <UserNotifications />}
                <Box className="ml-1 flex min-w-0 items-center">
                   <Avatar
                      alt={displayName}

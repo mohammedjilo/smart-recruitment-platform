@@ -6,7 +6,6 @@ import {
    BusinessCenterOutlined,
    DescriptionOutlined,
    LanguageOutlined,
-   OpenInNewOutlined,
    SchoolOutlined,
    WorkspacePremiumOutlined,
    WorkOutlined
@@ -16,6 +15,7 @@ import type { ReactNode } from "react"
 import { getQueryState } from "@/utils/queryState"
 import { getQueryPresentation } from "@/utils/presentationPolicy"
 import ProfessionalProfileSkeleton from "./ProfessionalProfileSkeleton"
+import CvDownloadButton from "@/components/common/CvDownloadButton"
 
 type Props = {
    userId: string
@@ -142,17 +142,11 @@ const ProfileContent = ({ profile }: { profile: AdminUserProfessionalProfile }) 
                   : `${profile.yearsOfExperience} years of experience`}
             </Typography>
          </Box>
-         {profile.cvPath && /^https?:\/\//i.test(profile.cvPath) && (
-            <Button
-               className="border-border! bg-surface! text-content! rounded-lg! normal-case!"
-               href={profile.cvPath}
-               component="a"
-               endIcon={<OpenInNewOutlined />}
-               rel="noreferrer"
-               size="small"
-               target="_blank">
-               Open CV
-            </Button>
+         {profile.hasCv && (
+            <CvDownloadButton
+               label="Open CV"
+               target={{ scope: "admin-profile", id: profile.userId }}
+            />
          )}
       </Box>
 

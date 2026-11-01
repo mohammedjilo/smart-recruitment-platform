@@ -176,7 +176,11 @@ export const getAdminAuthorization = async (
 export const assignAdminRole = async (
   actorUserId: string,
   targetUserId: string,
-  roleName: "SUPER_ADMIN" | "SUPPORT_ADMIN" | "OPERATIONS_ADMIN"
+  roleName:
+    | "SUPER_ADMIN"
+    | "SUPPORT_ADMIN"
+    | "OPERATIONS_ADMIN"
+    | "DEMO_ADMIN"
 ) => {
   await assertPermission(actorUserId, PERMISSIONS.ASSIGN_ADMIN_ROLE);
 

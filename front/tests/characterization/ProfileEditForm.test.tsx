@@ -13,6 +13,7 @@ const { mutations } = vi.hoisted(() => ({
       certificate: vi.fn(),
       skills: vi.fn(),
       profile: vi.fn(),
+      uploadCv: vi.fn(),
       language: vi.fn()
    }
 }))
@@ -33,7 +34,11 @@ vi.mock("@/features/user/services/skillApiCalls", () => ({
    useUpdateSkillsMutation: () => [mutations.skills, { isLoading: false }]
 }))
 vi.mock("@/features/user/services/professionalProfileApiCalls", () => ({
-   useUpdateProfessionalProfileMutation: () => [mutations.profile, { isLoading: false }]
+   useUpdateProfessionalProfileMutation: () => [mutations.profile, { isLoading: false }],
+   useUploadProfessionalProfileCvMutation: () => [
+      mutations.uploadCv,
+      { isLoading: false }
+   ]
 }))
 vi.mock("@/features/user/services/languageApiCalls", () => ({
    useUpdateUserLanguageMutation: () => [mutations.language, { isLoading: false }]

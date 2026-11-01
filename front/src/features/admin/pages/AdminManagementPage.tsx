@@ -53,14 +53,14 @@ export default function AdminManagementPage() {
    })
    const [mutationError, setMutationError] = useState<string | null>(null)
    const handleMutationError = (error: unknown) => {
-      const errorPresentation = getMutationPresentation(
-         getMutationErrorState(error),
-         { surface: "action", importance: "important" }
-      )
+      const errorPresentation = getMutationPresentation(getMutationErrorState(error), {
+         surface: "action",
+         importance: "important"
+      })
       setMutationError(
          errorPresentation.category === "silent"
             ? null
-            : errorPresentation.message ?? null
+            : (errorPresentation.message ?? null)
       )
    }
 
@@ -107,12 +107,6 @@ export default function AdminManagementPage() {
    return (
       <Box className="space-y-5">
          <Box>
-            <Typography className="text-2xl! font-bold! text-content!">
-               Admin Management
-            </Typography>
-            <Typography className="mt-1! text-sm!" color="textSecondary">
-               Manage admin roles and account status.
-            </Typography>
             {hasPermission(ADMIN_PERMISSIONS.CREATE_ADMIN) && (
                <Button
                   className="mt-4! normal-case!"
@@ -126,7 +120,9 @@ export default function AdminManagementPage() {
             columns={columns}
             emptyState={
                <Box className="p-10 text-center">
-                  <Typography className="text-sm!" color="textSecondary">
+                  <Typography
+                     className="text-sm!"
+                     color="textSecondary">
                      No admin accounts found.
                   </Typography>
                </Box>
@@ -145,7 +141,9 @@ export default function AdminManagementPage() {
             rolesPresentation.category === "resource_not_found" ||
             rolesPresentation.category === "stale_error") && (
             <Alert
-               aria-live={rolesPresentation.category === "stale_error" ? "polite" : "assertive"}
+               aria-live={
+                  rolesPresentation.category === "stale_error" ? "polite" : "assertive"
+               }
                action={
                   <Button
                      color="inherit"
@@ -155,14 +153,14 @@ export default function AdminManagementPage() {
                   </Button>
                }
                role={rolesPresentation.category === "stale_error" ? "status" : "alert"}
-               severity={rolesPresentation.category === "stale_error" ? "warning" : "error"}>
+               severity={
+                  rolesPresentation.category === "stale_error" ? "warning" : "error"
+               }>
                {rolesPresentation.message}
             </Alert>
          )}
          {rolesPresentation.category === "empty" && (
-            <Alert severity="info">
-               No admin roles are available for assignment.
-            </Alert>
+            <Alert severity="info">No admin roles are available for assignment.</Alert>
          )}
       </Box>
    )

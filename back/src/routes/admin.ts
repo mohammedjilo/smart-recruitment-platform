@@ -66,6 +66,10 @@ import {
   updateAdminStatusController,
 } from "../controllers/adminAuthorizationControllers.js";
 import { getAdminUserProfessionalProfileController } from "../controllers/adminUserDetailsControllers.js";
+import {
+  getAdminApplicationCvController,
+  getAdminCandidateProfileCvController,
+} from "../controllers/cvAccessControllers.js";
 
 const adminRouter = Express.Router();
 
@@ -134,6 +138,11 @@ adminRouter.get(
   "/users/:userId/professional-profile",
   requirePermission(PERMISSIONS.VIEW_USER_DETAILS),
   getAdminUserProfessionalProfileController
+);
+adminRouter.get(
+  "/users/:userId/professional-profile/cv",
+  requirePermission(PERMISSIONS.VIEW_USER_DETAILS),
+  getAdminCandidateProfileCvController
 );
 adminRouter.patch(
   "/users/:userId/status",
@@ -221,6 +230,11 @@ adminRouter.get(
   "/applications/:applicationId",
   requirePermission(PERMISSIONS.VIEW_APPLICATIONS),
   getApplicationByAdminController
+);
+adminRouter.get(
+  "/applications/:applicationId/cv",
+  requirePermission(PERMISSIONS.VIEW_APPLICATIONS),
+  getAdminApplicationCvController
 );
 adminRouter.get(
   "/applications/:applicationId/profile-snapshot",

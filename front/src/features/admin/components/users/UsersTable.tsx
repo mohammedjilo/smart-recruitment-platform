@@ -10,6 +10,8 @@ import { formatDate as formatDateValue } from "@/utils/formatDate"
 import type { SemanticQueryState } from "@/utils/queryState"
 import { getMutationErrorState, getMutationState } from "@/utils/mutationState"
 import { getMutationPresentation } from "@/utils/presentationPolicy"
+import { usePermissions } from "@/features/admin/authorization/usePermissions"
+import { ADMIN_PERMISSIONS } from "@/types/adminPermissions"
 
 type UsersTableProps = {
    users: AdminUser[]
@@ -38,6 +40,8 @@ const UsersTable = ({
 }: UsersTableProps) => {
    const [menuAnchor, setMenuAnchor] = useState<null | HTMLElement>(null)
    const [selectedUser, setSelectedUser] = useState<AdminUser | null>(null)
+   const { hasPermission } = usePermissions()
+   const canChangeStatus = hasPermission(ADMIN_PERMISSIONS.SUSPEND_USERS)
    const [updateUserStatus, mutationResult] = useUpdateUserStatusByAdminMutation()
    const mutationState = getMutationState(mutationResult)
    const mutationPresentation = getMutationPresentation(mutationState, {
@@ -119,6 +123,7 @@ const UsersTable = ({
    const columns = getAdminUsersColumns({
       onView,
       onOpenActionsMenu: openActionsMenu,
+      canChangeStatus,
       formatDate,
       formatTime
    })
@@ -145,18 +150,20 @@ const UsersTable = ({
             onRetry={onRetry}
          />
 
-         <Menu
-            anchorEl={menuAnchor}
-            open={Boolean(menuAnchor)}
-            onClose={closeActionsMenu}>
-            <MenuItem
-               disabled={isUpdatingStatus}
-               onClick={handleStatusChange}>
-               {selectedUser?.accountStatus === "ACTIVE"
-                  ? "Deactivate User"
-                  : "Reactivate User"}
-            </MenuItem>
-         </Menu>
+         {canChangeStatus && (
+            <Menu
+               anchorEl={menuAnchor}
+               open={Boolean(menuAnchor)}
+               onClose={closeActionsMenu}>
+               <MenuItem
+                  disabled={isUpdatingStatus}
+                  onClick={handleStatusChange}>
+                  {selectedUser?.accountStatus === "ACTIVE"
+                     ? "Deactivate User"
+                     : "Reactivate User"}
+               </MenuItem>
+            </Menu>
+         )}
       </Box>
    )
 }

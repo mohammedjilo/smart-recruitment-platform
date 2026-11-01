@@ -4,6 +4,7 @@ export const adminRoleNameSchema = z.enum([
   "SUPER_ADMIN",
   "SUPPORT_ADMIN",
   "OPERATIONS_ADMIN",
+  "DEMO_ADMIN",
 ]);
 
 export const assignAdminRoleSchema = z.object({

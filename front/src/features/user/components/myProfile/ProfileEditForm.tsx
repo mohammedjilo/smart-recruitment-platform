@@ -25,6 +25,7 @@ import { showAlert } from "@/utils/swal"
 import type { RootState } from "@/redux/store"
 import { getMutationErrorState, getMutationState } from "@/utils/mutationState"
 import { getMutationPresentation } from "@/utils/presentationPolicy"
+import ProfessionalProfileCvManager from "./ProfessionalProfileCvManager"
 
 type Props<TFormType extends EditableProfileFormType> = {
    formType: TFormType
@@ -129,8 +130,7 @@ const ProfileEditForm = <TFormType extends EditableProfileFormType>({
                         ? values.yearsOfExperience
                         : values.yearsOfExperience
                           ? Number(values.yearsOfExperience)
-                          : 0,
-                  cvPath: typeof values.cvPath === "string" ? values.cvPath : undefined
+                          : 0
                }
             }).unwrap()
          }
@@ -258,7 +258,18 @@ const ProfileEditForm = <TFormType extends EditableProfileFormType>({
                            fullWidth
                            helperText={fieldState.error?.message}
                            label="Years of Experience"
-                           slotProps={{ htmlInput: { inputMode: "numeric" } }}
+                           slotProps={{
+                              htmlInput: {
+                                 inputMode: "numeric",
+                                 pattern: "[0-9]*"
+                              }
+                           }}
+                           onChange={event => {
+                              const value = event.target.value
+                              if (/^\d*$/.test(value)) {
+                                 formField.onChange(value)
+                              }
+                           }}
                         />
                      )}
                      rules={{
@@ -267,7 +278,12 @@ const ProfileEditForm = <TFormType extends EditableProfileFormType>({
                            "Enter a non-negative whole number of years."
                      }}
                   />
-                  {field("cvPath", "CV Path")}
+                  {userId && (
+                     <ProfessionalProfileCvManager
+                        hasCv={"hasCv" in data ? data.hasCv : false}
+                        userId={userId}
+                     />
+                  )}
                </Box>
             )}
          </DialogContent>

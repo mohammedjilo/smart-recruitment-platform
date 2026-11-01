@@ -16,6 +16,7 @@ import { showAlert } from "@/utils/swal"
 import { getMutationState } from "@/utils/mutationState"
 import { applyApiFieldErrors, getApiErrorDetails } from "@/utils/formErrors"
 import { getMutationPresentation } from "@/utils/presentationPolicy"
+import ProfessionalProfileCvManager from "@/features/user/components/myProfile/ProfessionalProfileCvManager"
 
 interface Props {
    onSave: (data: BasicInformationFormValues) => void
@@ -35,8 +36,7 @@ const BasicInformationForm: React.FC<Props> = ({ onSave, onCancel }) => {
       defaultValues: {
          jobTitle: "",
          summary: undefined,
-         yearsOfExperience: 0,
-         cvPath: undefined
+         yearsOfExperience: 0
       }
    })
 
@@ -52,8 +52,7 @@ const BasicInformationForm: React.FC<Props> = ({ onSave, onCancel }) => {
       reset({
          jobTitle: profile.jobTitle ?? "",
          summary: profile.summary ?? undefined,
-         yearsOfExperience: profile.yearsOfExperience ?? 0,
-         cvPath: profile.cvPath ?? undefined
+         yearsOfExperience: profile.yearsOfExperience ?? 0
       })
    }, [profile, reset])
 
@@ -132,7 +131,7 @@ const BasicInformationForm: React.FC<Props> = ({ onSave, onCancel }) => {
                   render={({ field }) => (
                      <TextField
                         {...field}
-                        type="number"
+                        type="text"
                         error={!!errors.yearsOfExperience}
                         fullWidth
                         helperText={errors.yearsOfExperience?.message}
@@ -140,14 +139,15 @@ const BasicInformationForm: React.FC<Props> = ({ onSave, onCancel }) => {
                         size="medium"
                         slotProps={{
                            inputLabel: { shrink: true },
-                           htmlInput: { min: 0 }
+                           htmlInput: { inputMode: "numeric", pattern: "[0-9]*" }
                         }}
                         variant="outlined"
-                        onChange={e =>
-                           field.onChange(
-                              e.target.value === "" ? 0 : Number(e.target.value)
-                           )
-                        }
+                        onChange={e => {
+                           const value = e.target.value
+                           if (/^\d*$/.test(value)) {
+                              field.onChange(value === "" ? 0 : Number(value))
+                           }
+                        }}
                      />
                   )}
                />
@@ -174,25 +174,17 @@ const BasicInformationForm: React.FC<Props> = ({ onSave, onCancel }) => {
                   />
                </Box>
 
-               <Box className="md:col-span-2">
-                  <Controller
-                     name="cvPath"
-                     control={control}
-                     render={({ field }) => (
-                        <TextField
-                           {...field}
-                           placeholder="https://example.com/resume.pdf"
-                           error={!!errors.cvPath}
-                           fullWidth
-                           helperText={errors.cvPath?.message}
-                           label="CV URL (Optional)"
-                           size="medium"
-                           slotProps={{ inputLabel: { shrink: true } }}
-                           variant="outlined"
-                        />
-                     )}
-                  />
-               </Box>
+               {userId && (
+                  <Box className="md:col-span-2">
+                     <Typography className="mb-2! text-sm! font-medium!">
+                        Secure CV storage
+                     </Typography>
+                     <ProfessionalProfileCvManager
+                        hasCv={profile?.hasCv ?? false}
+                        userId={userId}
+                     />
+                  </Box>
+               )}
             </Box>
 
             <Box className="mt-5 flex justify-end gap-3">

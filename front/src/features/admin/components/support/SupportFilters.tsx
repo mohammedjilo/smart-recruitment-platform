@@ -23,6 +23,7 @@ export type SupportFilterValues = {
 }
 
 type SupportFiltersProps = SupportFilterValues & {
+   hideAssignedAdmin?: boolean
    admins: Array<{ id: string; firstName: string; lastName: string }>
    categories: Array<{ id: string; name: string }>
    isLoadingAdmins: boolean
@@ -65,6 +66,7 @@ const SupportFilters = ({
    isLoadingAdmins,
    isLoadingCategories,
    currentAdminId,
+   hideAssignedAdmin = false,
    onSearchChange,
    onStatusChange,
    onPriorityChange,
@@ -162,7 +164,7 @@ const SupportFilters = ({
             )}
          </Select>
       </FormControl>
-      <FormControl size="small">
+      {!hideAssignedAdmin && <FormControl size="small">
          <InputLabel>Assigned Admin</InputLabel>
          <Select
             disabled={isLoadingAdmins}
@@ -195,7 +197,7 @@ const SupportFilters = ({
                ))
             )}
          </Select>
-      </FormControl>
+      </FormControl>}
       </FiltersBar>
    )
 }

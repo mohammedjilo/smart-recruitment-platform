@@ -401,6 +401,9 @@ model ProfessionalProfile {
   summary           String?
   yearsOfExperience Int?
   cvPath            String?
+  cvPublicId        String?
+  cvResourceType    String   @default("raw")
+  cvDeliveryType    String   @default("upload")
   createdAt         DateTime @default(now())
   updatedAt         DateTime @updatedAt
   userId            String   @unique
@@ -470,6 +473,9 @@ model Application {
 
   cvId             String?
   cvUrl            String?
+  cvPublicId       String?
+  cvResourceType   String   @default("raw")
+  cvDeliveryType   String   @default("upload")
   profileSnapshot  Json?
   questionSnapshot Json?
 

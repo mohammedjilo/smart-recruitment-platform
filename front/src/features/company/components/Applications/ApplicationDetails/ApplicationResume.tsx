@@ -1,6 +1,7 @@
-import { Box, Button, Typography } from "@mui/material"
+import { Box, Typography } from "@mui/material"
 import { DescriptionOutlined } from "@mui/icons-material"
 import type { CompanyApplication } from "@/types/application"
+import CvDownloadButton from "@/components/common/CvDownloadButton"
 
 const ApplicationResume = ({ application }: { application: CompanyApplication }) => (
    <Box className="border-t border-[#E7EAF0] px-5 py-4">
@@ -18,18 +19,11 @@ const ApplicationResume = ({ application }: { application: CompanyApplication })
                </Typography>
             </Box>
          </Box>
-         {application.cvUrl && (
-            <Button
-               className="normal-case!"
-               href={application.cvUrl}
-               color="primary"
-               component="a"
-               rel="noopener noreferrer"
-               size="small"
-               target="_blank"
-               variant="outlined">
-               View Resume
-            </Button>
+         {application.hasCv && (
+            <CvDownloadButton
+               label="View Resume"
+               target={{ scope: "company-application", id: application.id }}
+            />
          )}
       </Box>
    </Box>

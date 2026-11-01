@@ -9,6 +9,33 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
+export const CV_UPLOAD_OPTIONS = {
+  resource_type: "raw",
+  type: "authenticated",
+  folder: "applications/cvs",
+} as const;
+
+export const uploadRestrictedCv = async <T extends {
+  resource_type: string;
+  type: string;
+}>(
+  upload: (
+    data: string,
+    options: typeof CV_UPLOAD_OPTIONS
+  ) => Promise<T>,
+  uploadData: string
+) => {
+  const result = await upload(uploadData, CV_UPLOAD_OPTIONS);
+  if (result.resource_type !== "raw" || result.type !== "authenticated") {
+    throw new AppError(
+      "CV storage did not confirm restricted delivery",
+      502,
+      "CV_STORAGE_UNAVAILABLE"
+    );
+  }
+  return result;
+};
+
 export const cloudinaryUploadImage = async (
   fileToUpload: string | Buffer,
   mimetype?: string
@@ -57,12 +84,10 @@ export const cloudinaryUploadCV = async (
 
     const uploadData = `data:${mimetype};base64,${base64}`;
 
-    const result = await cloudinary.uploader.upload(uploadData, {
-      resource_type: "raw",
-      folder: "applications/cvs",
-    });
-
-    return result;
+    return await uploadRestrictedCv(
+      (data, options) => cloudinary.uploader.upload(data, options),
+      uploadData
+    );
   } catch (error) {
     if (error instanceof AppError) throw error;
     throw new AppError(
@@ -74,3 +99,14 @@ export const cloudinaryUploadCV = async (
     );
   }
 };
+
+export const cloudinaryPrivateCvDownloadUrl = (
+  publicId: string,
+  expiresAt: number
+) =>
+  cloudinary.utils.private_download_url(publicId, "pdf", {
+    resource_type: "raw",
+    type: "authenticated",
+    expires_at: expiresAt,
+    attachment: true,
+  });

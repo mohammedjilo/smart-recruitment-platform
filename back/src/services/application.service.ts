@@ -44,6 +44,9 @@ const applicationContextSelect = {
   profile: {
     select: {
       yearsOfExperience: true,
+      cvPublicId: true,
+      cvResourceType: true,
+      cvDeliveryType: true,
       educations: { select: { major: true, university: true, degree: true } },
       experiences: {
         select: {
@@ -146,8 +149,9 @@ const createApplicationCore = async (
     strengths: Prisma.InputJsonValue;
     missingSkills: Prisma.InputJsonValue;
   },
-  cvId: string | null,
-  cvUrl: string | null
+  cvPublicId: string | null,
+  cvResourceType: string,
+  cvDeliveryType: string
 ) => {
   // The transaction contains only the application aggregate and its answers.
   // External providers must remain outside it so provider latency or failure
@@ -192,8 +196,11 @@ const createApplicationCore = async (
           userId,
           jobId,
           resumeType: input.useProfessionalProfile ? "PROFILE" : "UPLOAD",
-          cvId,
-          cvUrl,
+          cvId: cvPublicId,
+          cvPublicId,
+          cvUrl: null,
+          cvResourceType,
+          cvDeliveryType,
           profileSnapshot: profileSnapshot ?? undefined,
           questionSnapshot: questionSnapshot as Prisma.InputJsonValue,
           matchScore: matchResult.score,
@@ -215,8 +222,9 @@ const createApplicationCore = async (
           recommendation: true,
           strengths: true,
           missingSkills: true,
-          cvId: true,
-          cvUrl: true,
+          cvPublicId: true,
+          cvResourceType: true,
+          cvDeliveryType: true,
           profileSnapshot: true,
           questionSnapshot: true,
           createdAt: true,
@@ -299,15 +307,23 @@ export const applyToJob = async (
     }),
   };
 
-  let cvId: string | null = null;
-  let cvUrl: string | null = null;
+  let cvPublicId = input.useProfessionalProfile
+    ? user.profile?.cvPublicId ?? null
+    : null;
+  let cvResourceType = input.useProfessionalProfile
+    ? user.profile?.cvResourceType ?? "raw"
+    : "raw";
+  let cvDeliveryType = input.useProfessionalProfile
+    ? user.profile?.cvDeliveryType ?? "upload"
+    : "authenticated";
   if (!input.useProfessionalProfile && cvFile) {
     const uploadResult = await cloudinaryUploadCV(
       cvFile.buffer,
       cvFile.mimetype
     );
-    cvId = uploadResult.public_id;
-    cvUrl = uploadResult.secure_url;
+    cvPublicId = uploadResult.public_id;
+    cvResourceType = "raw";
+    cvDeliveryType = "authenticated";
   }
 
   const matchResult = await calculateMatch(
@@ -323,8 +339,9 @@ export const applyToJob = async (
     buildQuestionSnapshot(job.applicationQuestions),
     answers,
     matchResult,
-    cvId,
-    cvUrl
+    cvPublicId,
+    cvResourceType,
+    cvDeliveryType
   );
 
   try {
@@ -343,7 +360,15 @@ export const applyToJob = async (
     });
   }
 
-  return application;
+  const { cvPublicId: storedCvPublicId, ...safeApplication } = application;
+  return {
+    ...safeApplication,
+    hasCv:
+      application.cvResourceType === "raw" &&
+      application.cvDeliveryType === "authenticated"
+        ? Boolean(storedCvPublicId)
+        : false,
+  };
 };
 type UserApplicationsOptions = {
   page?: number;
@@ -446,8 +471,9 @@ export const getUserApplicationDetails = async (
       strengths: true,
       missingSkills: true,
       resumeType: true,
-      cvId: true,
-      cvUrl: true,
+      cvPublicId: true,
+      cvResourceType: true,
+      cvDeliveryType: true,
       createdAt: true,
       updatedAt: true,
       answers: {
@@ -478,7 +504,14 @@ export const getUserApplicationDetails = async (
     throw new AppError("Application not found", 404);
   }
 
-  return application;
+  const { cvPublicId, ...safeApplication } = application;
+  return {
+    ...safeApplication,
+    hasCv:
+      application.cvResourceType === "raw" &&
+      application.cvDeliveryType === "authenticated" &&
+      Boolean(cvPublicId),
+  };
 };
 type CompanyApplicationsOptions = {
   page?: number;
@@ -499,7 +532,8 @@ type CompanyApplicationsOptions = {
 
 export const getCompanyApplications = async (
   companyId: string,
-  options: CompanyApplicationsOptions = {}
+  options: CompanyApplicationsOptions = {},
+  isDemoAdmin = false
 ) => {
   const pagination = parsePagination(
     { page: options.page, pageSize: options.pageSize },
@@ -513,7 +547,9 @@ export const getCompanyApplications = async (
   } as Prisma.ApplicationOrderByWithRelationInput;
 
   const companyWhere: Prisma.ApplicationWhereInput = {
-    job: { companyId },
+    job: {
+      companyId,
+    },
     ...(search
       ? {
           OR: [
@@ -552,8 +588,9 @@ export const getCompanyApplications = async (
         strengths: true,
         missingSkills: true,
         resumeType: true,
-        cvId: true,
-        cvUrl: true,
+        cvPublicId: true,
+        cvResourceType: true,
+        cvDeliveryType: true,
         profileSnapshot: true,
         questionSnapshot: true,
         createdAt: true,
@@ -602,7 +639,14 @@ export const getCompanyApplications = async (
   );
 
   return {
-    data: applications,
+    data: applications.map(({ cvPublicId, ...application }) => ({
+      ...application,
+      hasCv:
+        !isDemoAdmin &&
+        application.cvResourceType === "raw" &&
+        application.cvDeliveryType === "authenticated" &&
+        Boolean(cvPublicId),
+    })),
     ...buildPaginationMeta(pagination.page, pagination.pageSize, totalCount),
     stats: {
       totalApplications: statusCounts.reduce(
@@ -645,8 +689,9 @@ export const updateApplicationStatus = async (
       strengths: true,
       missingSkills: true,
       resumeType: true,
-      cvId: true,
-      cvUrl: true,
+      cvPublicId: true,
+      cvResourceType: true,
+      cvDeliveryType: true,
       profileSnapshot: true,
       createdAt: true,
       updatedAt: true,
@@ -662,7 +707,14 @@ export const updateApplicationStatus = async (
   }
 
   if (application.status === status) {
-    return application;
+    const { cvPublicId, ...safeApplication } = application;
+    return {
+      ...safeApplication,
+      hasCv:
+        application.cvResourceType === "raw" &&
+        application.cvDeliveryType === "authenticated" &&
+        Boolean(cvPublicId),
+    };
   }
   assertApplicationTransition(application.status, status);
 
@@ -696,8 +748,9 @@ export const updateApplicationStatus = async (
         strengths: true,
         missingSkills: true,
         resumeType: true,
-        cvId: true,
-        cvUrl: true,
+        cvPublicId: true,
+        cvResourceType: true,
+        cvDeliveryType: true,
         profileSnapshot: true,
         createdAt: true,
         updatedAt: true,
@@ -731,7 +784,14 @@ export const updateApplicationStatus = async (
     });
   }
 
-  return updatedApplication;
+  const { cvPublicId, ...safeApplication } = updatedApplication;
+  return {
+    ...safeApplication,
+    hasCv:
+      updatedApplication.cvResourceType === "raw" &&
+      updatedApplication.cvDeliveryType === "authenticated" &&
+      Boolean(cvPublicId),
+  };
 };
 
 export const withdrawApplication = async (
@@ -750,8 +810,9 @@ export const withdrawApplication = async (
       strengths: true,
       missingSkills: true,
       resumeType: true,
-      cvId: true,
-      cvUrl: true,
+      cvPublicId: true,
+      cvResourceType: true,
+      cvDeliveryType: true,
       profileSnapshot: true,
       createdAt: true,
       updatedAt: true,
@@ -796,8 +857,9 @@ export const withdrawApplication = async (
         strengths: true,
         missingSkills: true,
         resumeType: true,
-        cvId: true,
-        cvUrl: true,
+        cvPublicId: true,
+        cvResourceType: true,
+        cvDeliveryType: true,
         profileSnapshot: true,
         createdAt: true,
         updatedAt: true,
@@ -824,5 +886,12 @@ export const withdrawApplication = async (
     return withdrawnApplication;
   });
 
-  return updatedApplication;
+  const { cvPublicId, ...safeApplication } = updatedApplication;
+  return {
+    ...safeApplication,
+    hasCv:
+      updatedApplication.cvResourceType === "raw" &&
+      updatedApplication.cvDeliveryType === "authenticated" &&
+      Boolean(cvPublicId),
+  };
 };

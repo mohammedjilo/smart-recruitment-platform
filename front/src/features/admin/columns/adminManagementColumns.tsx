@@ -5,6 +5,19 @@ import type {
    AdminRoleSummary,
    AdminSummary
 } from "@/types/api/adminAuthorization"
+import type { AssignAdminRoleArgs } from "@/types/api/adminAuthorization"
+
+const adminRoleNames = [
+   "SUPER_ADMIN",
+   "SUPPORT_ADMIN",
+   "OPERATIONS_ADMIN",
+   "DEMO_ADMIN"
+] as const
+
+const isAdminRoleName = (
+   roleName: string
+): roleName is (typeof adminRoleNames)[number] =>
+   adminRoleNames.some(allowedRoleName => allowedRoleName === roleName)
 
 export type AdminManagementTableAdmin = AdminSummary & Record<string, unknown>
 
@@ -18,7 +31,7 @@ type AdminManagementColumnsArgs = {
    canAssignRole: boolean
    canDisableAdmin: boolean
    onView: (adminId: string) => void
-   onAssignRole: (adminId: string, roleName: string) => void
+   onAssignRole: (adminId: string, roleName: AssignAdminRoleArgs["roleName"]) => void
    onUpdateStatus: (adminId: string, status: "ACTIVE" | "DEACTIVATED") => void
 }
 
@@ -64,7 +77,11 @@ export const getAdminManagementColumns = ({
             }
             value={admin.adminRoleAssignments[0]?.adminRole.name ?? ""}
             size="small"
-            onChange={event => onAssignRole(admin.id, event.target.value)}>
+            onChange={event => {
+               if (isAdminRoleName(event.target.value)) {
+                  onAssignRole(admin.id, event.target.value)
+               }
+            }}>
             {roles.map(role => (
                <MenuItem
                   key={role.id}

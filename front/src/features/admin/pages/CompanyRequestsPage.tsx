@@ -19,9 +19,15 @@ import { AdminListSkeleton } from "@/features/admin/components/AdminSkeletons"
 import { getAdminCompanyDetailsPath } from "@/utils/companyRoutes"
 import { getQueryState } from "@/utils/queryState"
 import { getQueryPresentation } from "@/utils/presentationPolicy"
+import { usePermissions } from "@/features/admin/authorization/usePermissions"
+import { ADMIN_PERMISSIONS } from "@/types/adminPermissions"
 
 const CompanyRequestsPage = () => {
    const navigate = useNavigate()
+   const { hasPermission } = usePermissions()
+   const canReview =
+      hasPermission(ADMIN_PERMISSIONS.EDIT_COMPANIES) ||
+      hasPermission(ADMIN_PERMISSIONS.SUSPEND_COMPANIES)
 
    const [pageNumber, setPageNumber] = useState(1)
 
@@ -211,6 +217,7 @@ const CompanyRequestsPage = () => {
             {/* Table */}
             <Box>
                <CompanyRequestsTable
+                  canReview={canReview}
                   companies={companies}
                   isFetching={queryPresentation.category === "refreshing"}
                   isUpdating={

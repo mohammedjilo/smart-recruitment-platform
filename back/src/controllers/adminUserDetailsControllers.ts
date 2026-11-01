@@ -12,7 +12,8 @@ import { sendSuccess } from "../utils/apiResponse.js";
 export const getAdminUserProfessionalProfileController = asyncHandler(
   async (req: Request, res: Response) => {
     const profile = await getAdminUserProfessionalProfile(
-      req.params.userId as string
+      req.params.userId as string,
+      req.isDemoAdmin
     );
     sendSuccess(res, 200, profile);
   }

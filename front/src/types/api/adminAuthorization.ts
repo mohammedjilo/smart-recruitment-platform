@@ -47,7 +47,7 @@ export type AdminRolesResponse = {
 
 export type AssignAdminRoleArgs = {
    userId: string
-   roleName: string
+   roleName: "SUPER_ADMIN" | "SUPPORT_ADMIN" | "OPERATIONS_ADMIN" | "DEMO_ADMIN"
 }
 
 export type UpdateAdminStatusArgs = {

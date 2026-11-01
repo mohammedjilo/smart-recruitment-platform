@@ -1,12 +1,12 @@
-import { Box, Button, CircularProgress, Typography } from "@mui/material"
+import { Box, CircularProgress, Typography } from "@mui/material"
 
 import CalendarMonthOutlinedIcon from "@mui/icons-material/CalendarMonthOutlined"
 import DescriptionOutlinedIcon from "@mui/icons-material/DescriptionOutlined"
 import InsertDriveFileOutlinedIcon from "@mui/icons-material/InsertDriveFileOutlined"
-import DownloadOutlinedIcon from "@mui/icons-material/DownloadOutlined"
 import type { AdminApplicationDetails } from "@/types/admin"
 import { formatDate } from "@/utils/formatDate"
 import { getMatchScoreColor } from "@/theme/tokens"
+import CvDownloadButton from "@/components/common/CvDownloadButton"
 
 type ApplicationMetaInfoProps = {
    application: AdminApplicationDetails
@@ -28,8 +28,8 @@ const ApplicationMetaInfo = ({ application }: ApplicationMetaInfoProps) => {
          />
 
          <CvMetaItem
-            cvId={application.cvId}
-            cvUrl={application.cvUrl}
+            applicationId={application.id}
+            hasCv={application.hasCv}
          />
 
          <MatchScoreItem score={application.matchScore} />
@@ -62,11 +62,11 @@ const MetaItem = ({ icon, label, value }: MetaItemProps) => {
 }
 
 type CvMetaItemProps = {
-   cvUrl: string | null
-   cvId: string | null
+   hasCv: boolean
+   applicationId: string
 }
 
-const CvMetaItem = ({ cvUrl, cvId }: CvMetaItemProps) => {
+const CvMetaItem = ({ hasCv, applicationId }: CvMetaItemProps) => {
    return (
       <Box className="min-h-19.5 px-4 py-3">
          <Box className="text-primary flex items-center gap-2">
@@ -75,19 +75,16 @@ const CvMetaItem = ({ cvUrl, cvId }: CvMetaItemProps) => {
             <Typography className="text-[10px]!">CV File</Typography>
          </Box>
 
-         {cvUrl ? (
-            <Button
-               className="mt-1! min-w-0! px-2! normal-case!"
-               endIcon={<DownloadOutlinedIcon />}
-               size="small"
-               onClick={() => window.open(cvUrl, "_blank", "noopener,noreferrer")}>
-               Download CV
-            </Button>
+         {hasCv ? (
+            <CvDownloadButton
+               label="Download CV"
+               target={{ scope: "admin-application", id: applicationId }}
+            />
          ) : (
             <Typography
                className="mt-2! text-xs!"
                color="textSecondary">
-               {cvId ?? "No CV uploaded"}
+               No CV uploaded
             </Typography>
          )}
       </Box>

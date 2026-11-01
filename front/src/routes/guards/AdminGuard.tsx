@@ -5,6 +5,10 @@ import { useGetCurrentAdminPermissionsQuery } from "@/features/admin/services/ad
 import { Box, Button, Typography } from "@mui/material"
 import { getQueryState } from "@/utils/queryState"
 import { getQueryPresentation } from "@/utils/presentationPolicy"
+import {
+   isDemoAdminPathAllowed,
+   isDemoAdminPermissions
+} from "@/features/admin/authorization/demoAdmin"
 
 export default function AdminGuard() {
    const user = useSelector((state: RootState) => state.auth.user)
@@ -43,7 +47,7 @@ export default function AdminGuard() {
    }
 
    if (permissionsPresentation.category === "loading") {
-      return <Box className="text-muted p-6 text-sm">Loading permissions...</Box>
+      return null
    }
 
    if (
@@ -75,7 +79,19 @@ export default function AdminGuard() {
    const serverPermissions = permissionsQuery.currentData?.data.permissions
 
    if (!serverPermissions) {
-      return <Box className="text-muted p-6 text-sm">Loading permissions...</Box>
+      return null
+   }
+
+   if (
+      isDemoAdminPermissions(serverPermissions) &&
+      !isDemoAdminPathAllowed(location.pathname)
+   ) {
+      return (
+         <Navigate
+            replace
+            to="/admin/forbidden"
+         />
+      )
    }
 
    return <Outlet context={serverPermissions} />

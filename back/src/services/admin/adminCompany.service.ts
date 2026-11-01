@@ -119,10 +119,21 @@ export const getAllCompaniesAdmin = async (options: AllCompaniesQuery) => {
     prisma.company.count({ where }),
     prisma.company.count(),
     prisma.company.count({
-      where: { status: "ACTIVE", approvalStatus: "APPROVED" },
+      where: {
+        status: "ACTIVE",
+        approvalStatus: "APPROVED",
+      },
     }),
-    prisma.company.count({ where: { approvalStatus: "PENDING" } }),
-    prisma.company.count({ where: { approvalStatus: "REJECTED" } }),
+    prisma.company.count({
+      where: {
+        approvalStatus: "PENDING",
+      },
+    }),
+    prisma.company.count({
+      where: {
+        approvalStatus: "REJECTED",
+      },
+    }),
   ]);
 
   return {
@@ -316,10 +327,17 @@ export const getCompanyByAdmin = async (companyId: string) => {
         where: { id: companyId },
         select: companyAdminSelect,
       }),
-      prisma.job.count({ where: { companyId } }),
-      prisma.application.count({ where: { job: { companyId } } }),
+      prisma.job.count({
+        where: { companyId },
+      }),
+      prisma.application.count({
+        where: { job: { companyId } },
+      }),
       prisma.job.findMany({
-        where: { companyId, status: { not: "DRAFT" } },
+        where: {
+          companyId,
+          status: { not: "DRAFT" },
+        },
         orderBy: { createdAt: "desc" },
         take: 3,
         select: {
@@ -328,7 +346,9 @@ export const getCompanyByAdmin = async (companyId: string) => {
           status: true,
           slug: true,
           createdAt: true,
-          _count: { select: { applications: true } },
+          _count: {
+            select: { applications: true },
+          },
         },
       }),
     ],

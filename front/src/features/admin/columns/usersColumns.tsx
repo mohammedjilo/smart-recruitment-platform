@@ -12,6 +12,7 @@ import UserStatusChip from "@/components/common/UserStatusChip"
 type GetAdminUsersColumnsArgs = {
    onView: (userId: string) => void
    onOpenActionsMenu: (event: React.MouseEvent<HTMLElement>, user: AdminUser) => void
+   canChangeStatus?: boolean
    formatDate: (date: string) => string
    formatTime: (date: string) => string
 }
@@ -19,6 +20,7 @@ type GetAdminUsersColumnsArgs = {
 export const getAdminUsersColumns = ({
    onView,
    onOpenActionsMenu,
+   canChangeStatus = true,
    formatDate,
    formatTime
 }: GetAdminUsersColumnsArgs): DataTableColumn<AdminUser>[] => [
@@ -120,12 +122,14 @@ export const getAdminUsersColumns = ({
                View
             </Button>
 
-            <IconButton
-               className="rounded-lg! border!"
-               size="small"
-               onClick={event => onOpenActionsMenu(event, user)}>
-               <MoreVertOutlinedIcon fontSize="small" />
-            </IconButton>
+            {canChangeStatus && (
+               <IconButton
+                  className="rounded-lg! border!"
+                  size="small"
+                  onClick={event => onOpenActionsMenu(event, user)}>
+                  <MoreVertOutlinedIcon fontSize="small" />
+               </IconButton>
+            )}
          </Box>
       )
    }

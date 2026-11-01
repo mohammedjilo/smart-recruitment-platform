@@ -13,6 +13,9 @@ import { getInitials } from "@/utils/string/getInitials"
 import formatCreatedAt from "@/utils/formatDate"
 import { useNavigate } from "react-router-dom"
 import { getAdminCompanyDetailsPath } from "@/utils/companyRoutes"
+import { usePermissions } from "@/features/admin/authorization/usePermissions"
+import { ADMIN_PERMISSIONS } from "@/types/adminPermissions"
+import { isDemoAdminPermissions } from "@/features/admin/authorization/demoAdmin"
 
 type Props = {
    company: AdminCompany
@@ -20,6 +23,9 @@ type Props = {
 
 const CompanyCard = ({ company }: Props) => {
    const navigate = useNavigate()
+   const { permissions } = usePermissions()
+   const isDemoAdmin = isDemoAdminPermissions(permissions)
+   const canEditCompany = !isDemoAdmin && permissions.includes(ADMIN_PERMISSIONS.EDIT_COMPANIES)
    const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null)
    const handleMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
       setAnchorEl(event.currentTarget)
@@ -103,7 +109,9 @@ const CompanyCard = ({ company }: Props) => {
                onClose={handleMenuClose}>
                <MenuItem onClick={handleMenuClose}>View Details</MenuItem>
 
-               <MenuItem onClick={handleMenuClose}>Edit Company</MenuItem>
+               {canEditCompany && (
+                  <MenuItem onClick={handleMenuClose}>Edit Company</MenuItem>
+               )}
             </Menu>
          </Box>
       </Box>

@@ -1,5 +1,5 @@
 import Express from "express";
-import { authMiddleware } from "../middlewares/auth";
+import { authMiddleware, requireUser } from "../middlewares/auth";
 import { validate } from "../middlewares/validate";
 import {
   personalInformationUpdateSchema,
@@ -14,6 +14,15 @@ import {
   updateProfessionalProfileController,
   getDashboardUserController,
 } from "../controllers/userControllers";
+import {
+  getCandidateProfileCvController,
+  replaceCandidateProfileCvController,
+} from "../controllers/cvAccessControllers.js";
+import {
+  handleUploadError,
+  upload,
+  validateUploadedFile,
+} from "../utils/upload.js";
 
 const userRouter = Express.Router();
 
@@ -46,6 +55,20 @@ userRouter.put(
   authMiddleware,
   validate(updateProfessionalProfileSchema),
   updateProfessionalProfileController
+);
+userRouter.get(
+  "/professional-profile/cv",
+  authMiddleware,
+  requireUser,
+  getCandidateProfileCvController
+);
+userRouter.put(
+  "/professional-profile/cv",
+  authMiddleware,
+  requireUser,
+  handleUploadError(upload.single("cv")),
+  validateUploadedFile("pdf"),
+  replaceCandidateProfileCvController
 );
 userRouter.get("/dashboard", authMiddleware, getDashboardUserController);
 

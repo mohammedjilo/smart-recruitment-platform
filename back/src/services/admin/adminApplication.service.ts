@@ -6,8 +6,11 @@ import { getAdminApplicationsQuerySchema } from "../../validation/admin.validati
 
 type AdminApplicationsQuery = z.infer<typeof getAdminApplicationsQuerySchema>;
 
-export const getApplicationByAdmin = async (applicationId: string) => {
-  const application = await prisma.application.findUnique({
+export const getApplicationByAdmin = async (
+  applicationId: string,
+  isDemoAdmin = false
+) => {
+  const application = await prisma.application.findFirst({
     where: { id: applicationId },
     select: {
       id: true,
@@ -17,8 +20,9 @@ export const getApplicationByAdmin = async (applicationId: string) => {
       strengths: true,
       missingSkills: true,
       resumeType: true,
-      cvId: true,
-      cvUrl: true,
+      cvPublicId: true,
+      cvResourceType: true,
+      cvDeliveryType: true,
       profileSnapshot: true,
       createdAt: true,
       updatedAt: true,
@@ -58,11 +62,21 @@ export const getApplicationByAdmin = async (applicationId: string) => {
 
   if (!application) throw new AppError("Application not found", 404);
 
-  return application;
+  const { cvPublicId, ...safeApplication } = application;
+  return {
+    ...safeApplication,
+    hasCv:
+      !isDemoAdmin &&
+      application.cvResourceType === "raw" &&
+      application.cvDeliveryType === "authenticated" &&
+      Boolean(cvPublicId),
+  };
 };
 
-export const getProfileSnapshotByAdmin = async (applicationId: string) => {
-  const application = await prisma.application.findUnique({
+export const getProfileSnapshotByAdmin = async (
+  applicationId: string
+) => {
+  const application = await prisma.application.findFirst({
     where: { id: applicationId },
     select: {
       id: true,

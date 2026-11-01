@@ -13,6 +13,7 @@ import {
   updateApplicationStatusController,
   withdrawApplicationController,
 } from "../controllers/applicationControllers";
+import { getApplicationCvController } from "../controllers/cvAccessControllers.js";
 import {
   handleUploadError,
   upload,
@@ -30,6 +31,12 @@ import {
 
 const applicationRouter = Express.Router();
 
+applicationRouter.get(
+  "/:applicationId/cv",
+  authMiddleware,
+  validate(applicationIdParamsSchema, "params"),
+  getApplicationCvController
+);
 applicationRouter.get(
   "/me",
   authMiddleware,

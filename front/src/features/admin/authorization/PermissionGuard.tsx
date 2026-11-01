@@ -1,6 +1,7 @@
 import type { ReactNode } from "react"
 import { Navigate, useOutletContext } from "react-router-dom"
 import type { AdminPermission } from "@/types/adminPermissions"
+import { hasAdminPermission } from "./demoAdmin"
 
 type Props = {
    permission?: AdminPermission
@@ -18,8 +19,12 @@ export default function PermissionGuard({
    const serverPermissions = useOutletContext<AdminPermission[]>()
 
    const isAllowed =
-      (permission ? serverPermissions.includes(permission) : false) ||
-      Boolean(permissions?.some(requiredPermission => serverPermissions.includes(requiredPermission)))
+      (permission ? hasAdminPermission(serverPermissions, permission) : false) ||
+      Boolean(
+         permissions?.some(requiredPermission =>
+            hasAdminPermission(serverPermissions, requiredPermission)
+         )
+      )
 
    if (!isAllowed) {
       return (

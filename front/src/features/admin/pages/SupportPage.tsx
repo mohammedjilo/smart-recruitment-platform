@@ -21,8 +21,12 @@ import { AdminStatsSkeleton } from "@/features/admin/components/AdminSkeletons"
 import FiltersBarSkeleton from "@/components/common/FiltersBarSkeleton"
 import { getQueryState } from "@/utils/queryState"
 import { getQueryPresentation } from "@/utils/presentationPolicy"
+import { usePermissions } from "@/features/admin/authorization/usePermissions"
+import { isDemoAdminPermissions } from "@/features/admin/authorization/demoAdmin"
 
 export default function SupportPage() {
+   const { permissions } = usePermissions()
+   const isDemoAdmin = isDemoAdminPermissions(permissions)
    const currentAdminId = useSelector((state: RootState) => state.auth.user?.id)
    const [page, setPage] = useState(1)
    const [search, setSearch] = useState("")
@@ -41,7 +45,7 @@ export default function SupportPage() {
       return () => clearTimeout(timeout)
    }, [search])
 
-   const adminsQuery = useGetAdminsQuery()
+   const adminsQuery = useGetAdminsQuery(undefined, { skip: isDemoAdmin })
    const adminsState = getQueryState(adminsQuery, {
       isEmpty: response => response.data.length === 0
    })
@@ -115,11 +119,12 @@ export default function SupportPage() {
                {queryPresentation.message}
             </Alert>
          ) : null}
-         {(adminsPresentation.category === "section_error" ||
+         {(!isDemoAdmin &&
+            (adminsPresentation.category === "section_error" ||
             adminsPresentation.category === "access_denied" ||
             adminsPresentation.category === "authentication_notice" ||
             adminsPresentation.category === "resource_not_found" ||
-            adminsPresentation.category === "stale_error") && (
+            adminsPresentation.category === "stale_error")) && (
             <Alert
                aria-live={
                   adminsPresentation.category === "stale_error" ? "polite" : "assertive"
@@ -180,6 +185,7 @@ export default function SupportPage() {
                categories={categories}
                categoryId={categoryId}
                currentAdminId={currentAdminId}
+               hideAssignedAdmin={isDemoAdmin}
                isLoadingAdmins={isLoadingAdmins}
                isLoadingCategories={isLoadingCategories}
                priority={priority}

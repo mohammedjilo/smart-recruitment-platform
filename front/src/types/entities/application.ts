@@ -36,8 +36,7 @@ export type CompanyApplication = Application & {
    strengths: unknown
    missingSkills: unknown
    resumeType: ResumeType
-   cvId: string | null
-   cvUrl: string | null
+   hasCv: boolean
    profileSnapshot: unknown
    answers?: Array<{
       id: string

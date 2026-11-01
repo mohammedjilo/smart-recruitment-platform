@@ -17,13 +17,15 @@ type GetCompanyRequestsColumnsArgs = {
    onApprove: (company: CompanyRequests) => void
    onReject: (company: CompanyRequests) => void
    isUpdating?: boolean
+   canReview?: boolean
 }
 
 export const getCompanyRequestsColumns = ({
    onView,
    onApprove,
    onReject,
-   isUpdating = false
+   isUpdating = false,
+   canReview = true
 }: GetCompanyRequestsColumnsArgs): DataTableColumn<CompanyRequests>[] => [
    {
       id: "company",
@@ -145,7 +147,7 @@ export const getCompanyRequestsColumns = ({
                   onClick={() => onView(company)}>
                   View
                </Button>
-               {isPending && (
+               {isPending && canReview && (
                   <Box className="contents">
                      <Button
                         className="bg-surface! rounded-md! border-[#86EFAC]! text-[#15803D]! normal-case!"

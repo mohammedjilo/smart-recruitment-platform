@@ -157,7 +157,9 @@ export default function CreateAdminPage() {
                         />
                      </MenuItem>
                   ) : (
-                     (rolesData?.data ?? []).map(role => (
+                     (rolesData?.data ?? [])
+                        .filter(role => role.name !== "DEMO_ADMIN")
+                        .map(role => (
                         <MenuItem
                            key={role.id}
                            value={role.name}>

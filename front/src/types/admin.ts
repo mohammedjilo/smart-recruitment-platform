@@ -409,8 +409,7 @@ export type AdminApplicationDetails = {
    strengths: unknown
    missingSkills: unknown
    resumeType: ResumeType
-   cvId: string | null
-   cvUrl: string | null
+   hasCv: boolean
    profileSnapshot: unknown
    createdAt: string
    updatedAt: string
