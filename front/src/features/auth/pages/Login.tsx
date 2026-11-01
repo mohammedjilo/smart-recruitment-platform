@@ -74,6 +74,8 @@ const Login: React.FC = () => {
    const location = useLocation()
    const isExplicitLogout = location.state?.explicitLogout === true
    const from = isExplicitLogout ? undefined : location.state?.from?.pathname
+   const adminDestination =
+      from === "/admin" || from?.startsWith("/admin/") ? from : "/admin"
 
    const onSubmit = async (data: LoginFormValues) => {
       try {
@@ -90,13 +92,13 @@ const Login: React.FC = () => {
             return
          }
 
-         if (from) {
-            navigate(from, { replace: true })
+         if ("user" in result.data && result.data.user.role === "ADMIN") {
+            navigate(adminDestination, { replace: true })
             return
          }
 
-         if ("user" in result.data && result.data.user.role === "ADMIN") {
-            navigate("/admin", { replace: true })
+         if (from) {
+            navigate(from, { replace: true })
             return
          }
 
@@ -119,9 +121,10 @@ const Login: React.FC = () => {
    useEffect(() => {
       if (!user && !company) return
 
-      const destination = from ?? (user?.role === "ADMIN" ? "/admin" : "/dashboard")
+      const destination =
+         user?.role === "ADMIN" ? adminDestination : (from ?? "/dashboard")
       navigate(destination, { replace: true })
-   }, [user, company, from, navigate])
+   }, [user, company, from, adminDestination, navigate])
    return (
       <Box className="flex min-h-screen items-center justify-center">
          <CustomCard>
