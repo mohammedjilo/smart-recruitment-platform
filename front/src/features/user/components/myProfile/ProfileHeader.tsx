@@ -1,8 +1,24 @@
-import { Box, Card, CardContent, Chip, Divider, Typography, Avatar } from "@mui/material"
+import {
+   Avatar,
+   Box,
+   Button,
+   Card,
+   CardContent,
+   Chip,
+   Divider,
+   Typography
+} from "@mui/material"
 import EmailOutlinedIcon from "@mui/icons-material/EmailOutlined"
 import PhoneOutlinedIcon from "@mui/icons-material/PhoneOutlined"
 import LocationOnOutlinedIcon from "@mui/icons-material/LocationOnOutlined"
 import CalendarMonthOutlinedIcon from "@mui/icons-material/CalendarMonthOutlined"
+import PhotoCameraOutlinedIcon from "@mui/icons-material/PhotoCameraOutlined"
+import { useEffect, useState } from "react"
+import { useDispatch, useSelector } from "react-redux"
+import type { RootState } from "@/redux/store"
+import { authActions } from "@/redux/slices/authSlice"
+import { useUpdateUserProfilePictureMutation } from "@/features/user/services/userApiCalls"
+import { showAlert } from "@/utils/swal"
 
 import type { CompleteUserProfile } from "@/types/user"
 import { formatDate as formatDateValue } from "@/utils/formatDate"
@@ -37,7 +53,64 @@ const calculateAge = (birthdate?: string | null) => {
 }
 
 const ProfileHeader = ({ profile }: Props) => {
+   const dispatch = useDispatch()
    const age = calculateAge(profile.birthdate)
+   const userId = useSelector((state: RootState) => state.auth.user?.id)
+   const [updateProfilePicture, uploadResult] = useUpdateUserProfilePictureMutation()
+   const [selectedFile, setSelectedFile] = useState<File | null>(null)
+   const [selectedPhotoPreview, setSelectedPhotoPreview] = useState<string | null>(null)
+   const [photoUrl, setPhotoUrl] = useState(profile.profilePicUrl)
+
+   useEffect(() => {
+      setPhotoUrl(profile.profilePicUrl)
+   }, [profile.profilePicUrl])
+
+   useEffect(() => {
+      if (!selectedFile) {
+         setSelectedPhotoPreview(null)
+         return
+      }
+
+      const objectUrl = URL.createObjectURL(selectedFile)
+      setSelectedPhotoPreview(objectUrl)
+      return () => URL.revokeObjectURL(objectUrl)
+   }, [selectedFile])
+
+   const handlePhotoChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+      const file = event.target.files?.[0]
+      if (file) setSelectedFile(file)
+      event.target.value = ""
+   }
+
+   const handlePhotoSave = async () => {
+      if (!userId || !selectedFile) return
+
+      try {
+         const response = await updateProfilePicture({
+            userId,
+            file: selectedFile
+         }).unwrap()
+         setPhotoUrl(response.data.profilePicUrl)
+         setSelectedFile(null)
+         dispatch(
+            authActions.updateUser({
+               id: response.data.id,
+               profilePicUrl: response.data.profilePicUrl
+            })
+         )
+         await showAlert({
+            type: "success",
+            title: "Profile photo updated",
+            text: "Your profile photo has been updated successfully."
+         })
+      } catch {
+         await showAlert({
+            type: "error",
+            title: "Upload failed",
+            text: "Your profile photo could not be updated. Please try again."
+         })
+      }
+   }
 
    return (
       <Card className="rounded-xl! border! shadow-none!">
@@ -45,12 +118,38 @@ const ProfileHeader = ({ profile }: Props) => {
             <Box className="grid gap-3 md:grid-cols-[1.15fr_1px_0.85fr] md:gap-4">
                {/* Left Side */}
                <Box className="flex items-start gap-2.5">
-                  <Avatar
-                     className="h-22! w-22! shrink-0 text-[2rem]!"
-                     alt={`${profile.firstName} ${profile.lastName}`}
-                     src={profile.profilePicUrl ?? undefined}>
-                     {profile.firstName?.charAt(0)}
-                  </Avatar>
+                  <Box className="flex shrink-0 flex-col items-center gap-2">
+                     <Avatar
+                        className="h-22! w-22! text-[2rem]!"
+                        alt={`${profile.firstName} ${profile.lastName}`}
+                        src={selectedPhotoPreview ?? photoUrl ?? undefined}>
+                        {profile.firstName?.charAt(0)}
+                     </Avatar>
+                     <Button
+                        aria-label="Choose a profile photo"
+                        disabled={uploadResult.isLoading}
+                        component="label"
+                        size="small"
+                        startIcon={<PhotoCameraOutlinedIcon />}
+                        variant="outlined">
+                        Change photo
+                        <input
+                           type="file"
+                           accept="image/jpeg,image/png,image/gif,image/webp"
+                           hidden
+                           onChange={handlePhotoChange}
+                        />
+                     </Button>
+                     {selectedFile && (
+                        <Button
+                           disabled={uploadResult.isLoading}
+                           size="small"
+                           variant="contained"
+                           onClick={handlePhotoSave}>
+                           {uploadResult.isLoading ? "Saving..." : "Save photo"}
+                        </Button>
+                     )}
+                  </Box>
 
                   <Box>
                      <Box className="flex flex-wrap items-center gap-1">

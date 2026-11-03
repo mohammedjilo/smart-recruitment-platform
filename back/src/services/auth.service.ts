@@ -504,7 +504,7 @@ export const loginAccount = async (input: LoginInput) => {
   if (company.approvalStatus !== "APPROVED") {
     throw new AppError("Company account is not approved", 403);
   }
-  const { password, ...companyInfo } = company;
+  const { password: _password, ...companyInfo } = company;
   const tokens = issueTokens({
     id: company.id,
     email: company.email,

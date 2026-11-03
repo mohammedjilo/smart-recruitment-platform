@@ -23,6 +23,9 @@ import FormErrorAlert from "@/components/common/FormErrorAlert"
 import { applyApiFieldErrors } from "@/utils/formErrors"
 import { getMutationState } from "@/utils/mutationState"
 import { getMutationPresentation } from "@/utils/presentationPolicy"
+import CountryCitySelector, {
+   type LocationSelection
+} from "@/components/common/CountryCitySelector"
 
 const defaultValues: CreateAdminFormValues = {
    firstName: "",
@@ -31,6 +34,11 @@ const defaultValues: CreateAdminFormValues = {
    password: "",
    phone: "",
    country: "",
+   countryCode: "",
+   state: "",
+   stateCode: "",
+   city: "",
+   cityGeonameId: 0,
    roleName: "SUPPORT_ADMIN"
 }
 
@@ -38,13 +46,16 @@ export default function CreateAdminPage() {
    const navigate = useNavigate()
    const [createAdmin, mutationResult] = useCreateAdminMutation()
    const mutationState = getMutationState(mutationResult)
-   const mutationPresentation = getMutationPresentation(mutationState, { surface: "form" })
+   const mutationPresentation = getMutationPresentation(mutationState, {
+      surface: "form"
+   })
    const isLoading = mutationPresentation.category === "loading"
    const { data: rolesData, isLoading: isLoadingRoles } = useGetAdminRolesQuery()
    const {
       register,
       handleSubmit,
       setError,
+      setValue,
       watch,
       formState: { errors }
    } = useForm<CreateAdminFormValues>({
@@ -55,6 +66,14 @@ export default function CreateAdminPage() {
       shouldFocusError: true
    })
    const selectedRole = rolesData?.data.find(role => role.name === watch("roleName"))
+   const location: LocationSelection = {
+      countryCode: watch("countryCode"),
+      countryName: watch("country"),
+      stateCode: watch("stateCode") ?? "",
+      stateName: watch("state") ?? "",
+      cityName: watch("city"),
+      cityGeonameId: watch("cityGeonameId") || null
+   }
 
    const onSubmit = async (form: CreateAdminFormValues) => {
       try {
@@ -82,15 +101,6 @@ export default function CreateAdminPage() {
             onClick={() => navigate("/admin/admins")}>
             Back to Admin Management
          </Button>
-         <Box>
-            <Typography className="text-content! text-2xl! font-bold!">
-               Create Admin
-            </Typography>
-            <Typography className="mt-1! text-sm!" color="textSecondary">
-               Create an administrative account with a managed role. Admin accounts do not
-               receive candidate profiles.
-            </Typography>
-         </Box>
 
          <FormErrorAlert message={errorMessage} />
 
@@ -130,12 +140,39 @@ export default function CreateAdminPage() {
                   helperText={errors.phone?.message}
                   label="Phone"
                />
-               <TextField
-                  {...register("country")}
-                  error={Boolean(errors.country)}
-                  helperText={errors.country?.message}
-                  label="Country"
-               />
+               <Box className="md:col-span-2">
+                  <CountryCitySelector
+                     required
+                     value={location}
+                     errors={{
+                        country: errors.country?.message ?? errors.countryCode?.message,
+                        state: errors.state?.message,
+                        city: errors.city?.message,
+                        cityGeonameId: errors.cityGeonameId?.message
+                     }}
+                     size="medium"
+                     onChange={selection => {
+                        setValue("country", selection.countryName, {
+                           shouldValidate: true
+                        })
+                        setValue("countryCode", selection.countryCode, {
+                           shouldValidate: true
+                        })
+                        setValue("state", selection.stateName, {
+                           shouldValidate: true
+                        })
+                        setValue("stateCode", selection.stateCode, {
+                           shouldValidate: true
+                        })
+                        setValue("city", selection.cityName, {
+                           shouldValidate: true
+                        })
+                        setValue("cityGeonameId", selection.cityGeonameId ?? 0, {
+                           shouldValidate: true
+                        })
+                     }}
+                  />
+               </Box>
             </Box>
 
             <FormControl
@@ -160,12 +197,12 @@ export default function CreateAdminPage() {
                      (rolesData?.data ?? [])
                         .filter(role => role.name !== "DEMO_ADMIN")
                         .map(role => (
-                        <MenuItem
-                           key={role.id}
-                           value={role.name}>
-                           {role.name}
-                        </MenuItem>
-                     ))
+                           <MenuItem
+                              key={role.id}
+                              value={role.name}>
+                              {role.name}
+                           </MenuItem>
+                        ))
                   )}
                </Select>
                {errors.roleName && (
@@ -174,7 +211,9 @@ export default function CreateAdminPage() {
             </FormControl>
 
             <Box className="bg-bg rounded-lg p-4">
-               <Typography className="text-xs! font-semibold! uppercase!" color="textSecondary">
+               <Typography
+                  className="text-xs! font-semibold! uppercase!"
+                  color="textSecondary">
                   Permission summary
                </Typography>
                <Typography className="text-content! mt-2! text-sm!">

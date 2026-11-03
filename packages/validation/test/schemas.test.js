@@ -7,6 +7,7 @@ import {
   personalInformationUpdateSchema,
   updateProfessionalProfileSchema,
   createAdminSchema,
+  updateAdminProfileSchema,
   createJobSchema,
   isDateOnOrAfterToday,
   isValidDateOnly,
@@ -255,6 +256,53 @@ test("shared schemas reject invalid required fields", () => {
     false,
   );
   assert.equal(createAdminSchema.safeParse({}).success, false);
+});
+
+test("admin creation requires a selected country and city", () => {
+  const admin = {
+    firstName: "Admin",
+    lastName: "User",
+    email: "admin@example.com",
+    password: "password123",
+    phone: "1234567",
+    country: "United States",
+    countryCode: "US",
+    state: "California",
+    stateCode: "",
+    city: "Los Angeles",
+    cityGeonameId: 5368361,
+    roleName: "SUPPORT_ADMIN",
+  };
+
+  assert.equal(createAdminSchema.safeParse(admin).success, true);
+  assert.equal(
+    createAdminSchema.safeParse({ ...admin, cityGeonameId: 0 }).success,
+    false,
+  );
+  assert.equal(
+    createAdminSchema.safeParse({ ...admin, countryCode: "" }).success,
+    false,
+  );
+});
+
+test("admin profile updates allow unrelated fields but validate changed locations", () => {
+  assert.equal(
+    updateAdminProfileSchema.safeParse({ firstName: "Admin" }).success,
+    true,
+  );
+  assert.equal(
+    updateAdminProfileSchema.safeParse({ country: "United States" }).success,
+    false,
+  );
+  assert.equal(
+    updateAdminProfileSchema.safeParse({
+      country: "United States",
+      countryCode: "US",
+      city: "Los Angeles",
+      cityGeonameId: 5368361,
+    }).success,
+    true,
+  );
 });
 
 test("user registration requires country and city and accepts an optional region", () => {

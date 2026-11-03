@@ -34,6 +34,11 @@ const NotificationListItem = ({ notification, portal = "user", onMarkAsRead }: P
          return
       }
 
+      if (notification.type === "SUPPORT" && portal === "admin") {
+         navigate("/admin/support/tickets")
+         return
+      }
+
       if (notification.type === "COMPANY_REQUEST" && portal === "admin") {
          navigate(
             notification.companyRequestId

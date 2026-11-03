@@ -8,6 +8,7 @@ import {
   getCompanyJobsForUser,
   updateProfessionalProfile,
   updateUserPersonalInformation,
+  updateUserProfilePicture,
   getDashboardData,
 } from "../services/user.service";
 import { getCompaniesQuerySchema } from "../validation/user.validation";
@@ -150,6 +151,25 @@ export const updateUserPersonalInformationController = asyncHandler(
     );
     sendSuccess(res, 200, user, {
       message: "Personal information updated successfully",
+    });
+  }
+);
+
+export const updateUserProfilePictureController = asyncHandler(
+  async (req: Request, res: Response) => {
+    const userId = req.user?.id;
+    if (!userId) {
+      throw new AppError("User authentication required", 401);
+    }
+
+    const file = req.file;
+    if (!file) {
+      throw new AppError("Profile picture is required", 400, "BAD_REQUEST");
+    }
+
+    const profile = await updateUserProfilePicture(userId, file);
+    sendSuccess(res, 200, profile, {
+      message: "Profile picture updated successfully",
     });
   }
 );

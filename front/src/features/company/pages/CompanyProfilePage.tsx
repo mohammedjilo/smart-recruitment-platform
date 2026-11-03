@@ -92,10 +92,7 @@ const CompanyProfilePage = () => {
 
          <Box className="space-y-5">
             {/* Top Profile Card */}
-            <CompanyOverviewCard
-               company={company}
-               onEdit={handleEditProfile}
-            />
+            <CompanyOverviewCard company={company} />
 
             {/* Main Information */}
             <Box className="grid grid-cols-1 gap-5 xl:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">

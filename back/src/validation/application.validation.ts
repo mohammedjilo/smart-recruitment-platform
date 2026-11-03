@@ -6,15 +6,6 @@ const answerValueSchema = z.union([
   z.array(z.string().trim().min(1).max(500)).min(1).max(20),
 ]);
 
-const parseAnswers = (value: unknown) => {
-  if (typeof value !== "string") return value;
-  try {
-    return JSON.parse(value) as unknown;
-  } catch {
-    return value;
-  }
-};
-
 export const applicationAnswerSchema = z.object({
   questionId: z.string().uuid("Invalid question id"),
   answer: answerValueSchema,

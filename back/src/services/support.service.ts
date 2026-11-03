@@ -277,7 +277,7 @@ const ensureCategoryExists = async (
   }
 };
 
-const notifyAdmins = async (message: string) => {
+const notifyAdmins = async (message: string, supportTicketId: string) => {
   const adminIds = await findEligibleAdminIdsForNotificationType("SUPPORT");
 
   await Promise.all(
@@ -286,7 +286,7 @@ const notifyAdmins = async (message: string) => {
         userId: adminId,
         message,
         type: "SUPPORT",
-        supportTicketId: undefined,
+        supportTicketId,
       })
     )
   );
@@ -367,7 +367,8 @@ export const createSupportTicket = async (
   });
 
   await notifyAdmins(
-    `New support ticket created: "${ticket.subject}". Please review the queue.`
+    `New support ticket created: "${ticket.subject}". Please review the queue.`,
+    ticket.id
   );
 
   return ticket;

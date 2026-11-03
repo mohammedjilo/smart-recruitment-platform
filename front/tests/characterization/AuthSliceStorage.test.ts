@@ -68,6 +68,21 @@ describe("auth state storage", () => {
       expect(state.permissions).toEqual([ADMIN_PERMISSIONS.VIEW_USERS])
    })
 
+   it("persists updated user details for subsequent browser sessions", async () => {
+      localStorage.setItem("userInfo", JSON.stringify(userInfo))
+      const { authActions, authReducer } = await import("@/redux/slices/authSlice")
+      const state = authReducer(
+         await loadAuthState(),
+         authActions.updateUser({ id: userInfo.id, profilePicUrl: "/profile.webp" })
+      )
+
+      expect(state.user?.profilePicUrl).toBe("/profile.webp")
+      expect(JSON.parse(localStorage.getItem("userInfo") ?? "{}")).toMatchObject({
+         id: userInfo.id,
+         profilePicUrl: "/profile.webp"
+      })
+   })
+
    it("starts unauthenticated when saved keys are missing", async () => {
       const state = await loadAuthState()
 

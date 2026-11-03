@@ -36,6 +36,11 @@ const NotificationItem = ({ notification, onClose, onMarkAsRead }: Props) => {
          return
       }
 
+      if (notification.type === "SUPPORT" && location.pathname.startsWith("/admin")) {
+         navigate("/admin/support/tickets")
+         return
+      }
+
       if (
          notification.type === "COMPANY_REQUEST" &&
          location.pathname.startsWith("/admin")

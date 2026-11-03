@@ -120,6 +120,12 @@ export type UpdateUserPersonalInformationResult = {
       | "updatedAt"
    >
 }
+
+export type UpdateUserProfilePictureResult = {
+   success: true
+   message?: string
+   data: Pick<CompleteUserProfile, "id" | "profilePicId" | "profilePicUrl">
+}
 /////////
 export type Company = CompanySummary
 

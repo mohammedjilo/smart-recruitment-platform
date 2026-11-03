@@ -1,9 +1,10 @@
-import { Box, Button, Typography } from "@mui/material"
+import { Avatar, Box, Button, Typography } from "@mui/material"
 import ArrowBackRoundedIcon from "@mui/icons-material/ArrowBackRounded"
 import { useNavigate, useParams } from "react-router-dom"
 import { useGetAdminAuthorizationQuery } from "@/features/admin/services/adminApiCalls"
 import { formatDate } from "@/utils/formatDate"
 import { AdminAuthorizationDetailsSkeleton } from "@/features/admin/components/AdminSkeletons"
+import { getInitials } from "@/utils/string/getInitials"
 
 export default function AdminDetailsPage() {
    const navigate = useNavigate()
@@ -30,38 +31,66 @@ export default function AdminDetailsPage() {
    return (
       <Box className="max-w-3xl space-y-5">
          <Button
-            className="normal-case!"
+            className="mb-2! normal-case!"
             startIcon={<ArrowBackRoundedIcon />}
             onClick={() => navigate("/admin/admins")}>
             Back to Admin Management
          </Button>
          <Box className="border-border bg-surface rounded-xl border p-6">
-            <Typography className="text-content! text-2xl! font-bold!">
-               {admin.firstName} {admin.lastName}
-            </Typography>
-            <Typography className="mt-1! text-sm!" color="textSecondary">{admin.email}</Typography>
+            <Box className="flex items-center gap-4">
+               <Avatar
+                  alt={`${admin.firstName} ${admin.lastName}`}
+                  src={admin.profilePicUrl ?? undefined}
+                  sx={{ width: 72, height: 72, fontSize: 24 }}>
+                  {getInitials(`${admin.firstName} ${admin.lastName}`)}
+               </Avatar>
+               <Box className="min-w-0">
+                  <Typography className="text-content! text-2xl! font-bold!">
+                     {admin.firstName} {admin.lastName}
+                  </Typography>
+                  <Typography
+                     className="mt-1! text-sm!"
+                     color="textSecondary">
+                     {admin.email}
+                  </Typography>
+               </Box>
+            </Box>
             <Box className="mt-5 grid grid-cols-1 gap-4 md:grid-cols-3">
                <Box>
-                  <Typography className="text-xs!" color="textSecondary">Role</Typography>
+                  <Typography
+                     className="text-xs!"
+                     color="textSecondary">
+                     Role
+                  </Typography>
                   <Typography className="text-content! mt-1! text-sm! font-semibold!">
                      {admin.adminRoleAssignments[0]?.adminRole.name ?? "Unassigned"}
                   </Typography>
                </Box>
                <Box>
-                  <Typography className="text-xs!" color="textSecondary">Status</Typography>
+                  <Typography
+                     className="text-xs!"
+                     color="textSecondary">
+                     Status
+                  </Typography>
                   <Typography className="text-content! mt-1! text-sm! font-semibold!">
                      {admin.accountStatus}
                   </Typography>
                </Box>
                <Box>
-                  <Typography className="text-xs!" color="textSecondary">Created</Typography>
+                  <Typography
+                     className="text-xs!"
+                     color="textSecondary">
+                     Created
+                  </Typography>
                   <Typography className="text-content! mt-1! text-sm!">
                      {formatDate(admin.createdAt)}
                   </Typography>
                </Box>
             </Box>
             <Box className="bg-bg mt-6 rounded-lg p-4">
-               <Typography className="text-xs! font-semibold! uppercase!" color="textSecondary">
+               <Typography
+                  className="text-xs! font-semibold! uppercase!"
+                  color="textSecondary">
                   Permissions
                </Typography>
                <Typography className="text-content! mt-2! text-sm! leading-6!">

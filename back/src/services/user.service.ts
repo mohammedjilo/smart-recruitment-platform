@@ -5,6 +5,7 @@ import { z } from "zod";
 import { updateProfessionalProfileSchema } from "../validation/professionalProfile.validation";
 import { getRecommendedJobs } from "./recommendation.service.js"; // Import the recommendation service.
 import { getCompaniesQuerySchema } from "../validation/user.validation";
+import { cloudinaryUploadImage } from "../utils/cloudinary.js";
 import {
   cityLocationPredicate,
   resolveLocation,
@@ -410,6 +411,26 @@ export const updateUserPersonalInformation = async (
       city: true,
       cityGeonameId: true,
       updatedAt: true,
+    },
+  });
+};
+
+export const updateUserProfilePicture = async (
+  userId: string,
+  file: Express.Multer.File,
+) => {
+  const uploadedImage = await cloudinaryUploadImage(file.buffer, file.mimetype);
+
+  return prisma.user.update({
+    where: { id: userId },
+    data: {
+      profilePicId: uploadedImage.public_id,
+      profilePicUrl: uploadedImage.secure_url,
+    },
+    select: {
+      id: true,
+      profilePicId: true,
+      profilePicUrl: true,
     },
   });
 };

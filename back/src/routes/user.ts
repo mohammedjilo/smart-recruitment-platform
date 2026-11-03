@@ -13,6 +13,7 @@ import {
   getCompanyJobsController,
   updateProfessionalProfileController,
   getDashboardUserController,
+  updateUserProfilePictureController,
 } from "../controllers/userControllers";
 import {
   getCandidateProfileCvController,
@@ -20,6 +21,7 @@ import {
 } from "../controllers/cvAccessControllers.js";
 import {
   handleUploadError,
+  imageUpload,
   upload,
   validateUploadedFile,
 } from "../utils/upload.js";
@@ -32,6 +34,14 @@ userRouter.put(
   authMiddleware,
   validate(personalInformationUpdateSchema),
   updateUserPersonalInformationController
+);
+userRouter.put(
+  "/profile/picture",
+  authMiddleware,
+  requireUser,
+  handleUploadError(imageUpload.single("picture")),
+  validateUploadedFile("image"),
+  updateUserProfilePictureController
 );
 userRouter.get(
   "/profile/:userId",

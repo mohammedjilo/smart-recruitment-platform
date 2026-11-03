@@ -41,7 +41,14 @@ import type {
    CreateAdminArgs,
    CreateAdminResponse
 } from "@/types/api/adminAuthorization"
+import type {
+   AdminProfileResponse,
+   AdminProfileUpdateArgs,
+   AdminProfileUpdateResult
+} from "@/types/api/adminProfile"
 import { smartApi } from "@/services/api/baseApi"
+
+const ADMIN_PROFILE_PICTURE_UPLOAD_TIMEOUT_MS = 120_000
 
 type OperationsDashboardResponse = {
    success: true
@@ -68,6 +75,37 @@ const extendedSmartApi = smartApi.injectEndpoints({
          providesTags: (_result, _error, userId) => [
             { type: "AdminPermissions", id: userId }
          ]
+      }),
+      getAdminProfile: builder.query<AdminProfileResponse, void>({
+         query: () => "/api/admin/me/profile",
+         providesTags: [{ type: "AdminProfile", id: "SELF" }]
+      }),
+      updateAdminProfile: builder.mutation<
+         AdminProfileUpdateResult,
+         AdminProfileUpdateArgs
+      >({
+         query: body => ({
+            url: "/api/admin/me/profile",
+            method: "PATCH",
+            body
+         }),
+         invalidatesTags: [{ type: "AdminProfile", id: "SELF" }]
+      }),
+      updateAdminProfilePicture: builder.mutation<
+         AdminProfileUpdateResult,
+         { file: File }
+      >({
+         query: ({ file }) => {
+            const formData = new FormData()
+            formData.append("picture", file)
+            return {
+               url: "/api/admin/me/profile/picture",
+               method: "PUT",
+               body: formData,
+               timeout: ADMIN_PROFILE_PICTURE_UPLOAD_TIMEOUT_MS
+            }
+         },
+         invalidatesTags: [{ type: "AdminProfile", id: "SELF" }]
       }),
       getAdmins: builder.query<AdminSummariesResponse, void>({
          query: () => "/api/admin/admins",
@@ -449,6 +487,9 @@ export const {
    useApproveCompanyRequestMutation,
    useRejectCompanyRequestMutation,
    useGetCurrentAdminPermissionsQuery,
+   useGetAdminProfileQuery,
+   useUpdateAdminProfileMutation,
+   useUpdateAdminProfilePictureMutation,
    useGetAdminsQuery,
    useGetAdminAuthorizationQuery,
    useCreateAdminMutation,

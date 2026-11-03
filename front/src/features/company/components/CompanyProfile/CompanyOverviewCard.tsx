@@ -4,8 +4,7 @@ import LanguageOutlinedIcon from "@mui/icons-material/LanguageOutlined"
 import LocationOnOutlinedIcon from "@mui/icons-material/LocationOnOutlined"
 import PhoneOutlinedIcon from "@mui/icons-material/PhoneOutlined"
 import SecurityOutlinedIcon from "@mui/icons-material/SecurityOutlined"
-import EditOutlinedIcon from "@mui/icons-material/EditOutlined"
-import { Avatar, Box, IconButton, Typography } from "@mui/material"
+import { Avatar, Box, Typography } from "@mui/material"
 
 import ProfileInfoItem from "./ProfileInfoItem"
 import type { Company } from "@/types/company"
@@ -15,10 +14,9 @@ import formatCreatedAt from "@/utils/formatDate"
 
 type CompanyOverviewCardProps = {
    company: Company
-   onEdit: () => void
 }
 
-const CompanyOverviewCard = ({ company, onEdit }: CompanyOverviewCardProps) => {
+const CompanyOverviewCard = ({ company }: CompanyOverviewCardProps) => {
    return (
       <Box className="bg-surface rounded-xl border p-6">
          <Box className="grid grid-cols-1 gap-8 xl:grid-cols-[minmax(0,1.05fr)_minmax(0,1.15fr)]">
@@ -26,23 +24,12 @@ const CompanyOverviewCard = ({ company, onEdit }: CompanyOverviewCardProps) => {
             <Box className="flex flex-col gap-5 border-b pb-7 xl:flex-row xl:border-r xl:border-b-0 xl:pr-8 xl:pb-0">
                <Box className="relative shrink-0">
                   <Avatar
-                     className="h-33! w-33! rounded-xl! bg-[#F5F3FF]! text-3xl! font-bold! text-[#5425d4]! border! border-[#E2E8F0]!"
+                     className="h-33! w-33! rounded-xl! border! border-[#E2E8F0]! bg-[#F5F3FF]! text-3xl! font-bold! text-[#5425d4]!"
                      alt={company.companyName}
                      src={company.logoUrl ?? undefined}
                      variant="rounded">
                      {getInitials(company.companyName)}
                   </Avatar>
-
-                  <IconButton
-                     className="absolute! -right-2.5! -bottom-2! h-9.5! w-9.5! bg-[#FFFFFF]! shadow-[0_4px_12px_rgba(15,_23,_42,_0.08)]! border! border-[#E2E8F0]!"
-                     sx={{
-                        "&:hover": {
-                           backgroundColor: "#F8FAFC"
-                        }
-                     }}
-                     onClick={onEdit}>
-                     <EditOutlinedIcon className="text-lg! text-[#475569]!" />
-                  </IconButton>
                </Box>
 
                <Box className="min-w-0">

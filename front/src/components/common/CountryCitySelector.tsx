@@ -46,13 +46,21 @@ export default function CountryCitySelector({
    const [selectedCity, setSelectedCity] = useState<GeoNamesCity | null>(null)
    const [countryLoadError, setCountryLoadError] = useState(false)
    const [loadingCountries, setLoadingCountries] = useState(true)
+   const selectedCountry = countries.find(
+      country =>
+         country.iso2 === value.countryCode ||
+         (!value.countryCode &&
+            country.name.trim().toLocaleLowerCase() ===
+               value.countryName.trim().toLocaleLowerCase())
+   )
+   const selectedCountryCode = value.countryCode || selectedCountry?.iso2 || ""
    const cityQuery = useGetLocationCitiesQuery(
       {
-         countryCode: value.countryCode,
+         countryCode: selectedCountryCode,
          q: searchQuery || undefined,
          limit: 25
       },
-      { skip: !value.countryCode }
+      { skip: !selectedCountryCode }
    )
    const cities = useMemo(
       () => cityQuery.currentData?.data ?? [],
@@ -108,6 +116,8 @@ export default function CountryCitySelector({
       setSearchQuery(city?.name ?? "")
       onChange({
          ...value,
+         countryCode: selectedCountryCode,
+         countryName: value.countryName || selectedCountry?.name || "",
          stateName: city?.admin1Name ?? "",
          stateCode: "",
          cityName: city?.name ?? "",
@@ -121,7 +131,7 @@ export default function CountryCitySelector({
             className="min-w-50"
             disabled={loadingCountries}
             required={required}
-            value={value.countryCode}
+            value={selectedCountryCode}
             error={Boolean(errors?.country || countryLoadError)}
             fullWidth
             helperText={
@@ -155,7 +165,7 @@ export default function CountryCitySelector({
          <Autocomplete
             className="min-w-50"
 
-            disabled={!value.countryCode}
+            disabled={!selectedCountryCode}
             value={selectedCity}
             filterOptions={options => options}
             fullWidth
@@ -176,7 +186,7 @@ export default function CountryCitySelector({
                <TextField
                   {...params}
                   placeholder={
-                     value.countryCode
+                     selectedCountryCode
                         ? "Search city or populated place"
                         : "Select a country first"
                   }

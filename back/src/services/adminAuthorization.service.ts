@@ -7,12 +7,14 @@ import {
   getUserPermissions,
 } from "../authorization/permission.service.js";
 import { PERMISSIONS } from "../authorization/permissions.js";
+import { resolveLocation } from "../utils/locationData.js";
 
 const adminSummarySelect = {
   id: true,
   firstName: true,
   lastName: true,
   email: true,
+  profilePicUrl: true,
   accountStatus: true,
   role: true,
   createdAt: true,
@@ -55,10 +57,16 @@ export const createAdmin = async (
     password: string;
     phone: string;
     country: string;
+    countryCode: string;
+    state?: string;
+    stateCode?: string;
+    city: string;
+    cityGeonameId: number;
     roleName: "SUPER_ADMIN" | "SUPPORT_ADMIN" | "OPERATIONS_ADMIN";
-  }
+  },
 ) => {
   await assertPermission(actorUserId, PERMISSIONS.CREATE_ADMIN);
+  const location = await resolveLocation(input);
 
   const existingUser = await prisma.user.findUnique({
     where: { email: input.email },
@@ -92,7 +100,7 @@ export const createAdmin = async (
         email: input.email,
         password: hashPassword(input.password),
         phone: input.phone,
-        country: input.country,
+        ...location,
         role: "ADMIN",
         accountStatus: "ACTIVE",
       },
@@ -154,7 +162,7 @@ export const listAdmins = async (actorUserId: string) => {
 
 export const getAdminAuthorization = async (
   actorUserId: string,
-  targetUserId: string
+  targetUserId: string,
 ) => {
   await assertPermission(actorUserId, PERMISSIONS.VIEW_ADMINS);
 
@@ -176,11 +184,7 @@ export const getAdminAuthorization = async (
 export const assignAdminRole = async (
   actorUserId: string,
   targetUserId: string,
-  roleName:
-    | "SUPER_ADMIN"
-    | "SUPPORT_ADMIN"
-    | "OPERATIONS_ADMIN"
-    | "DEMO_ADMIN"
+  roleName: "SUPER_ADMIN" | "SUPPORT_ADMIN" | "OPERATIONS_ADMIN" | "DEMO_ADMIN",
 ) => {
   await assertPermission(actorUserId, PERMISSIONS.ASSIGN_ADMIN_ROLE);
 
@@ -221,7 +225,7 @@ export const assignAdminRole = async (
     select: { adminRole: { select: { name: true } } },
   });
   const wasSuperAdmin = previousRoles.some(
-    (assignment) => assignment.adminRole.name === "SUPER_ADMIN"
+    (assignment) => assignment.adminRole.name === "SUPER_ADMIN",
   );
 
   if (wasSuperAdmin && roleName !== "SUPER_ADMIN") {
@@ -263,7 +267,7 @@ export const assignAdminRole = async (
 export const updateAdminStatus = async (
   actorUserId: string,
   targetUserId: string,
-  status: "ACTIVE" | "DEACTIVATED"
+  status: "ACTIVE" | "DEACTIVATED",
 ) => {
   await assertPermission(actorUserId, PERMISSIONS.DISABLE_ADMIN);
 
@@ -288,7 +292,7 @@ export const updateAdminStatus = async (
   }
 
   const isSuperAdmin = target.adminRoleAssignments.some(
-    (assignment) => assignment.adminRole.name === "SUPER_ADMIN"
+    (assignment) => assignment.adminRole.name === "SUPER_ADMIN",
   );
   if (isSuperAdmin && status === "DEACTIVATED") {
     const activeSuperAdmins = await prisma.userAdminRole.count({

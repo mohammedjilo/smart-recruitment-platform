@@ -9,7 +9,7 @@ type UserInfo = {
    firstName: string
    lastName: string
    email: string
-   profilePicUrl: string
+   profilePicUrl: string | null
    role: "USER" | "ADMIN"
    permissions?: AdminPermission[]
 }
@@ -54,7 +54,7 @@ const isUserInfo = (value: unknown): value is UserInfo =>
    isString(value.firstName) &&
    isString(value.lastName) &&
    isString(value.email) &&
-   isString(value.profilePicUrl) &&
+   isNullableString(value.profilePicUrl) &&
    (value.role === "USER" || value.role === "ADMIN") &&
    (value.permissions === undefined ||
       (Array.isArray(value.permissions) && value.permissions.every(isAdminPermission)))
@@ -125,9 +125,7 @@ const storedUser = readStoredValue("userInfo")
 const storedCompany = readStoredValue("companyInfo")
 const storedToken = (() => {
    try {
-      return typeof window === "undefined"
-         ? null
-         : window.localStorage.getItem("token")
+      return typeof window === "undefined" ? null : window.localStorage.getItem("token")
    } catch {
       return null
    }
@@ -194,10 +192,7 @@ const authSlice = createSlice({
          localStorage.removeItem("userInfo")
          localStorage.removeItem("companyInfo")
          localStorage.removeItem("token")
-         localStorage.setItem(
-            "companyRegistrationReview",
-            JSON.stringify(action.payload)
-         )
+         localStorage.setItem("companyRegistrationReview", JSON.stringify(action.payload))
       },
       setToken(state, action: PayloadAction<string | null>) {
          state.token = action.payload
@@ -229,6 +224,7 @@ const authSlice = createSlice({
                const val = payload[key as keyof typeof payload]
                if (val !== undefined) (state.user as any)[key] = val
             })
+            localStorage.setItem("userInfo", JSON.stringify(state.user))
          }
       },
       logout(state) {

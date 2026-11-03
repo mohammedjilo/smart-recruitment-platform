@@ -3,6 +3,22 @@ import { v2 as cloudinary } from "cloudinary";
 import { UploadApiResponse } from "cloudinary";
 import "dotenv/config";
 import { AppError } from "./appError.js";
+const ensureCloudinaryConfig = () => {
+  const cloudName = process.env.CLOUDINARY_CLOUD_NAME;
+  const apiKey = process.env.CLOUDINARY_API_KEY;
+  const apiSecret = process.env.CLOUDINARY_API_SECRET;
+
+  if (!cloudName || !apiKey || !apiSecret) {
+    throw new AppError(
+      "Cloudinary is not configured. Add CLOUDINARY_CLOUD_NAME, CLOUDINARY_API_KEY, and CLOUDINARY_API_SECRET to the environment.",
+      503,
+      "SERVICE_UNAVAILABLE",
+      undefined,
+      { source: "cloudinary", classification: "unexpected" }
+    );
+  }
+};
+
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
   api_key: process.env.CLOUDINARY_API_KEY,
@@ -15,14 +31,13 @@ export const CV_UPLOAD_OPTIONS = {
   folder: "applications/cvs",
 } as const;
 
-export const uploadRestrictedCv = async <T extends {
-  resource_type: string;
-  type: string;
-}>(
-  upload: (
-    data: string,
-    options: typeof CV_UPLOAD_OPTIONS
-  ) => Promise<T>,
+export const uploadRestrictedCv = async <
+  T extends {
+    resource_type: string;
+    type: string;
+  },
+>(
+  upload: (data: string, options: typeof CV_UPLOAD_OPTIONS) => Promise<T>,
   uploadData: string
 ) => {
   const result = await upload(uploadData, CV_UPLOAD_OPTIONS);
@@ -41,6 +56,8 @@ export const cloudinaryUploadImage = async (
   mimetype?: string
 ): Promise<UploadApiResponse> => {
   try {
+    ensureCloudinaryConfig();
+
     let uploadData: string;
     if (Buffer.isBuffer(fileToUpload)) {
       if (!mimetype) {
@@ -71,6 +88,8 @@ export const cloudinaryUploadCV = async (
   file: Buffer,
   mimetype: string
 ): Promise<UploadApiResponse> => {
+  ensureCloudinaryConfig();
+
   if (
     file.length > 5 * 1024 * 1024 ||
     mimetype !== "application/pdf" ||

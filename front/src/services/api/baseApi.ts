@@ -1,12 +1,6 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react"
-import type {
-   BaseQueryApi,
-   BaseQueryFn
-} from "@reduxjs/toolkit/query"
-import {
-   createReliableBaseQuery,
-   interpretRefreshResult
-} from "./requestReliability"
+import type { BaseQueryApi, BaseQueryFn } from "@reduxjs/toolkit/query"
+import { createReliableBaseQuery, interpretRefreshResult } from "./requestReliability"
 import type { RootState } from "@/redux/store"
 import { authActions } from "@/redux/slices/authSlice"
 import { normalizeApiError, type NormalizedApiError } from "@/utils/apiError"
@@ -131,6 +125,7 @@ export const smartApi = createApi({
       "AdminAuthorization",
       "AdminPermissions",
       "AdminRoles",
+      "AdminProfile",
       "AdminUserDetails",
       "AdminCompanyDetails",
       "CompanyUsers",

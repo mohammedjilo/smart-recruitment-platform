@@ -3,6 +3,7 @@ export type AdminSummary = {
    firstName: string
    lastName: string
    email: string
+   profilePicUrl: string | null
    accountStatus: "ACTIVE" | "DEACTIVATED"
    role: "USER" | "ADMIN"
    createdAt: string
@@ -62,6 +63,11 @@ export type CreateAdminArgs = {
    password: string
    phone: string
    country: string
+   countryCode: string
+   state?: string
+   stateCode?: string
+   city: string
+   cityGeonameId: number
    roleName: "SUPER_ADMIN" | "SUPPORT_ADMIN" | "OPERATIONS_ADMIN"
 }
 

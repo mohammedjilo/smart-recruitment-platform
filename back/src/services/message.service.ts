@@ -39,21 +39,6 @@ const messageSummarySelect = {
   },
 } as const;
 
-const resolveSenderName = (message: {
-  senderUser?: { firstName?: string | null; lastName?: string | null } | null;
-  senderCompany?: { companyName?: string | null } | null;
-}) => {
-  if (message.senderUser) {
-    return `${message.senderUser.firstName ?? ""} ${message.senderUser.lastName ?? ""}`.trim();
-  }
-
-  if (message.senderCompany) {
-    return message.senderCompany.companyName ?? "Company";
-  }
-
-  return "System";
-};
-
 const assertValidApplicationForUserCompany = async (
   actor: MessageActor,
   applicationId: string

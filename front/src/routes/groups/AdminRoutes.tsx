@@ -15,37 +15,28 @@ const AdminDashboard = lazy(() => import("@/features/admin/pages/DashboardPage")
 const OperationsDashboard = lazy(
    () => import("@/features/admin/pages/OperationsDashboardPage")
 )
-const CompanyRequests = lazy(
-   () => import("@/features/admin/pages/CompanyRequestsPage")
-)
+const CompanyRequests = lazy(() => import("@/features/admin/pages/CompanyRequestsPage"))
 const Companies = lazy(() => import("@/features/admin/pages/CompaniesPage"))
 const AdminCompanyDetails = lazy(
    () => import("@/features/admin/pages/CompanyDetailsPage")
 )
 const AdminJobs = lazy(() => import("@/features/admin/pages/JobsPage"))
 const AdminUsers = lazy(() => import("@/features/admin/pages/UsersPage"))
-const AdminUserDetails = lazy(
-   () => import("@/features/admin/pages/UserDetailsPage")
-)
-const AdminApplications = lazy(
-   () => import("@/features/admin/pages/ApplicationsPage")
-)
+const AdminUserDetails = lazy(() => import("@/features/admin/pages/UserDetailsPage"))
+const AdminApplications = lazy(() => import("@/features/admin/pages/ApplicationsPage"))
 const AdminJobDetails = lazy(() => import("@/features/admin/pages/JobDetailsPage"))
 const AdminSupport = lazy(() => import("@/features/admin/pages/SupportPage"))
 const AdminSupportTicketDetails = lazy(
    () => import("@/features/admin/pages/SupportTicketDetailsPage")
 )
-const AdminManagement = lazy(
-   () => import("@/features/admin/pages/AdminManagementPage")
-)
+const AdminManagement = lazy(() => import("@/features/admin/pages/AdminManagementPage"))
 const CreateAdmin = lazy(() => import("@/features/admin/pages/CreateAdminPage"))
 const AdminDetails = lazy(() => import("@/features/admin/pages/AdminDetailsPage"))
 const ApplicationDetailsPage = lazy(
    () => import("@/features/admin/pages/ApplicationDetailsPage")
 )
-const SupportDashboard = lazy(
-   () => import("@/features/admin/pages/SupportDashboardPage")
-)
+const SupportDashboard = lazy(() => import("@/features/admin/pages/SupportDashboardPage"))
+const AdminProfilePage = lazy(() => import("@/features/admin/pages/AdminProfilePage"))
 const Forbidden = lazy(() => import("@/features/admin/pages/ForbiddenPage"))
 
 const adminRoutes: RouteObject[] = [
@@ -62,6 +53,26 @@ const adminRoutes: RouteObject[] = [
                <AdminLayout>
                   <RoutePage>
                      <Forbidden />
+                  </RoutePage>
+               </AdminLayout>
+            )
+         },
+         {
+            path: "/admin/profile",
+            element: (
+               <AdminLayout>
+                  <RoutePage>
+                     <AdminProfilePage />
+                  </RoutePage>
+               </AdminLayout>
+            )
+         },
+         {
+            path: "/admin/settings",
+            element: (
+               <AdminLayout>
+                  <RoutePage>
+                     <AdminProfilePage />
                   </RoutePage>
                </AdminLayout>
             )
@@ -96,7 +107,8 @@ const adminRoutes: RouteObject[] = [
             path: "/admin/operations",
             element: (
                <AdminLayout>
-                  <PermissionGuard permission={ADMIN_PERMISSIONS.VIEW_OPERATIONS_DASHBOARD}>
+                  <PermissionGuard
+                     permission={ADMIN_PERMISSIONS.VIEW_OPERATIONS_DASHBOARD}>
                      <RoutePage>
                         <OperationsDashboard />
                      </RoutePage>

@@ -21,20 +21,12 @@ const CompanyLogoCard = ({ company }: CompanyLogoCardProps) => {
             </Box>
 
             <Avatar
-               className="h-18.5! w-18.5! rounded-[10px]! bg-[#F5F3FF]! text-[22px]! font-bold! text-[#5425d4]! border! border-[#E2E8F0]!"
+               className="h-18.5! w-18.5! rounded-[10px]! border! border-[#E2E8F0]! bg-[#F5F3FF]! text-[22px]! font-bold! text-[#5425d4]!"
                alt={company.companyName}
                src={company.logoUrl ?? undefined}
                variant="rounded">
                {getInitials(company.companyName)}
             </Avatar>
-
-            <Box>
-               <Typography
-                  className="text-muted text-xs"
-                  variant="caption">
-                  JPG, PNG or SVG. Maximum size of 2MB.
-               </Typography>
-            </Box>
          </Box>
       </Box>
    )

@@ -19,9 +19,11 @@ const pageTitles: Record<string, string> = {
    "/admin/support": "Support Dashboard",
    "/admin/support/tickets": "Support",
    "/admin/admins": "Admin Management",
+   "/admin/admins/new": "Create Admin",
    "/admin/notifications": "Notifications",
-   "/admin/settings": "Settings",
-   "/admin/about": "Application & Employment Guide"
+   "/admin/settings": "Profile",
+   "/admin/about": "Application & Employment Guide",
+   "/admin/profile": "Profile"
 }
 
 const pageDescriptions: Record<string, string> = {
@@ -35,8 +37,10 @@ const pageDescriptions: Record<string, string> = {
    "/admin/support/tickets": "Manage support tickets and requests",
    "/admin/admins": "Manage administrator accounts, roles, and access",
    "/admin/notifications": "View platform notifications",
-   "/admin/settings": "Manage your account and platform settings",
-   "/admin/about": "Learn about application statuses and employment types"
+   "/admin/settings": "Manage your personal profile",
+   "/admin/about": "Learn about application statuses and employment types",
+   "/admin/admins/new": "Create an administrative account with a managed role",
+   "/admin/profile": "Manage your personal profile"
 }
 
 const dynamicPages = [
@@ -49,6 +53,11 @@ const dynamicPages = [
       pattern: /^\/admin\/users\/[^/]+$/,
       title: "User Details",
       description: "View user information and activity"
+   },
+   {
+      pattern: /^\/admin\/admins\/[^/]+$/,
+      title: "Admin Details",
+      description: "View administrator account, role, and permissions"
    },
    {
       pattern: /^\/admin\/jobs\/[^/]+\/[^/]+$/,

@@ -8,7 +8,8 @@ import {
    NotificationsNone as NotificationsIcon,
    InfoOutlined as InfoIcon,
    KeyboardArrowDown as KeyboardArrowDownIcon,
-   LogoutOutlined as LogoutOutlinedIcon
+   LogoutOutlined as LogoutOutlinedIcon,
+   SettingsOutlined as SettingsIcon
 } from "@mui/icons-material"
 import {
    Avatar,
@@ -103,11 +104,11 @@ const communicationLinks = [
 ]
 
 const systemLinks = [
-   // {
-   //    label: "Settings",
-   //    path: "/admin/settings",
-   //    icon: SettingsIcon
-   // },
+   {
+      label: "Profile",
+      path: "/admin/profile",
+      icon: SettingsIcon
+   },
    {
       label: "Application Guide",
       path: "/admin/about",
@@ -148,18 +149,18 @@ function SidebarLink({
                   location.pathname.startsWith(activePathPrefix))
 
             return (
-            <ListItemButton
-               className={`group! min-h-8.5! rounded-lg! px-2! text-sm! transition-all! duration-200! ${
-                  isLinkActive
-                     ? "bg-primary! hover:bg-primary-dark! text-white!"
-                     : "text-muted hover:bg-primary-tint hover:text-primary"
-               }`}
-               component="span">
-               <ListItemIcon className="text-inherit!">
-                  <Icon className="text-[21px]! text-inherit!" />
-               </ListItemIcon>
-               <ListItemText primary={label} />
-            </ListItemButton>
+               <ListItemButton
+                  className={`group! min-h-8.5! rounded-lg! px-2! text-sm! transition-all! duration-200! ${
+                     isLinkActive
+                        ? "bg-primary! hover:bg-primary-dark! text-white!"
+                        : "text-muted hover:bg-primary-tint hover:text-primary"
+                  }`}
+                  component="span">
+                  <ListItemIcon className="text-inherit!">
+                     <Icon className="text-[21px]! text-inherit!" />
+                  </ListItemIcon>
+                  <ListItemText primary={label} />
+               </ListItemButton>
             )
          }}
       </NavLink>
@@ -232,7 +233,11 @@ export default function AdminSidebar({ open, onClose }: AdminSidebarProps) {
                         SRP
                      </Typography>
 
-                     <Typography className="text-xs!" color="textSecondary">Admin Panel</Typography>
+                     <Typography
+                        className="text-xs!"
+                        color="textSecondary">
+                        Admin Panel
+                     </Typography>
                   </Box>
                </Box>
             </Box>
@@ -245,7 +250,9 @@ export default function AdminSidebar({ open, onClose }: AdminSidebarProps) {
                component="nav">
                {/* Management */}
                <Box className="mb-7">
-                  <Typography className="mb-3! px-2! text-[11px]! font-semibold! tracking-wide!" color="textSecondary">
+                  <Typography
+                     className="mb-3! px-2! text-[11px]! font-semibold! tracking-wide!"
+                     color="textSecondary">
                      Management
                   </Typography>
 
@@ -268,7 +275,9 @@ export default function AdminSidebar({ open, onClose }: AdminSidebarProps) {
 
                {/* Communication */}
                <Box className="mb-7">
-                  <Typography className="mb-3! px-2! text-[11px]! font-semibold! tracking-wide!" color="textSecondary">
+                  <Typography
+                     className="mb-3! px-2! text-[11px]! font-semibold! tracking-wide!"
+                     color="textSecondary">
                      Communication
                   </Typography>
 
@@ -295,7 +304,9 @@ export default function AdminSidebar({ open, onClose }: AdminSidebarProps) {
 
                {/* System */}
                <Box>
-                  <Typography className="mb-3! px-2! text-[11px]! font-semibold! tracking-wide!" color="textSecondary">
+                  <Typography
+                     className="mb-3! px-2! text-[11px]! font-semibold! tracking-wide!"
+                     color="textSecondary">
                      System
                   </Typography>
 
@@ -328,7 +339,11 @@ export default function AdminSidebar({ open, onClose }: AdminSidebarProps) {
                         {adminName}
                      </Typography>
 
-                     <Typography className="text-xs!" color="textSecondary">{roleLabel}</Typography>
+                     <Typography
+                        className="text-xs!"
+                        color="textSecondary">
+                        {roleLabel}
+                     </Typography>
                   </Box>
 
                   <KeyboardArrowDownIcon

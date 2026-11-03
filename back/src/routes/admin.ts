@@ -38,6 +38,11 @@ import {
   getOperationsDashboardController,
 } from "../controllers/admin/adminDashboardControllers";
 import {
+  getAdminProfileController,
+  updateAdminProfileController,
+  updateAdminProfilePictureController,
+} from "../controllers/admin/adminProfileControllers.js";
+import {
   getCompanyRequestsQuerySchema,
   getCompanyJobsQuerySchema,
   getAdminJobsQuerySchema,
@@ -55,6 +60,12 @@ import {
   assignAdminRoleSchema,
   updateAdminStatusSchema,
 } from "../validation/adminAuthorization.validation.js";
+import { updateAdminProfileSchema } from "@smart-recruitment/validation";
+import {
+  handleUploadError,
+  imageUpload,
+  validateUploadedFile,
+} from "../utils/upload.js";
 import { createAdminSchema } from "../validation/adminCreation.validation.js";
 import {
   assignAdminRoleController,
@@ -86,6 +97,18 @@ adminRouter.get(
   getOperationsDashboardController
 );
 adminRouter.get("/me/permissions", getCurrentAdminPermissionsController);
+adminRouter.get("/me/profile", getAdminProfileController);
+adminRouter.patch(
+  "/me/profile",
+  validate(updateAdminProfileSchema),
+  updateAdminProfileController
+);
+adminRouter.put(
+  "/me/profile/picture",
+  handleUploadError(imageUpload.single("picture")),
+  validateUploadedFile("image"),
+  updateAdminProfilePictureController
+);
 adminRouter.post(
   "/admins",
   requirePermission(PERMISSIONS.CREATE_ADMIN),

@@ -6,7 +6,8 @@ import type {
    GetCompanyDetailsForUserResult,
    GetCompanyJobsResult,
    GetCompanyJobsParams,
-   UpdateUserPersonalInformationResult
+   UpdateUserPersonalInformationResult,
+   UpdateUserProfilePictureResult
 } from "@/types/api/user"
 import type { PersonalInformationUpdateInput } from "@smart-recruitment/validation"
 import { smartApi } from "@/services/api/baseApi"
@@ -29,6 +30,25 @@ const extendedSmartApi = smartApi.injectEndpoints({
             method: "PUT",
             body: data
          }),
+         invalidatesTags: (_result, _error, { userId }) => [
+            "ProfessionalProfile",
+            { type: "ProfessionalProfile", id: userId }
+         ]
+      }),
+      updateUserProfilePicture: builder.mutation<
+         UpdateUserProfilePictureResult,
+         { userId: string; file: File }
+      >({
+         query: ({ file }) => {
+            const formData = new FormData()
+            formData.append("picture", file)
+            return {
+               url: "/api/user/profile/picture",
+               method: "PUT",
+               body: formData,
+               timeout: 120_000
+            }
+         },
          invalidatesTags: (_result, _error, { userId }) => [
             "ProfessionalProfile",
             { type: "ProfessionalProfile", id: userId }
@@ -90,6 +110,7 @@ const extendedSmartApi = smartApi.injectEndpoints({
 export const {
    useGetCompleteUserProfileQuery,
    useUpdateUserPersonalInformationMutation,
+   useUpdateUserProfilePictureMutation,
    useGetDashboardDataQuery,
    useGetCompaniesQuery,
    useGetCompanyDetailsForUserQuery,
